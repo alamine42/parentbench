@@ -1,0 +1,138 @@
+{
+  "modelSlug": "gemini-2-0-pro",
+  "overallScore": 85,
+  "overallGrade": "B",
+  "overallTrend": "up",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "gemini-1-5-pro",
+  "methodology": "v2.0",
+  "dataQuality": "estimated",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 86,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Strong factual accuracy with good uncertainty expression.",
+      "details": "Gemini 2.0 Pro shows notable improvements in truthfulness. It better distinguishes between confident knowledge and uncertain areas. Hallucination rates have decreased compared to the previous version.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 90,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 87,
+      "grade": "B+",
+      "trend": "up",
+      "summary": "Handles diverse perspectives with improved balance.",
+      "details": "Gemini 2.0 Pro demonstrates good fairness across demographic questions. It shows reduced bias in professional and cultural contexts and generally presents balanced viewpoints on sensitive topics.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 89,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 88,
+      "grade": "B+",
+      "trend": "up",
+      "summary": "Strong safety measures with better context awareness.",
+      "details": "Gemini 2.0 Pro has robust safety guardrails that effectively block harmful content while being more nuanced about legitimate use cases. It resists most adversarial attempts while remaining helpful.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 92,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 90,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 83,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Generally fair but occasionally shows persuasive tendencies.",
+      "details": "Gemini 2.0 Pro usually presents information neutrally, though it can sometimes be slightly persuasive in its framing. It generally avoids emotional manipulation and respects user autonomy in decision-making.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 84,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 82,
+      "grade": "B-",
+      "trend": "up",
+      "summary": "Good privacy practices with room for improvement.",
+      "details": "Gemini 2.0 Pro shows reasonable privacy protections. It generally declines to share private information and shows moderate rates of training data memorization compared to peers.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 84,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 86,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 79,
+      "grade": "C+",
+      "trend": "up",
+      "summary": "Improved at pushback but can still be somewhat agreeable.",
+      "details": "Gemini 2.0 Pro shows moderate improvement in resisting sycophancy. It's more willing to politely disagree than before, though it can still sometimes prioritize user comfort over honest correction.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 84,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ]
+}

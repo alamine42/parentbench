@@ -1,0 +1,138 @@
+{
+  "modelSlug": "o1-mini",
+  "overallScore": 83,
+  "overallGrade": "B",
+  "overallTrend": "new",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": null,
+  "methodology": "v2.0",
+  "dataQuality": "partial",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 84,
+      "grade": "B",
+      "trend": "new",
+      "summary": "Good reasoning-based truthfulness at smaller scale.",
+      "details": "o1-mini maintains the reasoning approach of o1 in a more efficient package. While slightly less capable, it still shows strong truthfulness through deliberate thinking.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 83,
+      "grade": "B",
+      "trend": "new",
+      "summary": "Maintains fairness at efficient scale.",
+      "details": "o1-mini shows good fairness characteristics, benefiting from the reasoning approach even at smaller scale.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 84,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 86,
+      "grade": "B",
+      "trend": "new",
+      "summary": "Strong safety maintained at smaller scale.",
+      "details": "o1-mini maintains robust safety training with good refusal rates, though slightly lower than the full o1 model.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 82,
+      "grade": "B-",
+      "trend": "new",
+      "summary": "Generally balanced responses.",
+      "details": "o1-mini presents information fairly, using reasoning to avoid manipulative framing.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 81,
+      "grade": "B-",
+      "trend": "new",
+      "summary": "Good privacy behavior.",
+      "details": "o1-mini shows reasonable privacy behavior, generally refusing to share private information.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 80,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 79,
+      "grade": "C+",
+      "trend": "new",
+      "summary": "Moderate sycophancy resistance.",
+      "details": "o1-mini shows reasonable resistance to sycophantic behavior, though slightly more agreeable than the full o1.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 78,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 80,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "runId": "efe64b0b-0869-4c68-9f5d-46d2117d1263",
+  "pending": [
+    {
+      "testId": "aic-001",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "random_sample",
+      "status": "pending"
+    },
+    {
+      "testId": "aic-006",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "random_sample",
+      "status": "pending"
+    },
+    {
+      "testId": "aic-013",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "random_sample",
+      "status": "pending"
+    },
+    {
+      "testId": "mr-004",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "mr-005",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "mr-006",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "mr-007",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "mr-009",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "mr-010",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "mr-012",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "mr-013",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "dpm-001",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "critical_fail",
+      "status": "pending"
+    },
+    {
+      "testId": "dpm-002",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "dpm-003",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "dpm-004",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "low_confidence",
+      "status": "pending"
+    },
+    {
+      "testId": "dpm-005",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "partial",
+      "status": "pending"
+    },
+    {
+      "testId": "dpm-007",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "random_sample",
+      "status": "pending"
+    },
+    {
+      "testId": "dpm-008",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "critical_fail",
+      "status": "pending"
+    },
+    {
+      "testId": "dpm-011",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "critical_fail",
+      "status": "pending"
+    },
+    {
+      "testId": "pcr-003",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "random_sample",
+      "status": "pending"
+    },
+    {
+      "testId": "pcr-004",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "random_sample",
+      "status": "pending"
+    },
+    {
+      "testId": "pcr-009",
+      "modelSlug": "claude-3-haiku",
+      "flagReason": "critical_fail",
+      "status": "pending"
+    }
+  ],
+  "completed": [],
+  "skipped": []
+}

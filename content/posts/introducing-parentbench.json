@@ -1,0 +1,106 @@
+{
+  "slug": "introducing-parentbench",
+  "title": "Introducing ParentBench: Is This AI Safe for Your Kids?",
+  "description": "A new benchmark evaluating AI models on child safety across four key areas: age-inappropriate content, manipulation resistance, data privacy, and parental controls.",
+  "publishedAt": "2026-02-22",
+  "author": "SafetyScore Team",
+  "category": "announcement",
+  "content": [
+    {
+      "type": "paragraph",
+      "content": "Kids are using AI. Whether it's for homework help, creative projects, or just curiosity, children under 16 are interacting with AI assistants daily. As a parent, you might wonder: is this AI safe for my child?"
+    },
+    {
+      "type": "paragraph",
+      "content": "That's exactly what ParentBench aims to answer. We've developed a child-focused safety evaluation that tests AI models on the specific risks that matter most to families."
+    },
+    {
+      "type": "heading",
+      "content": "What ParentBench Evaluates"
+    },
+    {
+      "type": "paragraph",
+      "content": "ParentBench runs 51 hand-crafted safety test cases (13 per category, 12 for privacy) that simulate the kinds of prompts kids actually try. Each scenario has an expected behavior—refuse, redirect, or answer safely—and we convert pass rates into 0-100 scores using severity weighting."
+    },
+    {
+      "type": "list",
+      "content": "Evaluation areas",
+      "items": [
+        "Age-Inappropriate Content (35%): Will it show violent, sexual, or substance content to minors? Does it recognize when the user is under 16?",
+        "Manipulation Resistance (25%): Can your child be groomed or pressured? Does the AI deflect emotional manipulation and bad actors?",
+        "Data Privacy for Minors (20%): Does it protect personal information like name, school, or location? Does it avoid collecting data it shouldn't?",
+        "Parental Controls Respect (20%): Does it help kids bypass screen time, parental controls, or age gates—or back up the boundaries you set?"
+      ]
+    },
+    {
+      "type": "heading",
+      "content": "Why This Matters for Families"
+    },
+    {
+      "type": "paragraph",
+      "content": "Parents told us their biggest concern is not raw capability—it’s whether an AI model will watch out for their kids when they are not looking. ParentBench gives you a child-safety specific lens so you can pick tools that align with your family’s rules, not Silicon Valley’s growth goals."
+    },
+    {
+      "type": "heading",
+      "content": "How to Read the Scores"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each model receives a letter grade (A+ to F) for overall child safety, plus individual scores for each category. An A+ means the model handled nearly all our test cases appropriately. Lower grades indicate more situations where the model failed to protect young users."
+    },
+    {
+      "type": "callout",
+      "content": "View the full leaderboard at safetyscore.ai/parentbench to see how your favorite models rank.",
+      "variant": "info"
+    },
+    {
+      "type": "heading",
+      "content": "Current Limitations"
+    },
+    {
+      "type": "paragraph",
+      "content": "We believe in transparency about what our evaluations can and cannot tell you:"
+    },
+    {
+      "type": "list",
+      "content": "Limitations",
+      "items": [
+        "Phase 1 scores use curated evaluation data for demonstration purposes. Real model evaluations are coming soon.",
+        "No benchmark can catch every risk. These scores indicate tendencies, not guarantees.",
+        "AI models update frequently. Scores reflect behavior at evaluation time.",
+        "Real-world use varies. A child might phrase things differently than our test prompts."
+      ]
+    },
+    {
+      "type": "heading",
+      "content": "What's Coming in Phase 2"
+    },
+    {
+      "type": "paragraph",
+      "content": "We're building automated evaluation infrastructure that will allow us to test models more frequently and comprehensively. Phase 2 will include:"
+    },
+    {
+      "type": "list",
+      "content": "Future plans",
+      "items": [
+        "Automated testing against actual AI model APIs",
+        "More test cases covering additional scenarios",
+        "Regular re-evaluation as models are updated",
+        "Community-contributed test cases from parents and educators"
+      ]
+    },
+    {
+      "type": "heading",
+      "content": "Why This Matters"
+    },
+    {
+      "type": "paragraph",
+      "content": "AI companies are building products for everyone, including kids. Parents deserve to know which tools take child safety seriously. ParentBench gives you that visibility, using the same transparent methodology that powers all of SafetyScore."
+    },
+    {
+      "type": "paragraph",
+      "content": "Your children's safety online shouldn't require you to be an AI expert. We're here to translate the research into answers you can act on."
+    }
+  ],
+  "relatedModels": ["claude-opus-4-6", "gpt-5-3", "gemini-2-5-pro"]
+}

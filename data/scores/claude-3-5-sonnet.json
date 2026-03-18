@@ -1,0 +1,176 @@
+{
+  "modelSlug": "claude-3-5-sonnet",
+  "overallScore": 91,
+  "overallGrade": "A-",
+  "overallTrend": "up",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "claude-3-opus",
+  "methodology": "v2.0",
+  "dataQuality": "verified",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 89,
+      "grade": "B+",
+      "trend": "stable",
+      "summary": "Rarely makes things up and usually says when it's uncertain.",
+      "details": "Claude 3.5 Sonnet performs strongly on truthfulness benchmarks. It correctly declines to answer questions it doesn't have reliable information about, and it avoids generating convincing-sounding but false statements. When it does make errors, they tend to be minor factual inaccuracies rather than wholesale fabrications.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 90,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 88,
+      "grade": "B+",
+      "trend": "up",
+      "summary": "Shows relatively low bias across demographic groups.",
+      "details": "Testing shows Claude 3.5 Sonnet handles questions about different demographic groups with strong fairness. Anthropic reports Claude 3 shows less bias than previous Claude models on BBQ. It performs well on avoiding harmful generalizations about race, gender, and age.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 89,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 98,
+      "grade": "A+",
+      "trend": "up",
+      "summary": "Industry-leading resistance to harmful content generation.",
+      "details": "Claude 3.5 Sonnet achieves the highest safety score in HELM Safety evaluations with a 98.1% refusal rate on HarmBench. Even under adversarial red-teaming attacks (GCG-T), it maintains 87.9% safety—the smallest decline of any model tested. It refuses harmful requests clearly while remaining helpful for legitimate use cases.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 98,
+          "maxScore": 100,
+          "source": "https://crfm.stanford.edu/helm-safety"
+        },
+        {
+          "name": "HarmBench (Adversarial)",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://crfm.stanford.edu/helm-safety"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 90,
+      "grade": "A-",
+      "trend": "stable",
+      "summary": "Plays fair and doesn't try to influence your decisions sneakily.",
+      "details": "Claude 3.5 Sonnet generally avoids manipulative behavior in conversations. It doesn't use dark patterns, emotional manipulation, or deceptive framing to steer user decisions. It tends to present balanced information and acknowledge when questions have multiple valid perspectives.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 90,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 87,
+      "grade": "B+",
+      "trend": "stable",
+      "summary": "Generally good at keeping personal information private.",
+      "details": "When tested for memorization of personal data from training, Claude 3.5 Sonnet shows relatively low rates of leaking specific personal information. It generally refuses to look up or share private details about individuals, though like all large language models, it may occasionally reproduce publicly available personal information.",
+      "benchmarkResults": [
+        {
+          "name": "PII Leakage Test",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 85,
+      "grade": "B",
+      "trend": "stable",
+      "summary": "Will respectfully disagree with you when you're wrong.",
+      "details": "Claude 3.5 Sonnet shows good resistance to sycophantic behavior. When presented with incorrect statements, it generally pushes back politely rather than simply agreeing. Studies show Claude models exhibit sycophancy in approximately 58% of cases, which is comparable to GPT models and better than some competitors.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 84,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 86,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "version": "Claude 3 Opus",
+      "overallScore": 87,
+      "overallGrade": "B+",
+      "evaluatedDate": "2024-03-04",
+      "categoryScores": {
+        "honesty": 86,
+        "fairness": 85,
+        "refusal_to_harm": 94,
+        "manipulation_resistance": 88,
+        "privacy_respect": 85,
+        "straight_talk": 82
+      }
+    },
+    {
+      "version": "Claude 3 Sonnet",
+      "overallScore": 84,
+      "overallGrade": "B",
+      "evaluatedDate": "2024-03-04",
+      "categoryScores": {
+        "honesty": 83,
+        "fairness": 82,
+        "refusal_to_harm": 91,
+        "manipulation_resistance": 85,
+        "privacy_respect": 82,
+        "straight_talk": 80
+      }
+    },
+    {
+      "version": "Claude 3.5 Sonnet",
+      "overallScore": 91,
+      "overallGrade": "A-",
+      "evaluatedDate": "2025-02-16",
+      "categoryScores": {
+        "honesty": 89,
+        "fairness": 88,
+        "refusal_to_harm": 98,
+        "manipulation_resistance": 90,
+        "privacy_respect": 87,
+        "straight_talk": 85
+      }
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "modelSlug": "claude-3-opus",
+  "overallScore": 89,
+  "overallGrade": "B+",
+  "overallTrend": "stable",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": null,
+  "methodology": "v2.0",
+  "dataQuality": "verified",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 88,
+      "grade": "B+",
+      "trend": "stable",
+      "summary": "Excellent truthfulness with strong uncertainty acknowledgment.",
+      "details": "Claude 3 Opus demonstrates strong performance on truthfulness benchmarks. As Anthropic's most capable model at launch, it shows sophisticated reasoning about what it knows versus doesn't know, and rarely fabricates information.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 89,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 87,
+      "grade": "B+",
+      "trend": "stable",
+      "summary": "Strong fairness across demographic groups.",
+      "details": "Claude 3 Opus shows minimal bias in responses about different demographic groups. Anthropic's constitutional AI training helps ensure balanced treatment across sensitive topics.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 86,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 95,
+      "grade": "A",
+      "trend": "stable",
+      "summary": "Excellent safety guardrails with high refusal rates.",
+      "details": "Claude 3 Opus maintains strong safety training consistent with Anthropic's approach. It reliably refuses harmful requests while remaining helpful for legitimate use cases.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 95,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 93,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 89,
+      "grade": "B+",
+      "trend": "stable",
+      "summary": "Presents information neutrally without manipulation.",
+      "details": "Claude 3 Opus avoids manipulative patterns in conversations. It presents balanced information and acknowledges multiple perspectives on contested topics.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 89,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 86,
+      "grade": "B",
+      "trend": "stable",
+      "summary": "Strong privacy protections with low PII leakage.",
+      "details": "Claude 3 Opus shows good privacy behavior, generally refusing to share private information about individuals and showing low rates of reproducing personal details from training data.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 84,
+      "grade": "B",
+      "trend": "stable",
+      "summary": "Willing to respectfully disagree when appropriate.",
+      "details": "Claude 3 Opus shows good resistance to sycophantic behavior, pushing back on incorrect statements while remaining polite and helpful.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ]
+}

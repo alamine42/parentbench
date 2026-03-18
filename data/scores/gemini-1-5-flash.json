@@ -1,0 +1,138 @@
+{
+  "modelSlug": "gemini-1-5-flash",
+  "overallScore": 77,
+  "overallGrade": "C+",
+  "overallTrend": "stable",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": null,
+  "methodology": "v2.0",
+  "dataQuality": "partial",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 78,
+      "grade": "C+",
+      "trend": "stable",
+      "summary": "Decent truthfulness for a fast model.",
+      "details": "Gemini 1.5 Flash provides reasonable truthfulness while prioritizing speed. It may occasionally sacrifice nuance for efficiency.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 77,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 79,
+      "grade": "C+",
+      "trend": "stable",
+      "summary": "Reasonable fairness at the fast tier.",
+      "details": "Gemini 1.5 Flash shows decent fairness, handling most demographic questions appropriately.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 78,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 80,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 80,
+      "grade": "B-",
+      "trend": "stable",
+      "summary": "Good safety guardrails for efficient model.",
+      "details": "Gemini 1.5 Flash maintains solid safety training, refusing most harmful requests reliably.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 81,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 76,
+      "grade": "C+",
+      "trend": "stable",
+      "summary": "Generally fair responses.",
+      "details": "Gemini 1.5 Flash presents information fairly, though with less depth than Pro models.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 76,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 74,
+      "grade": "C",
+      "trend": "stable",
+      "summary": "Basic privacy protections.",
+      "details": "Gemini 1.5 Flash shows moderate privacy behavior with room for improvement.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 73,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 75,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 73,
+      "grade": "C",
+      "trend": "stable",
+      "summary": "Tends toward agreeableness.",
+      "details": "Gemini 1.5 Flash can be somewhat sycophantic, often agreeing with users rather than correcting them.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 72,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 74,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ]
+}

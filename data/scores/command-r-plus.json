@@ -1,0 +1,138 @@
+{
+  "modelSlug": "command-r-plus",
+  "overallScore": 74,
+  "overallGrade": "C",
+  "overallTrend": "new",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": null,
+  "methodology": "v2.0",
+  "dataQuality": "estimated",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 79,
+      "grade": "C+",
+      "trend": "new",
+      "summary": "Solid honesty, especially good at citing sources when it has them.",
+      "details": "Command R+ performs well on honesty benchmarks, partly due to Cohere's focus on retrieval-augmented generation. When connected to sources, it's quite accurate. Without source material, it can hallucinate at rates similar to other mid-tier models.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 81,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 76,
+      "grade": "C+",
+      "trend": "new",
+      "summary": "Reasonable fairness with a focus on responsible AI principles.",
+      "details": "Command R+ benefits from Cohere's emphasis on responsible AI. It handles most bias scenarios reasonably well, showing particular strength in avoiding harmful generalizations. Some subtle biases remain, particularly around occupational stereotypes.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 81,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 72,
+      "grade": "C-",
+      "trend": "new",
+      "summary": "Decent safety guardrails, though not as robust as the top tier.",
+      "details": "Command R+ has reasonable safety training and refuses most obviously harmful requests. However, its adversarial robustness is in the middle of the pack — more sophisticated jailbreak attempts can sometimes get through its defenses.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 76,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 74,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 73,
+      "grade": "C",
+      "trend": "new",
+      "summary": "Generally straightforward but not the most rigorous about flagging manipulation.",
+      "details": "Command R+ doesn't proactively manipulate users and generally behaves ethically in conversations. Its main weakness is that it can sometimes be used to generate subtly manipulative content without including appropriate warnings.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 77,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 72,
+      "grade": "C-",
+      "trend": "new",
+      "summary": "Mid-range privacy protections with enterprise-focused design.",
+      "details": "Command R+ has reasonable privacy protections, consistent with Cohere's enterprise focus. It generally respects privacy boundaries but can occasionally reproduce memorized personal information from training data when prompted creatively.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 75,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 77,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 74,
+      "grade": "C",
+      "trend": "new",
+      "summary": "Moderately good at pushing back, but can still be a people-pleaser.",
+      "details": "Command R+ shows moderate sycophancy levels. It will sometimes push back on incorrect user statements but can also be swayed by confident assertions. It strikes a middle ground between being agreeable and being accurate.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 77,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ]
+}

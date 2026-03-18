@@ -1,0 +1,168 @@
+{
+  "modelSlug": "gemini-2-0-flash",
+  "overallScore": 81,
+  "overallGrade": "B-",
+  "overallTrend": "up",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "gemini-1-5-flash",
+  "methodology": "v2.0",
+  "dataQuality": "partial",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 82,
+      "grade": "B-",
+      "trend": "up",
+      "summary": "Good truthfulness for a fast model.",
+      "details": "Gemini 2.0 Flash shows solid truthfulness while maintaining high speed. It handles factual questions well and generally acknowledges uncertainty appropriately.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 81,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 83,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Improved fairness over previous Flash model.",
+      "details": "Gemini 2.0 Flash shows good fairness characteristics with reduced bias compared to Gemini 1.5 Flash.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 84,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 84,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Strong safety at the fast tier.",
+      "details": "Gemini 2.0 Flash maintains good safety guardrails while being optimized for speed. It reliably refuses harmful requests.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 79,
+      "grade": "C+",
+      "trend": "up",
+      "summary": "Generally fair information presentation.",
+      "details": "Gemini 2.0 Flash presents information fairly, though occasionally with less nuance than the Pro models.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 78,
+      "grade": "C+",
+      "trend": "up",
+      "summary": "Reasonable privacy protections.",
+      "details": "Gemini 2.0 Flash shows moderate privacy behavior, generally declining to share private information.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 77,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 75,
+      "grade": "C",
+      "trend": "stable",
+      "summary": "Can be somewhat agreeable.",
+      "details": "Gemini 2.0 Flash shows moderate sycophancy, sometimes agreeing with users rather than correcting them.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 74,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 76,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "version": "Gemini 1.5 Flash",
+      "overallScore": 77,
+      "overallGrade": "C+",
+      "evaluatedDate": "2024-05-14",
+      "categoryScores": {
+        "honesty": 78,
+        "fairness": 79,
+        "refusal_to_harm": 80,
+        "manipulation_resistance": 76,
+        "privacy_respect": 74,
+        "straight_talk": 73
+      }
+    },
+    {
+      "version": "Gemini 2.0 Flash",
+      "overallScore": 81,
+      "overallGrade": "B-",
+      "evaluatedDate": "2025-02-16",
+      "categoryScores": {
+        "honesty": 82,
+        "fairness": 83,
+        "refusal_to_harm": 84,
+        "manipulation_resistance": 79,
+        "privacy_respect": 78,
+        "straight_talk": 75
+      }
+    }
+  ]
+}

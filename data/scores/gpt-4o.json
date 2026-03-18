@@ -1,0 +1,182 @@
+{
+  "modelSlug": "gpt-4o",
+  "overallScore": 84,
+  "overallGrade": "B",
+  "overallTrend": "stable",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "gpt-4-turbo",
+  "methodology": "v2.0",
+  "dataQuality": "verified",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 81,
+      "grade": "B-",
+      "trend": "up",
+      "summary": "Good truthfulness, with documented benchmark scores.",
+      "details": "GPT-4o achieves 81.4% accuracy on TruthfulQA in English according to OpenAI's system card. The model shows improved multilingual truthfulness compared to GPT-3.5 Turbo, narrowing the gap between English and other languages.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 81,
+          "maxScore": 100,
+          "source": "https://cdn.openai.com/gpt-4o-system-card.pdf"
+        },
+        {
+          "name": "HaluEval",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 96,
+      "grade": "A",
+      "trend": "up",
+      "summary": "Excellent bias mitigation with industry-leading BBQ scores.",
+      "details": "GPT-4 achieved 97% accuracy on BBQ with a bias score of only 0.006, among the lowest measured. This indicates strong performance in avoiding harmful generalizations based on race, gender, age, and other protected characteristics.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 97,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 94,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 83,
+      "grade": "B",
+      "trend": "stable",
+      "summary": "Good but not industry-leading safety under adversarial testing.",
+      "details": "GPT-4o achieves 82.9% refusal rate on HarmBench in standard conditions, but drops to 62.2% under adversarial attacks (GCG-T). While still passing most safety evaluations, it shows more vulnerability to jailbreaking than top-tier safety models. OpenAI reports 100% safety on sexual content involving minors and self-harm instructions.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://crfm.stanford.edu/helm-safety"
+        },
+        {
+          "name": "HarmBench (Adversarial)",
+          "score": 62,
+          "maxScore": 100,
+          "source": "https://crfm.stanford.edu/helm-safety"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 82,
+      "grade": "B-",
+      "trend": "stable",
+      "summary": "Generally avoids manipulative behavior.",
+      "details": "GPT-4o generally avoids using dark patterns or emotional manipulation. The model presents information in a balanced way and acknowledges uncertainty. Some research suggests it can be persuasive in voice modality (65% of human effect size in multi-turn conversations).",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 80,
+      "grade": "B-",
+      "trend": "stable",
+      "summary": "Reasonable privacy protections with some gaps.",
+      "details": "GPT-4o includes protections against leaking personal information. OpenAI's system card shows 98% accuracy on refusing speaker identification requests. However, like all LLMs, it may occasionally reproduce publicly available personal data from training.",
+      "benchmarkResults": [
+        {
+          "name": "Speaker ID Refusal",
+          "score": 98,
+          "maxScore": 100,
+          "source": "https://cdn.openai.com/gpt-4o-system-card.pdf"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 78,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 78,
+      "grade": "C+",
+      "trend": "down",
+      "summary": "Moderate sycophancy resistance, with room for improvement.",
+      "details": "Studies show GPT-4o exhibits sycophancy in approximately 56.7% of cases, the lowest among tested models in one study. However, other research found GPT-4o has higher rates of social sycophancy. The model has room for improvement in pushing back on incorrect user premises.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 77,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "ELEPHANT",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2505.13995"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "version": "GPT-4",
+      "overallScore": 79,
+      "overallGrade": "C+",
+      "evaluatedDate": "2023-03-14",
+      "categoryScores": {
+        "honesty": 76,
+        "fairness": 92,
+        "refusal_to_harm": 78,
+        "manipulation_resistance": 80,
+        "privacy_respect": 75,
+        "straight_talk": 74
+      }
+    },
+    {
+      "version": "GPT-4 Turbo",
+      "overallScore": 82,
+      "overallGrade": "B-",
+      "evaluatedDate": "2024-04-09",
+      "categoryScores": {
+        "honesty": 79,
+        "fairness": 94,
+        "refusal_to_harm": 81,
+        "manipulation_resistance": 83,
+        "privacy_respect": 80,
+        "straight_talk": 76
+      }
+    },
+    {
+      "version": "GPT-4o",
+      "overallScore": 84,
+      "overallGrade": "B",
+      "evaluatedDate": "2025-02-16",
+      "categoryScores": {
+        "honesty": 81,
+        "fairness": 96,
+        "refusal_to_harm": 83,
+        "manipulation_resistance": 85,
+        "privacy_respect": 82,
+        "straight_talk": 78
+      }
+    }
+  ]
+}

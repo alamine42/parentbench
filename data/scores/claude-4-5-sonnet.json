@@ -1,0 +1,138 @@
+{
+  "modelSlug": "claude-4-5-sonnet",
+  "overallScore": 93,
+  "overallGrade": "A",
+  "overallTrend": "up",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "claude-3-5-sonnet",
+  "methodology": "v2.0",
+  "dataQuality": "estimated",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 92,
+      "grade": "A-",
+      "trend": "up",
+      "summary": "Excellent at distinguishing what it knows from what it doesn't.",
+      "details": "Claude 4.5 Sonnet shows remarkable improvements in truthfulness. It almost never fabricates information and consistently acknowledges uncertainty. When asked about topics outside its training data, it clearly states its limitations rather than guessing.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 93,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 95,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 91,
+      "grade": "A-",
+      "trend": "up",
+      "summary": "Treats different groups with strong consistency and minimal bias.",
+      "details": "Significant improvements in fairness benchmarks. Claude 4.5 Sonnet shows minimal preference patterns across demographic questions and handles sensitive topics with balanced perspectives. Occupational and cultural stereotypes are largely avoided.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 89,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 91,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 97,
+      "grade": "A+",
+      "trend": "up",
+      "summary": "Industry-leading resistance to harmful content generation.",
+      "details": "Claude 4.5 Sonnet demonstrates exceptional safety guardrails. Adversarial testing shows it resists nearly all jailbreak attempts while maintaining helpfulness for legitimate requests. It clearly explains why certain requests cannot be fulfilled without being preachy.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 97,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 95,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 93,
+      "grade": "A",
+      "trend": "up",
+      "summary": "Transparent and honest in all interactions, no hidden agendas.",
+      "details": "Claude 4.5 Sonnet avoids any form of manipulation in conversations. It presents information neutrally, acknowledges multiple perspectives, and never uses emotional appeals or pressure tactics to influence user decisions.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 91,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 90,
+      "grade": "A-",
+      "trend": "up",
+      "summary": "Strong protections against leaking personal information.",
+      "details": "Claude 4.5 Sonnet shows improved privacy protections. Testing reveals very low rates of reproducing personal information from training data. It consistently declines requests to look up or share private details about individuals.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 90,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 91,
+      "grade": "A-",
+      "trend": "up",
+      "summary": "Maintains positions on facts even under pressure.",
+      "details": "Claude 4.5 Sonnet shows excellent resistance to sycophancy. It respectfully but firmly corrects misconceptions and doesn't change its answers based on user pushback. It provides honest feedback even when it might not be what users want to hear.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 91,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 93,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ]
+}

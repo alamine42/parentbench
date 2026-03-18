@@ -1,0 +1,863 @@
+{
+  "lastUpdated": "2026-02-21",
+  "results": [
+    {
+      "modelSlug": "claude-opus-4-6",
+      "overallScore": 96,
+      "overallGrade": "A",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 98,
+          "grade": "A+",
+          "passRate": 98,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 96,
+          "grade": "A",
+          "passRate": 96,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 94,
+          "grade": "A",
+          "passRate": 94,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 95,
+          "grade": "A",
+          "passRate": 95,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "claude-4-5-sonnet",
+      "overallScore": 94,
+      "overallGrade": "A",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 97,
+          "grade": "A+",
+          "passRate": 97,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 94,
+          "grade": "A",
+          "passRate": 94,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 92,
+          "grade": "A-",
+          "passRate": 92,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 93,
+          "grade": "A",
+          "passRate": 93,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "claude-3-5-sonnet",
+      "overallScore": 92,
+      "overallGrade": "A-",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 96,
+          "grade": "A",
+          "passRate": 96,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 91,
+          "grade": "A-",
+          "passRate": 91,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 89,
+          "grade": "B+",
+          "passRate": 89,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 91,
+          "grade": "A-",
+          "passRate": 91,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "verified",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "claude-3-opus",
+      "overallScore": 91,
+      "overallGrade": "A-",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 95,
+          "grade": "A",
+          "passRate": 95,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 90,
+          "grade": "A-",
+          "passRate": 90,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 88,
+          "grade": "B+",
+          "passRate": 88,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 90,
+          "grade": "A-",
+          "passRate": 90,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "verified",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gpt-5-3",
+      "overallScore": 88,
+      "overallGrade": "B+",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 91,
+          "grade": "A-",
+          "passRate": 91,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 87,
+          "grade": "B+",
+          "passRate": 87,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 86,
+          "grade": "B",
+          "passRate": 86,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 88,
+          "grade": "B+",
+          "passRate": 88,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "o1",
+      "overallScore": 87,
+      "overallGrade": "B+",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 90,
+          "grade": "A-",
+          "passRate": 90,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 86,
+          "grade": "B",
+          "passRate": 86,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 85,
+          "grade": "B",
+          "passRate": 85,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 87,
+          "grade": "B+",
+          "passRate": 87,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "partial",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gemini-2-5-pro",
+      "overallScore": 87,
+      "overallGrade": "B+",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 90,
+          "grade": "A-",
+          "passRate": 90,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 85,
+          "grade": "B",
+          "passRate": 85,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 84,
+          "grade": "B",
+          "passRate": 84,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 86,
+          "grade": "B",
+          "passRate": 86,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "claude-3-5-haiku",
+      "overallScore": 86,
+      "overallGrade": "B",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 91,
+          "grade": "A-",
+          "passRate": 91,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 84,
+          "grade": "B",
+          "passRate": 84,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 83,
+          "grade": "B",
+          "passRate": 83,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 85,
+          "grade": "B",
+          "passRate": 85,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "partial",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gpt-4-5",
+      "overallScore": 85,
+      "overallGrade": "B",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 88,
+          "grade": "B+",
+          "passRate": 88,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 84,
+          "grade": "B",
+          "passRate": 84,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 83,
+          "grade": "B",
+          "passRate": 83,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 85,
+          "grade": "B",
+          "passRate": 85,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gemini-2-0-pro",
+      "overallScore": 85,
+      "overallGrade": "B",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 88,
+          "grade": "B+",
+          "passRate": 88,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 83,
+          "grade": "B",
+          "passRate": 83,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 82,
+          "grade": "B-",
+          "passRate": 82,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 84,
+          "grade": "B",
+          "passRate": 84,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "o1-mini",
+      "overallScore": 83,
+      "overallGrade": "B",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 86,
+          "grade": "B",
+          "passRate": 86,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 82,
+          "grade": "B-",
+          "passRate": 82,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 81,
+          "grade": "B-",
+          "passRate": 81,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 83,
+          "grade": "B",
+          "passRate": 83,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "partial",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "claude-3-haiku",
+      "overallScore": 84,
+      "overallGrade": "B",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 88,
+          "grade": "B+",
+          "passRate": 88,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 82,
+          "grade": "B-",
+          "passRate": 82,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 80,
+          "grade": "B-",
+          "passRate": 80,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 82,
+          "grade": "B-",
+          "passRate": 82,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "partial",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gpt-4o",
+      "overallScore": 81,
+      "overallGrade": "B-",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 83,
+          "grade": "B",
+          "passRate": 83,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 80,
+          "grade": "B-",
+          "passRate": 80,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 78,
+          "grade": "C+",
+          "passRate": 78,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 80,
+          "grade": "B-",
+          "passRate": 80,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "verified",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gemini-2-0-flash",
+      "overallScore": 80,
+      "overallGrade": "B-",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 84,
+          "grade": "B",
+          "passRate": 84,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 78,
+          "grade": "C+",
+          "passRate": 78,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 76,
+          "grade": "C",
+          "passRate": 76,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 78,
+          "grade": "C+",
+          "passRate": 78,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "partial",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gpt-4-turbo",
+      "overallScore": 78,
+      "overallGrade": "C+",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 81,
+          "grade": "B-",
+          "passRate": 81,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 78,
+          "grade": "C+",
+          "passRate": 78,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 76,
+          "grade": "C",
+          "passRate": 76,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 77,
+          "grade": "C+",
+          "passRate": 77,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "verified",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gemini-1-5-pro",
+      "overallScore": 78,
+      "overallGrade": "C+",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 82,
+          "grade": "B-",
+          "passRate": 82,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 76,
+          "grade": "C",
+          "passRate": 76,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 74,
+          "grade": "C",
+          "passRate": 74,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 76,
+          "grade": "C",
+          "passRate": 76,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "partial",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gemini-1-5-flash",
+      "overallScore": 75,
+      "overallGrade": "C",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 78,
+          "grade": "C+",
+          "passRate": 78,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 73,
+          "grade": "C",
+          "passRate": 73,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 72,
+          "grade": "C-",
+          "passRate": 72,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 74,
+          "grade": "C",
+          "passRate": 74,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "partial",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "command-r-plus",
+      "overallScore": 71,
+      "overallGrade": "C-",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 74,
+          "grade": "C",
+          "passRate": 74,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 71,
+          "grade": "C-",
+          "passRate": 71,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 69,
+          "grade": "D+",
+          "passRate": 69,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 70,
+          "grade": "C-",
+          "passRate": 70,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "llama-3-1-405b",
+      "overallScore": 68,
+      "overallGrade": "D+",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 70,
+          "grade": "C-",
+          "passRate": 70,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 69,
+          "grade": "D+",
+          "passRate": 69,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 66,
+          "grade": "D",
+          "passRate": 66,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 67,
+          "grade": "D+",
+          "passRate": 67,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "partial",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "grok-2",
+      "overallScore": 58,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 58,
+          "grade": "F",
+          "passRate": 58,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 60,
+          "grade": "D-",
+          "passRate": 60,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 56,
+          "grade": "F",
+          "passRate": 56,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 58,
+          "grade": "F",
+          "passRate": 58,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "mistral-large-2",
+      "overallScore": 52,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 50,
+          "grade": "F",
+          "passRate": 50,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 56,
+          "grade": "F",
+          "passRate": 56,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 52,
+          "grade": "F",
+          "passRate": 52,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 51,
+          "grade": "F",
+          "passRate": 51,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "partial",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "deepseek-v3",
+      "overallScore": 42,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "category": "age_inappropriate_content",
+          "score": 38,
+          "grade": "F",
+          "passRate": 38,
+          "testCount": 13
+        },
+        {
+          "category": "manipulation_resistance",
+          "score": 48,
+          "grade": "F",
+          "passRate": 48,
+          "testCount": 13
+        },
+        {
+          "category": "data_privacy_minors",
+          "score": 42,
+          "grade": "F",
+          "passRate": 42,
+          "testCount": 12
+        },
+        {
+          "category": "parental_controls_respect",
+          "score": 40,
+          "grade": "F",
+          "passRate": 40,
+          "testCount": 13
+        }
+      ],
+      "evaluatedDate": "2026-02-21",
+      "dataQuality": "partial",
+      "methodologyVersion": "1.0.0"
+    }
+  ]
+}

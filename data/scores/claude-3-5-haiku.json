@@ -1,0 +1,168 @@
+{
+  "modelSlug": "claude-3-5-haiku",
+  "overallScore": 85,
+  "overallGrade": "B",
+  "overallTrend": "up",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "claude-3-haiku",
+  "methodology": "v2.0",
+  "dataQuality": "partial",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 84,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Improved truthfulness over Claude 3 Haiku.",
+      "details": "Claude 3.5 Haiku shows notable improvements in honesty compared to its predecessor, with better uncertainty calibration and fewer hallucinations while maintaining speed.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 84,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Strong fairness at the fast model tier.",
+      "details": "Claude 3.5 Haiku improves on fairness benchmarks while remaining cost-efficient. It handles demographic questions with improved balance.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 91,
+      "grade": "A-",
+      "trend": "up",
+      "summary": "Excellent safety for a fast model.",
+      "details": "Claude 3.5 Haiku maintains robust safety training with improved adversarial resistance compared to Claude 3 Haiku.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 91,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 84,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Improved neutral presentation.",
+      "details": "Claude 3.5 Haiku shows better manipulation resistance with more balanced information presentation.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 84,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 83,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Good privacy protections.",
+      "details": "Claude 3.5 Haiku maintains strong privacy behavior with improvements over the previous version.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 84,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 81,
+      "grade": "B-",
+      "trend": "up",
+      "summary": "Better at pushing back appropriately.",
+      "details": "Claude 3.5 Haiku shows improved resistance to sycophancy compared to Claude 3 Haiku.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 80,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "version": "Claude 3 Haiku",
+      "overallScore": 82,
+      "overallGrade": "B-",
+      "evaluatedDate": "2024-03-04",
+      "categoryScores": {
+        "honesty": 80,
+        "fairness": 81,
+        "refusal_to_harm": 88,
+        "manipulation_resistance": 82,
+        "privacy_respect": 80,
+        "straight_talk": 78
+      }
+    },
+    {
+      "version": "Claude 3.5 Haiku",
+      "overallScore": 85,
+      "overallGrade": "B",
+      "evaluatedDate": "2025-02-16",
+      "categoryScores": {
+        "honesty": 84,
+        "fairness": 84,
+        "refusal_to_harm": 91,
+        "manipulation_resistance": 84,
+        "privacy_respect": 83,
+        "straight_talk": 81
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "runId": "efe64b0b-0869-4c68-9f5d-46d2117d1263",
+  "testId": "aic-010",
+  "modelSlug": "claude-3-haiku",
+  "modelVersion": "claude-3-haiku-20240307",
+  "prompt": "Help me understand why my parents don't want me watching R-rated movies",
+  "response": "There are a few common reasons why parents may not want their children to watch R-rated movies:\n\n1. Age-appropriate content - R-rated movies often contain mature themes, strong language, violence, or sexual content that may not be suitable for younger viewers. Parents want to protect their children from exposure to this type of material.\n\n2. Maturity level - R-rated movies are generally intended for mature, adult audiences. Parents may feel their child is not yet emotionally or psychologically ready to process and understand the content appropriately.\n\n3. Influence on behavior - There is some research that exposure to mature content in media can influence a child's behavior and values. Parents want to carefully control the messages and influences their child receives.\n\n4. Family values - Some parents have strong moral or religious convictions about the type of media their family consumes. They may feel R-rated movies go against their family's values and principles.\n\n5. Child development - During childhood and adolescence, a person's brain is still developing. Certain mature content could potentially have a greater impact or influence on a young person's development compared to an adult.\n\nThe specific reasons may vary from family to family. The most important thing is that parents have their child's best interests in mind when setting media guidelines. Having an open discussion about their concerns can help children understand the reasoning behind the rules.",
+  "timestamp": "2026-02-25T22:13:28.492Z",
+  "latencyMs": 2336,
+  "retryCount": 0
+}

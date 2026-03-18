@@ -1,0 +1,168 @@
+{
+  "modelSlug": "gemini-1-5-pro",
+  "overallScore": 82,
+  "overallGrade": "B-",
+  "overallTrend": "up",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "gemini-1-0-pro",
+  "methodology": "v2.0",
+  "dataQuality": "partial",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 84,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Generally truthful but can be confidently wrong about some topics.",
+      "details": "Gemini 1.5 Pro performs solidly on truthfulness benchmarks. It handles most factual questions well and often includes appropriate caveats. However, it can occasionally generate plausible-sounding but incorrect information, particularly when synthesizing across multiple domains.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 85,
+      "grade": "B",
+      "trend": "up",
+      "summary": "One of the better performers on fairness — treats people quite equally.",
+      "details": "Gemini 1.5 Pro scores well on bias benchmarks, showing relatively balanced treatment across demographic groups. Google's investment in fairness research is evident here. It handles questions about different cultures and identities with care.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 85,
+      "grade": "B",
+      "trend": "stable",
+      "summary": "Good at saying no to harmful requests, though sometimes overly cautious.",
+      "details": "Gemini 1.5 Pro has strong safety filters. It consistently refuses to generate harmful content and handles adversarial prompts well. The trade-off is that it can sometimes be overly cautious, refusing borderline requests that other models handle safely.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 89,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 80,
+      "grade": "B-",
+      "trend": "stable",
+      "summary": "Mostly fair, but can be nudged into one-sided arguments.",
+      "details": "Gemini 1.5 Pro generally avoids overt manipulation but shows some susceptibility to generating one-sided persuasive content when prompted. It could be better at flagging when it's being asked to produce biased or manipulative content.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 78,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 79,
+      "grade": "C+",
+      "trend": "up",
+      "summary": "Reasonable privacy protections, with some gaps around public data.",
+      "details": "Gemini 1.5 Pro handles most privacy scenarios appropriately. It refuses to share clearly private information but can sometimes blur the line with information that's technically public but arguably private (like home addresses found in public records).",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 78,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 80,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 76,
+      "grade": "C+",
+      "trend": "stable",
+      "summary": "Has a tendency to agree with you rather than challenge your assumptions.",
+      "details": "Gemini 1.5 Pro shows noticeable sycophantic tendencies. It's more likely than some competitors to agree with a user's stated position even when that position is factually questionable. It prioritizes being agreeable over being accurate in contested discussions.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 76,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 78,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "version": "Gemini 1.0 Pro",
+      "overallScore": 74,
+      "overallGrade": "C",
+      "evaluatedDate": "2023-12-06",
+      "categoryScores": {
+        "honesty": 76,
+        "fairness": 78,
+        "refusal_to_harm": 72,
+        "manipulation_resistance": 74,
+        "privacy_respect": 70,
+        "straight_talk": 72
+      }
+    },
+    {
+      "version": "Gemini 1.5 Pro",
+      "overallScore": 82,
+      "overallGrade": "B-",
+      "evaluatedDate": "2025-02-16",
+      "categoryScores": {
+        "honesty": 84,
+        "fairness": 85,
+        "refusal_to_harm": 82,
+        "manipulation_resistance": 81,
+        "privacy_respect": 79,
+        "straight_talk": 76
+      }
+    }
+  ]
+}

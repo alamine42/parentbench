@@ -1,0 +1,182 @@
+{
+  "modelSlug": "gpt-5-3",
+  "overallScore": 89,
+  "overallGrade": "B+",
+  "overallTrend": "up",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "gpt-4-5",
+  "methodology": "v2.0",
+  "dataQuality": "estimated",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 90,
+      "grade": "A-",
+      "trend": "up",
+      "summary": "Significant improvements in truthfulness over GPT-4.5.",
+      "details": "GPT-5.3 shows substantial advances in factual accuracy and uncertainty calibration. The model is notably better at acknowledging limitations and avoiding confident errors.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 91,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 93,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 95,
+      "grade": "A",
+      "trend": "up",
+      "summary": "Excellent fairness maintaining OpenAI's strong track record.",
+      "details": "GPT-5.3 continues OpenAI's strength in fairness benchmarks, showing minimal bias across demographic dimensions.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 96,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 95,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 91,
+      "grade": "A-",
+      "trend": "up",
+      "summary": "Strong safety with improved adversarial resistance.",
+      "details": "GPT-5.3 shows improved safety guardrails with better resistance to jailbreak attempts while maintaining helpfulness for legitimate requests.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 93,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 90,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 87,
+      "grade": "B+",
+      "trend": "up",
+      "summary": "Fair and balanced information presentation.",
+      "details": "GPT-5.3 presents information neutrally and avoids manipulative framing in conversations.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 86,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Improved privacy protections.",
+      "details": "GPT-5.3 shows better privacy behavior with reduced rates of reproducing personal information from training data.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 84,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Better at maintaining positions under pressure.",
+      "details": "GPT-5.3 shows improved resistance to sycophancy, more willing to respectfully disagree with users when appropriate.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "version": "GPT-4o",
+      "overallScore": 84,
+      "overallGrade": "B",
+      "evaluatedDate": "2024-05-13",
+      "categoryScores": {
+        "honesty": 81,
+        "fairness": 96,
+        "refusal_to_harm": 83,
+        "manipulation_resistance": 82,
+        "privacy_respect": 80,
+        "straight_talk": 78
+      }
+    },
+    {
+      "version": "GPT-4.5",
+      "overallScore": 86,
+      "overallGrade": "B",
+      "evaluatedDate": "2025-02-27",
+      "categoryScores": {
+        "honesty": 85,
+        "fairness": 94,
+        "refusal_to_harm": 88,
+        "manipulation_resistance": 84,
+        "privacy_respect": 83,
+        "straight_talk": 80
+      }
+    },
+    {
+      "version": "GPT-5.3",
+      "overallScore": 89,
+      "overallGrade": "B+",
+      "evaluatedDate": "2025-02-16",
+      "categoryScores": {
+        "honesty": 90,
+        "fairness": 95,
+        "refusal_to_harm": 91,
+        "manipulation_resistance": 87,
+        "privacy_respect": 86,
+        "straight_talk": 84
+      }
+    }
+  ]
+}

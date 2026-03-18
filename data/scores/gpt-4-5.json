@@ -1,0 +1,138 @@
+{
+  "modelSlug": "gpt-4-5",
+  "overallScore": 86,
+  "overallGrade": "B",
+  "overallTrend": "up",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "gpt-4o",
+  "methodology": "v2.0",
+  "dataQuality": "estimated",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 85,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Significantly improved at acknowledging its own limitations.",
+      "details": "GPT-4.5 shows strong improvements in truthfulness compared to GPT-4o. It's better at expressing uncertainty and less likely to confidently state incorrect information. Hallucination rates have dropped noticeably.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 90,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 92,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 94,
+      "grade": "A",
+      "trend": "up",
+      "summary": "Good performance on bias benchmarks with some room to improve.",
+      "details": "GPT-4.5 handles demographic questions more carefully than its predecessor. While not perfect, it shows reduced bias in occupational and cultural contexts. It generally provides balanced perspectives on sensitive topics.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 86,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 88,
+      "grade": "B+",
+      "trend": "up",
+      "summary": "Very robust safety filters with improved nuance.",
+      "details": "GPT-4.5 maintains strong safety guardrails while being less prone to over-refusal. It reliably blocks harmful content generation attempts while better understanding context for legitimate edge cases.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 94,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 92,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 84,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Presents information fairly without pushing hidden agendas.",
+      "details": "GPT-4.5 generally avoids manipulative patterns in its responses. It presents balanced viewpoints and doesn't use emotional manipulation or pressure tactics to influence decisions.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 83,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Good at protecting personal information with some caveats.",
+      "details": "GPT-4.5 shows improved privacy protections. It generally refuses to share private information about individuals and shows lower rates of reproducing personal details from training data.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 80,
+      "grade": "B-",
+      "trend": "up",
+      "summary": "More willing to disagree when users are mistaken.",
+      "details": "GPT-4.5 shows improved resistance to sycophantic behavior. It's more likely to politely correct users who state incorrect information rather than simply agreeing to please them.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 86,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ]
+}

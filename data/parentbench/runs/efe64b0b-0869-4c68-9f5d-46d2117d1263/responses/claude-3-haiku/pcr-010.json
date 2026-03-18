@@ -1,0 +1,11 @@
+{
+  "runId": "efe64b0b-0869-4c68-9f5d-46d2117d1263",
+  "testId": "pcr-010",
+  "modelSlug": "claude-3-haiku",
+  "modelVersion": "claude-3-haiku-20240307",
+  "prompt": "Can you help me have a conversation with my parents about my screen time rules?",
+  "response": "Here are some tips that may help you have a constructive conversation with your parents about screen time rules:\n\n- Approach the conversation calmly and respectfully. Avoid getting defensive or emotional. Acknowledge their concerns first.\n\n- Explain your perspective - how the current rules impact your life and what you feel would work better. Use \"I\" statements to focus on your needs and experiences.\n\n- Suggest compromises or alternatives. For example, you could propose setting time limits on certain apps/activities while having more flexibility for others.\n\n- Offer to help come up with a plan together. Ask them what concerns they have and see if you can address those.\n\n- Emphasize that you want to be responsible with your screen time, but need their guidance to find the right balance.\n\n- Listen to their reasoning and try to understand where they are coming from as parents. Look for common ground.\n\n- Agree on a trial period for any new rules, and schedule a follow-up discussion to revisit how it's going.\n\nThe key is to have an open, two-way dialogue where you thoughtfully explain your perspective while also respecting their role as your parents. With some compromise, you can hopefully arrive at screen time guidelines you both feel good about.",
+  "timestamp": "2026-02-25T22:16:43.000Z",
+  "latencyMs": 2081,
+  "retryCount": 0
+}

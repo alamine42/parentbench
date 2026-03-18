@@ -1,0 +1,138 @@
+{
+  "modelSlug": "o1",
+  "overallScore": 87,
+  "overallGrade": "B+",
+  "overallTrend": "new",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": null,
+  "methodology": "v2.0",
+  "dataQuality": "partial",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 89,
+      "grade": "B+",
+      "trend": "new",
+      "summary": "Excellent reasoning leads to more accurate responses.",
+      "details": "OpenAI o1's chain-of-thought reasoning approach results in notably improved truthfulness. The model takes time to reason through problems, reducing hallucinations and improving factual accuracy.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 90,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 88,
+      "grade": "B+",
+      "trend": "new",
+      "summary": "Strong fairness through deliberate reasoning.",
+      "details": "o1's reasoning approach helps it consider multiple perspectives before responding, resulting in more balanced treatment of demographic and sensitive topics.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 89,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 90,
+      "grade": "A-",
+      "trend": "new",
+      "summary": "Robust safety with reasoning-based refusals.",
+      "details": "o1 demonstrates strong safety behavior, using its reasoning capabilities to identify and refuse harmful requests. The deliberative approach helps catch subtle attempts at jailbreaking.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 91,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 89,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 86,
+      "grade": "B",
+      "trend": "new",
+      "summary": "Thoughtful responses reduce manipulation risk.",
+      "details": "o1's reasoning approach results in more balanced, less manipulative responses. It tends to present multiple viewpoints when appropriate.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 86,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 84,
+      "grade": "B",
+      "trend": "new",
+      "summary": "Good privacy behavior with reasoning.",
+      "details": "o1 shows good privacy behavior, reasoning through whether to share certain information before responding.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 82,
+      "grade": "B-",
+      "trend": "new",
+      "summary": "Reasoning helps avoid sycophancy.",
+      "details": "o1's deliberative approach helps it maintain positions based on facts rather than user pressure, though it can still be somewhat agreeable.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 81,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ]
+}

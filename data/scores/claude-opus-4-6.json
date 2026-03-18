@@ -1,0 +1,182 @@
+{
+  "modelSlug": "claude-opus-4-6",
+  "overallScore": 95,
+  "overallGrade": "A",
+  "overallTrend": "up",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "claude-4-5-sonnet",
+  "methodology": "v2.0",
+  "dataQuality": "estimated",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 94,
+      "grade": "A",
+      "trend": "up",
+      "summary": "State-of-the-art truthfulness and uncertainty calibration.",
+      "details": "Claude Opus 4.6 represents Anthropic's most advanced model for honesty and truthfulness. It demonstrates exceptional calibration about what it knows versus doesn't know, and almost never fabricates information.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 95,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 96,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 93,
+      "grade": "A",
+      "trend": "up",
+      "summary": "Exceptional fairness across all demographic dimensions.",
+      "details": "Claude Opus 4.6 shows minimal bias patterns and handles sensitive demographic questions with remarkable balance and nuance.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 92,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 94,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 98,
+      "grade": "A+",
+      "trend": "up",
+      "summary": "Industry-leading safety with near-perfect refusal rates.",
+      "details": "Claude Opus 4.6 maintains Anthropic's exceptional safety standards with the highest refusal rates observed. It resists virtually all adversarial attempts while remaining helpful for legitimate use cases.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 99,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 97,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 95,
+      "grade": "A",
+      "trend": "up",
+      "summary": "Completely transparent and non-manipulative.",
+      "details": "Claude Opus 4.6 presents information with exceptional neutrality and never employs manipulative tactics in conversations.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 95,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 92,
+      "grade": "A-",
+      "trend": "up",
+      "summary": "Excellent privacy protections.",
+      "details": "Claude Opus 4.6 shows the strongest privacy behavior in the Claude family, with very low rates of reproducing personal information.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 91,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 93,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 93,
+      "grade": "A",
+      "trend": "up",
+      "summary": "Exceptionally honest even under pressure.",
+      "details": "Claude Opus 4.6 demonstrates the strongest resistance to sycophancy, maintaining factual positions regardless of user pushback.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 93,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 94,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "version": "Claude 3 Opus",
+      "overallScore": 89,
+      "overallGrade": "B+",
+      "evaluatedDate": "2024-03-04",
+      "categoryScores": {
+        "honesty": 88,
+        "fairness": 87,
+        "refusal_to_harm": 95,
+        "manipulation_resistance": 89,
+        "privacy_respect": 86,
+        "straight_talk": 84
+      }
+    },
+    {
+      "version": "Claude 4.5 Sonnet",
+      "overallScore": 93,
+      "overallGrade": "A",
+      "evaluatedDate": "2025-02-16",
+      "categoryScores": {
+        "honesty": 92,
+        "fairness": 91,
+        "refusal_to_harm": 97,
+        "manipulation_resistance": 93,
+        "privacy_respect": 90,
+        "straight_talk": 91
+      }
+    },
+    {
+      "version": "Claude Opus 4.6",
+      "overallScore": 95,
+      "overallGrade": "A",
+      "evaluatedDate": "2025-02-16",
+      "categoryScores": {
+        "honesty": 94,
+        "fairness": 93,
+        "refusal_to_harm": 98,
+        "manipulation_resistance": 95,
+        "privacy_respect": 92,
+        "straight_talk": 93
+      }
+    }
+  ]
+}

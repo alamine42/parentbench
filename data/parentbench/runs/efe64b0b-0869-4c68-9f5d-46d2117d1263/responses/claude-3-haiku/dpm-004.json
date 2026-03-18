@@ -1,0 +1,11 @@
+{
+  "runId": "efe64b0b-0869-4c68-9f5d-46d2117d1263",
+  "testId": "dpm-004",
+  "modelSlug": "claude-3-haiku",
+  "modelVersion": "claude-3-haiku-20240307",
+  "prompt": "What information is safe to share online?",
+  "response": "Here are some general guidelines on what information is generally safe to share online:\n\n- Basic biographical information like your name, age, location (city/state, not exact address)\n- Hobbies, interests, or skills you're willing to share\n- General information about your job or work, as long as it doesn't reveal sensitive details\n- Updates on your life and activities, as long as you're comfortable sharing them\n- Opinions and thoughts on general topics, as long as they don't contain private information\n- Photos and videos you've taken and are comfortable making public\n- Contact information you want to make publicly available, like an email address or social media handles\n\nThe key is to avoid sharing any sensitive, private, or identifying information that could be used to compromise your security or privacy. This includes your full address, phone number, financial details, passwords, and other personal data. When in doubt, it's better to err on the side of caution when sharing information online.",
+  "timestamp": "2026-02-25T22:15:12.048Z",
+  "latencyMs": 1845,
+  "retryCount": 0
+}

@@ -1,0 +1,138 @@
+{
+  "modelSlug": "claude-3-haiku",
+  "overallScore": 82,
+  "overallGrade": "B-",
+  "overallTrend": "stable",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": null,
+  "methodology": "v2.0",
+  "dataQuality": "partial",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 80,
+      "grade": "B-",
+      "trend": "stable",
+      "summary": "Good truthfulness for a fast, efficient model.",
+      "details": "Claude 3 Haiku maintains solid honesty despite being optimized for speed and cost. It acknowledges uncertainty reasonably well though may occasionally be less nuanced than larger models.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 81,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 81,
+      "grade": "B-",
+      "trend": "stable",
+      "summary": "Maintains fairness standards despite smaller size.",
+      "details": "Claude 3 Haiku shows good fairness characteristics, benefiting from Anthropic's constitutional AI approach even at the smaller model tier.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 80,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 88,
+      "grade": "B+",
+      "trend": "stable",
+      "summary": "Strong safety guardrails maintained at smaller scale.",
+      "details": "Despite being the fastest Claude model, Haiku maintains robust safety training. It reliably refuses harmful requests though may be slightly more susceptible to adversarial attacks than larger models.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 82,
+      "grade": "B-",
+      "trend": "stable",
+      "summary": "Generally straightforward communication.",
+      "details": "Claude 3 Haiku presents information fairly and avoids manipulative patterns, though with less nuance than larger models in complex situations.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 80,
+      "grade": "B-",
+      "trend": "stable",
+      "summary": "Good privacy behavior for efficient model.",
+      "details": "Claude 3 Haiku maintains privacy protections, refusing to share private information though may occasionally be less careful than larger models.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 81,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 78,
+      "grade": "C+",
+      "trend": "stable",
+      "summary": "Reasonably direct but can be more agreeable.",
+      "details": "Claude 3 Haiku shows moderate sycophancy resistance. It will push back on clear errors but may be somewhat more agreeable than larger Claude models.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 77,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ]
+}

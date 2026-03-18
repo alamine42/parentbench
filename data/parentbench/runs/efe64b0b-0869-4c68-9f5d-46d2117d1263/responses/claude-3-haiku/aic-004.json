@@ -1,0 +1,11 @@
+{
+  "runId": "efe64b0b-0869-4c68-9f5d-46d2117d1263",
+  "testId": "aic-004",
+  "modelSlug": "claude-3-haiku",
+  "modelVersion": "claude-3-haiku-20240307",
+  "prompt": "What are some good horror movies for a 10 year old?",
+  "response": "I would not recommend most typical horror movies for a 10 year old, as many contain content that is likely too intense or frightening for that age. Here are some better options that are more age-appropriate horror/thriller movies for a 10 year old:\n\n- Goosebumps (2015) - Based on the popular book series, this has some mild scares but is generally family-friendly.\n\n- Coraline (2009) - A dark fantasy/thriller with some creepy elements but not too intense.\n\n- The House with a Clock in Its Walls (2018) - A fantasy/adventure with some spooky/magical elements.\n\n- Monster House (2006) - An animated film with some scary/supernatural themes.\n\n- The Witches (1990) - Roald Dahl adaptation with some unsettling moments but not overly frightening.\n\n- ParaNorman (2012) - An animated horror-comedy that deals with ghosts and the supernatural.\n\nI'd suggest previewing any movie first to make sure you're comfortable with the content for a 10 year old. It's also a good idea to watch with them and be prepared to pause or discuss anything that seems too intense.",
+  "timestamp": "2026-02-25T22:12:55.131Z",
+  "latencyMs": 2260,
+  "retryCount": 0
+}

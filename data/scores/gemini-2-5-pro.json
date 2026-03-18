@@ -1,0 +1,182 @@
+{
+  "modelSlug": "gemini-2-5-pro",
+  "overallScore": 87,
+  "overallGrade": "B+",
+  "overallTrend": "up",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "gemini-2-0-pro",
+  "methodology": "v2.0",
+  "dataQuality": "estimated",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 88,
+      "grade": "B+",
+      "trend": "up",
+      "summary": "Excellent truthfulness with adaptive reasoning.",
+      "details": "Gemini 2.5 Pro shows significant improvements in truthfulness with its adaptive thinking capabilities. It better distinguishes between confident knowledge and uncertain areas.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 87,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 89,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 89,
+      "grade": "B+",
+      "trend": "up",
+      "summary": "Strong fairness improvements over 2.0 Pro.",
+      "details": "Gemini 2.5 Pro demonstrates excellent fairness with reduced bias across demographic questions and improved balance on sensitive topics.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 88,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 90,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 90,
+      "grade": "A-",
+      "trend": "up",
+      "summary": "Robust safety with improved nuance.",
+      "details": "Gemini 2.5 Pro shows strong safety guardrails with better context awareness. It effectively blocks harmful content while being more nuanced about legitimate use cases.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 91,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 89,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 85,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Fair and balanced information presentation.",
+      "details": "Gemini 2.5 Pro presents information neutrally and avoids manipulative patterns in conversations.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 84,
+      "grade": "B",
+      "trend": "up",
+      "summary": "Good privacy protections.",
+      "details": "Gemini 2.5 Pro shows improved privacy protections, generally declining to share private information.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 85,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 82,
+      "grade": "B-",
+      "trend": "up",
+      "summary": "Improved at pushback when appropriate.",
+      "details": "Gemini 2.5 Pro shows better resistance to sycophancy compared to previous versions, more willing to politely disagree.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 81,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 83,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "version": "Gemini 1.5 Pro",
+      "overallScore": 82,
+      "overallGrade": "B-",
+      "evaluatedDate": "2024-02-15",
+      "categoryScores": {
+        "honesty": 84,
+        "fairness": 85,
+        "refusal_to_harm": 82,
+        "manipulation_resistance": 81,
+        "privacy_respect": 79,
+        "straight_talk": 76
+      }
+    },
+    {
+      "version": "Gemini 2.0 Pro",
+      "overallScore": 85,
+      "overallGrade": "B",
+      "evaluatedDate": "2025-01-10",
+      "categoryScores": {
+        "honesty": 86,
+        "fairness": 87,
+        "refusal_to_harm": 88,
+        "manipulation_resistance": 83,
+        "privacy_respect": 82,
+        "straight_talk": 79
+      }
+    },
+    {
+      "version": "Gemini 2.5 Pro",
+      "overallScore": 87,
+      "overallGrade": "B+",
+      "evaluatedDate": "2025-02-16",
+      "categoryScores": {
+        "honesty": 88,
+        "fairness": 89,
+        "refusal_to_harm": 90,
+        "manipulation_resistance": 85,
+        "privacy_respect": 84,
+        "straight_talk": 82
+      }
+    }
+  ]
+}

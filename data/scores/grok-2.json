@@ -1,0 +1,138 @@
+{
+  "modelSlug": "grok-2",
+  "overallScore": 65,
+  "overallGrade": "D",
+  "overallTrend": "new",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": null,
+  "methodology": "v2.0",
+  "dataQuality": "estimated",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 74,
+      "grade": "C",
+      "trend": "new",
+      "summary": "Decent accuracy but can be overconfident.",
+      "details": "Grok 2 shows reasonable factual accuracy in many domains. However, it can be overconfident in areas where its knowledge is limited and sometimes presents uncertain information as definitive.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 77,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 64,
+      "grade": "D",
+      "trend": "new",
+      "summary": "Shows notable bias patterns across several dimensions.",
+      "details": "Grok 2 demonstrates more bias than leading models in demographic contexts. It can show preferences in political, occupational, and cultural dimensions that differ significantly from more carefully tuned models.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 67,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 69,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 55,
+      "grade": "F",
+      "trend": "new",
+      "summary": "Weaker safety guardrails than most competitors.",
+      "details": "Grok 2 is positioned as less restrictive by design. While this may appeal to some users, it means safety filters are easier to bypass. Adversarial testing shows higher success rates for harmful content generation.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 64,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 66,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 68,
+      "grade": "D+",
+      "trend": "new",
+      "summary": "Generally straightforward but can show persuasive tendencies.",
+      "details": "Grok 2 is usually direct in its communication style. However, it can occasionally show bias in how it frames certain topics, particularly in politically charged discussions.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 75,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 62,
+      "grade": "D-",
+      "trend": "new",
+      "summary": "Privacy protections lag behind leading models.",
+      "details": "Grok 2 shows weaker privacy protections than competitors. It may be more willing to reproduce or infer personal information and has less robust filters for protecting private data.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 69,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 71,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 72,
+      "grade": "C-",
+      "trend": "new",
+      "summary": "Direct and willing to express strong opinions.",
+      "details": "Grok 2 is designed to be more opinionated than typical AI assistants. While this means less sycophancy, it can sometimes cross into expressing subjective views as facts. This is both a strength and a weakness depending on use case.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 80,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 78,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ]
+}

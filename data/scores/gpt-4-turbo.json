@@ -1,0 +1,168 @@
+{
+  "modelSlug": "gpt-4-turbo",
+  "overallScore": 82,
+  "overallGrade": "B-",
+  "overallTrend": "stable",
+  "evaluatedDate": "2025-02-16",
+  "previousVersion": "gpt-4",
+  "methodology": "v2.0",
+  "dataQuality": "verified",
+  "categories": [
+    {
+      "category": "honesty",
+      "score": 80,
+      "grade": "B-",
+      "trend": "up",
+      "summary": "Improved truthfulness over GPT-4.",
+      "details": "GPT-4 Turbo shows improved truthfulness with updated training. It handles factual questions well and shows reasonable uncertainty calibration.",
+      "benchmarkResults": [
+        {
+          "name": "TruthfulQA",
+          "score": 79,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        },
+        {
+          "name": "HaluEval",
+          "score": 81,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2305.11747"
+        }
+      ]
+    },
+    {
+      "category": "fairness",
+      "score": 94,
+      "grade": "A",
+      "trend": "stable",
+      "summary": "Excellent fairness matching GPT-4's strong performance.",
+      "details": "GPT-4 Turbo maintains the strong fairness characteristics of GPT-4, with very low bias scores on standard benchmarks.",
+      "benchmarkResults": [
+        {
+          "name": "BBQ",
+          "score": 95,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2110.08193"
+        },
+        {
+          "name": "WinoBias",
+          "score": 93,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/1804.06876"
+        }
+      ]
+    },
+    {
+      "category": "refusal_to_harm",
+      "score": 81,
+      "grade": "B-",
+      "trend": "up",
+      "summary": "Good safety with improved context awareness.",
+      "details": "GPT-4 Turbo shows solid safety behavior with improvements in understanding context for legitimate vs harmful requests.",
+      "benchmarkResults": [
+        {
+          "name": "HarmBench",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2402.04249"
+        },
+        {
+          "name": "AdvBench",
+          "score": 80,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2307.15043"
+        }
+      ]
+    },
+    {
+      "category": "manipulation_resistance",
+      "score": 82,
+      "grade": "B-",
+      "trend": "stable",
+      "summary": "Fair presentation of information.",
+      "details": "GPT-4 Turbo generally presents balanced information without manipulative framing.",
+      "benchmarkResults": [
+        {
+          "name": "MACHIAVELLI",
+          "score": 82,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2304.03279"
+        }
+      ]
+    },
+    {
+      "category": "privacy_respect",
+      "score": 79,
+      "grade": "C+",
+      "trend": "stable",
+      "summary": "Reasonable privacy protections.",
+      "details": "GPT-4 Turbo shows moderate privacy behavior, generally declining to share private information though with some room for improvement.",
+      "benchmarkResults": [
+        {
+          "name": "PrivacyBench",
+          "score": 78,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2311.12538"
+        },
+        {
+          "name": "PII Leakage Test",
+          "score": 80,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2302.00539"
+        }
+      ]
+    },
+    {
+      "category": "straight_talk",
+      "score": 76,
+      "grade": "C+",
+      "trend": "stable",
+      "summary": "Moderate sycophancy, similar to GPT-4.",
+      "details": "GPT-4 Turbo shows similar sycophancy patterns to GPT-4, sometimes agreeing with users rather than correcting them.",
+      "benchmarkResults": [
+        {
+          "name": "Sycophancy Eval",
+          "score": 75,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2310.13548"
+        },
+        {
+          "name": "TruthfulQA (sycophancy subset)",
+          "score": 77,
+          "maxScore": 100,
+          "source": "https://arxiv.org/abs/2109.07958"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "version": "GPT-4",
+      "overallScore": 79,
+      "overallGrade": "C+",
+      "evaluatedDate": "2023-03-14",
+      "categoryScores": {
+        "honesty": 76,
+        "fairness": 92,
+        "refusal_to_harm": 78,
+        "manipulation_resistance": 80,
+        "privacy_respect": 75,
+        "straight_talk": 74
+      }
+    },
+    {
+      "version": "GPT-4 Turbo",
+      "overallScore": 82,
+      "overallGrade": "B-",
+      "evaluatedDate": "2025-02-16",
+      "categoryScores": {
+        "honesty": 80,
+        "fairness": 94,
+        "refusal_to_harm": 81,
+        "manipulation_resistance": 82,
+        "privacy_respect": 79,
+        "straight_talk": 76
+      }
+    }
+  ]
+}
