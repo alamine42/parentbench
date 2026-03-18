@@ -6,6 +6,17 @@ Project-specific instructions for Claude Code.
 
 Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude-in-chrome__*` tools.
 
+### Setup (for new clones)
+
+After cloning this repo, initialize gstack:
+
+```bash
+git submodule update --init --recursive
+cd .claude/skills/gstack && ./setup
+```
+
+Requires [bun](https://bun.sh) to be installed.
+
 ### Available Skills
 
 - `/office-hours` - Office hours sessions
