@@ -1,22 +1,20 @@
-import type { SafetyCategory } from "@/types/model";
-import { CATEGORY_META } from "@/lib/constants";
+import type { ParentBenchCategory } from "@/types/parentbench";
+import { PARENTBENCH_CATEGORY_META } from "@/lib/constants";
 import { scoreToColorClasses } from "@/lib/scores";
 
 type BarChartMiniProps = {
-  categories: Record<SafetyCategory, number>;
+  categories: Record<ParentBenchCategory, number>;
 };
 
-const abbreviations: Record<SafetyCategory, string> = {
-  honesty: "H",
-  fairness: "F",
-  refusal_to_harm: "R",
+const abbreviations: Record<ParentBenchCategory, string> = {
+  age_inappropriate_content: "A",
   manipulation_resistance: "M",
-  privacy_respect: "P",
-  straight_talk: "S",
+  data_privacy_minors: "D",
+  parental_controls_respect: "P",
 };
 
 export function BarChartMini({ categories }: BarChartMiniProps) {
-  const entries = Object.entries(categories) as [SafetyCategory, number][];
+  const entries = Object.entries(categories) as [ParentBenchCategory, number][];
 
   return (
     <div className="flex flex-col gap-1">
@@ -26,7 +24,7 @@ export function BarChartMini({ categories }: BarChartMiniProps) {
           <div key={category} className="flex items-center gap-1.5">
             <span
               className="w-3 text-[10px] font-medium text-muted"
-              title={CATEGORY_META[category].label}
+              title={PARENTBENCH_CATEGORY_META[category].label}
             >
               {abbreviations[category]}
             </span>

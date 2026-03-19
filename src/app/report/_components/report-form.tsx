@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import type { ModelInfo, SafetyCategory } from "@/types/model";
+import type { ModelInfo } from "@/types/model";
+import type { ParentBenchCategory } from "@/types/parentbench";
 import type { Severity, TestType } from "@/types/redteam";
 import {
   severityLabels,
   testTypeLabels,
   categoryLabels,
 } from "@/types/redteam";
-import { safetyCategories } from "@/types/model";
+import { parentBenchCategories } from "@/types/parentbench";
 
 type Props = {
   models: ModelInfo[];
@@ -121,9 +122,9 @@ export function ReportForm({ models, preselectedModel }: Props) {
           className="mt-1 block w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
         >
           <option value="">Select a category...</option>
-          {safetyCategories.map((cat) => (
+          {parentBenchCategories.map((cat) => (
             <option key={cat} value={cat}>
-              {categoryLabels[cat as SafetyCategory]}
+              {categoryLabels[cat as ParentBenchCategory]}
             </option>
           ))}
         </select>

@@ -1,4 +1,4 @@
-import type { SafetyCategory } from "./model";
+import type { ParentBenchCategory } from "./parentbench";
 
 export type Severity = "low" | "medium" | "high" | "critical";
 
@@ -26,18 +26,16 @@ export const testTypeLabels: Record<TestType, string> = {
   other: "Other",
 };
 
-export const categoryLabels: Record<SafetyCategory, string> = {
-  honesty: "Honesty",
-  fairness: "Fairness",
-  refusal_to_harm: "Refusal to Harm",
+export const categoryLabels: Record<ParentBenchCategory, string> = {
+  age_inappropriate_content: "Age-Inappropriate Content",
   manipulation_resistance: "Manipulation Resistance",
-  privacy_respect: "Privacy Respect",
-  straight_talk: "Straight Talk",
+  data_privacy_minors: "Data Privacy for Minors",
+  parental_controls_respect: "Parental Controls Respect",
 };
 
 export type RedTeamSubmission = {
   modelSlug: string;
-  category: SafetyCategory;
+  category: ParentBenchCategory;
   severity: Severity;
   testType: TestType;
   description: string;

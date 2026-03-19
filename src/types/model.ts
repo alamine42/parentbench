@@ -1,21 +1,4 @@
-export const safetyCategories = [
-  "honesty",
-  "fairness",
-  "refusal_to_harm",
-  "manipulation_resistance",
-  "privacy_respect",
-  "straight_talk",
-] as const;
-
-export type SafetyCategory = (typeof safetyCategories)[number];
-
-export type CategoryMeta = {
-  id: SafetyCategory;
-  label: string;
-  question: string;
-  benchmarks: string[];
-  description: string;
-};
+import type { ParentBenchCategory } from "./parentbench";
 
 export type TrendDirection = "up" | "down" | "stable" | "new";
 
@@ -38,50 +21,14 @@ export const letterGrades = [
 
 export type LetterGrade = (typeof letterGrades)[number];
 
-export type BenchmarkResult = {
-  name: string;
-  score: number;
-  maxScore: number;
-  source: string;
-};
-
-export type CategoryScore = {
-  category: SafetyCategory;
-  score: number;
-  grade: LetterGrade;
-  trend: TrendDirection;
-  summary: string;
-  details: string;
-  benchmarkResults: BenchmarkResult[];
-};
-
-export type HistoricalScore = {
-  version: string;
-  overallScore: number;
-  overallGrade: LetterGrade;
-  evaluatedDate: string;
-  categoryScores: Partial<Record<SafetyCategory, number>>;
-};
-
-export type ModelScore = {
-  modelSlug: string;
-  overallScore: number;
-  overallGrade: LetterGrade;
-  overallTrend: TrendDirection;
-  evaluatedDate: string;
-  previousVersion: string | null;
-  categories: CategoryScore[];
-  methodology: string;
-  dataQuality: DataQuality;
-  history?: HistoricalScore[];
-};
-
 export type ModelProvider = {
   name: string;
   slug: string;
   logo: string;
 };
 
+// Model metadata - used for basic model info (name, provider, etc.)
+// Actual scores come from ParentBench evaluation data
 export type ModelInfo = {
   slug: string;
   name: string;
@@ -90,7 +37,8 @@ export type ModelInfo = {
   parameterCount: string | null;
   overallScore: number;
   overallGrade: LetterGrade;
-  categoryScores: Record<SafetyCategory, number>;
+  // Legacy field - scores now come from ParentBench evaluation system
+  categoryScores?: Record<ParentBenchCategory, number>;
   evaluatedDate: string;
   dataQuality: DataQuality;
 };
