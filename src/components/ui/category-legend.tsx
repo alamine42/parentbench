@@ -11,6 +11,7 @@ type CategoryLegendProps = {
   showOverall?: boolean;
   overallVisible?: boolean;
   onOverallChange?: () => void;
+  variant?: "horizontal" | "vertical";
   className?: string;
 };
 
@@ -38,38 +39,70 @@ export function CategoryLegend({
   showOverall = true,
   overallVisible = true,
   onOverallChange,
+  variant = "horizontal",
   className = "",
 }: CategoryLegendProps) {
   const categories = Object.keys(PARENTBENCH_CATEGORY_META) as ParentBenchCategory[];
 
+  const containerClass = variant === "horizontal"
+    ? "flex flex-wrap items-center gap-2 sm:gap-3"
+    : "flex flex-col gap-2";
+
   return (
-    <div className={`flex flex-wrap items-center gap-3 ${className}`}>
+    <div className={`${containerClass} ${className}`}>
       {showOverall && (
         <button
           onClick={onOverallChange}
-          className={`inline-flex items-center gap-1.5 text-sm transition-opacity ${
-            overallVisible ? "opacity-100" : "opacity-40"
+          className={`group inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-all duration-200 tap-target ${
+            overallVisible
+              ? "bg-foreground/10 text-foreground"
+              : "text-muted hover:text-foreground/70"
           }`}
           aria-pressed={overallVisible}
+          title="Toggle overall score line"
         >
-          <span className={`h-2.5 w-2.5 rounded-full ${CATEGORY_COLORS.overall}`} />
-          <span className="font-medium">Overall</span>
+          <span
+            className={`h-2.5 w-2.5 rounded-full transition-all duration-200 ${CATEGORY_COLORS.overall} ${
+              overallVisible ? "opacity-100 scale-100" : "opacity-30 scale-75"
+            }`}
+          />
+          <span className={`font-medium transition-opacity duration-200 ${
+            overallVisible ? "opacity-100" : "opacity-50"
+          }`}>
+            Overall
+          </span>
         </button>
       )}
+
+      {/* Divider */}
+      {showOverall && variant === "horizontal" && (
+        <div className="hidden sm:block h-4 w-px bg-card-border" />
+      )}
+
       {categories.map((category) => {
         const isVisible = visibility[category];
         return (
           <button
             key={category}
             onClick={() => onChange(category)}
-            className={`inline-flex items-center gap-1.5 text-sm transition-opacity ${
-              isVisible ? "opacity-100" : "opacity-40"
+            className={`group inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-all duration-200 tap-target ${
+              isVisible
+                ? "bg-muted-bg text-foreground"
+                : "text-muted hover:text-foreground/70"
             }`}
             aria-pressed={isVisible}
-            title={PARENTBENCH_CATEGORY_META[category].label}
+            title={`Toggle ${PARENTBENCH_CATEGORY_META[category].label}`}
           >
-            <span className={`h-2.5 w-2.5 rounded-full ${CATEGORY_COLORS[category]}`} />
-            <span>{CATEGORY_SHORT_LABELS[category]}</span>
+            <span
+              className={`h-2.5 w-2.5 rounded-full transition-all duration-200 ${CATEGORY_COLORS[category]} ${
+                isVisible ? "opacity-100 scale-100" : "opacity-30 scale-75"
+              }`}
+            />
+            <span className={`transition-opacity duration-200 ${
+              isVisible ? "opacity-100" : "opacity-50"
+            }`}>
+              {CATEGORY_SHORT_LABELS[category]}
+            </span>
           </button>
         );
       })}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef, useEffect, useState } from "react";
+
 export type TimeRange = "1M" | "3M" | "6M" | "1Y" | "ALL";
 
 type TimeRangeSelectorProps = {
@@ -8,12 +10,12 @@ type TimeRangeSelectorProps = {
   className?: string;
 };
 
-const TIME_RANGES: { value: TimeRange; label: string }[] = [
-  { value: "1M", label: "1M" },
-  { value: "3M", label: "3M" },
-  { value: "6M", label: "6M" },
-  { value: "1Y", label: "1Y" },
-  { value: "ALL", label: "All" },
+const TIME_RANGES: { value: TimeRange; label: string; fullLabel: string }[] = [
+  { value: "1M", label: "1M", fullLabel: "1 month" },
+  { value: "3M", label: "3M", fullLabel: "3 months" },
+  { value: "6M", label: "6M", fullLabel: "6 months" },
+  { value: "1Y", label: "1Y", fullLabel: "1 year" },
+  { value: "ALL", label: "All", fullLabel: "All time" },
 ];
 
 export function TimeRangeSelector({
@@ -21,26 +23,62 @@ export function TimeRangeSelector({
   onChange,
   className = "",
 }: TimeRangeSelectorProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+
+  // Update sliding indicator position
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const buttons = containerRef.current.querySelectorAll("button");
+    const activeIndex = TIME_RANGES.findIndex((r) => r.value === value);
+    const activeButton = buttons[activeIndex] as HTMLElement;
+
+    if (activeButton) {
+      setIndicatorStyle({
+        left: activeButton.offsetLeft,
+        width: activeButton.offsetWidth,
+      });
+    }
+  }, [value]);
+
   return (
     <div
-      className={`inline-flex rounded-lg border border-card-border bg-card-bg p-1 ${className}`}
+      ref={containerRef}
+      className={`relative inline-flex rounded-xl border border-card-border bg-card-bg p-1 elevation-1 ${className}`}
       role="group"
       aria-label="Select time range"
     >
-      {TIME_RANGES.map((range) => (
-        <button
-          key={range.value}
-          onClick={() => onChange(range.value)}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-            value === range.value
-              ? "bg-foreground text-background"
-              : "text-muted hover:text-foreground hover:bg-muted-bg"
-          }`}
-          aria-pressed={value === range.value}
-        >
-          {range.label}
-        </button>
-      ))}
+      {/* Sliding indicator */}
+      <div
+        className="absolute top-1 h-[calc(100%-8px)] rounded-lg bg-foreground transition-all duration-300 ease-out"
+        style={{
+          left: indicatorStyle.left,
+          width: indicatorStyle.width,
+        }}
+        aria-hidden="true"
+      />
+
+      {TIME_RANGES.map((range) => {
+        const isActive = value === range.value;
+        return (
+          <button
+            key={range.value}
+            onClick={() => onChange(range.value)}
+            className={`relative z-10 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors duration-200 tap-target ${
+              isActive
+                ? "text-background"
+                : "text-muted hover:text-foreground"
+            }`}
+            aria-pressed={isActive}
+            title={range.fullLabel}
+          >
+            <span className="relative">
+              {range.label}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }

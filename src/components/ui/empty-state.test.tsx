@@ -12,7 +12,7 @@ describe("EmptyState", () => {
 
   it("renders no-comparison variant with defaults", () => {
     render(<EmptyState variant="no-comparison" />);
-    expect(screen.getByText("Select models to compare")).toBeInTheDocument();
+    expect(screen.getByText("Compare AI models")).toBeInTheDocument();
   });
 
   it("renders no-results variant with defaults", () => {

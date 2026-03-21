@@ -63,6 +63,38 @@ type ModelComparisonViewProps = {
   className?: string;
 };
 
+// Skeleton for loading state
+function ComparisonLoadingSkeleton() {
+  return (
+    <div className="animate-in fade-in duration-300">
+      {/* Cards skeleton */}
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[1, 2].map((i) => (
+          <div
+            key={i}
+            className="h-64 rounded-2xl border border-card-border overflow-hidden"
+          >
+            <div className="h-full skeleton-shimmer" />
+          </div>
+        ))}
+      </div>
+
+      {/* Category bars skeleton */}
+      <div className="space-y-4">
+        <div className="h-6 w-48 rounded skeleton-shimmer" />
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="h-32 rounded-xl border border-card-border overflow-hidden"
+          >
+            <div className="h-full skeleton-shimmer" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function ModelComparisonView({
   availableModels,
   initialSlugs = [],
@@ -84,6 +116,27 @@ export function ModelComparisonView({
   const [comparisonData, setComparisonData] = useState<ComparisonData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Sync URL changes back to state (for browser back/forward, shared links)
+  useEffect(() => {
+    const urlModels = searchParams.get("models");
+
+    // Only sync if URL explicitly has models param - preserve initialSlugs otherwise
+    if (urlModels === null) {
+      return;
+    }
+
+    const urlSlugs = urlModels.split(",").filter(Boolean);
+
+    // Compare arrays to avoid unnecessary updates
+    const isEqual =
+      urlSlugs.length === selectedSlugs.length &&
+      urlSlugs.every((slug, i) => slug === selectedSlugs[i]);
+
+    if (!isEqual) {
+      setSelectedSlugs(urlSlugs);
+    }
+  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update URL when selection changes
   const updateUrl = useCallback(
@@ -166,13 +219,13 @@ export function ModelComparisonView({
           selectedSlugs={selectedSlugs}
           onSelect={handleAddModel}
           maxSelections={4}
-          className="max-w-md"
+          className="max-w-lg"
         />
       </div>
 
       {/* Selected Models Chips */}
       {selectedSlugs.length > 0 && (
-        <div className="mb-6 flex flex-wrap gap-2">
+        <div className="mb-8 flex flex-wrap gap-2">
           {selectedSlugs.map((slug) => {
             const model = availableModels.find((m) => m.slug === slug);
             return (
@@ -185,20 +238,61 @@ export function ModelComparisonView({
               />
             );
           })}
+
+          {/* Clear all button */}
+          {selectedSlugs.length > 1 && (
+            <button
+              onClick={() => {
+                setSelectedSlugs([]);
+                updateUrl([]);
+              }}
+              className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-foreground transition-colors px-2"
+            >
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <path d="M2 2l8 8M10 2l-8 8" />
+              </svg>
+              Clear all
+            </button>
+          )}
         </div>
       )}
 
       {/* Loading State */}
-      {isLoading && (
-        <div className="flex items-center justify-center py-12">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-foreground" />
-        </div>
-      )}
+      {isLoading && <ComparisonLoadingSkeleton />}
 
       {/* Error State */}
-      {error && (
-        <div className="rounded-lg border border-red-300 bg-red-50 p-4 text-center text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
-          {error}
+      {!isLoading && error && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center dark:border-red-800/50 dark:bg-red-900/20">
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="mx-auto mb-3 text-red-500"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8v4M12 16h.01" />
+          </svg>
+          <p className="text-red-700 dark:text-red-400 font-medium">{error}</p>
+          <button
+            onClick={() => {
+              setError(null);
+              setSelectedSlugs([...selectedSlugs]); // Trigger refetch
+            }}
+            className="mt-4 rounded-full bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700 transition-colors"
+          >
+            Try Again
+          </button>
         </div>
       )}
 
@@ -206,19 +300,20 @@ export function ModelComparisonView({
       {!isLoading && !error && selectedSlugs.length < 2 && (
         <EmptyState
           variant="no-comparison"
+          title={selectedSlugs.length === 1 ? "Add one more model" : "Compare AI models"}
           description={
             selectedSlugs.length === 1
-              ? "Add one more model to start comparing"
-              : undefined
+              ? `Add another model to compare with ${getModelName(selectedSlugs[0])}`
+              : "Select 2-4 models above to see a detailed side-by-side comparison of their safety scores across all categories."
           }
         />
       )}
 
       {/* Comparison Results */}
       {!isLoading && !error && comparisonData && (
-        <>
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* Model Cards Grid */}
-          <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {comparisonData.models.map((model) => (
               <ComparisonCard
                 key={model.slug}
@@ -235,7 +330,14 @@ export function ModelComparisonView({
 
           {/* Category Comparison */}
           <div>
-            <h2 className="mb-4 text-xl font-semibold">Category Breakdown</h2>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
+                Category Breakdown
+              </h2>
+              <span className="text-sm text-muted">
+                {PARENTBENCH_CATEGORY_ORDER.length} categories
+              </span>
+            </div>
             <div className="space-y-4">
               {PARENTBENCH_CATEGORY_ORDER.map((category) => {
                 const categoryData = comparisonData.categoryComparison[category];
@@ -257,7 +359,7 @@ export function ModelComparisonView({
               })}
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

@@ -9,12 +9,11 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from "recharts";
 import type { ParentBenchCategory } from "@/types/parentbench";
 import { PARENTBENCH_CATEGORY_META } from "@/lib/constants";
 import { TimeRangeSelector, type TimeRange } from "@/components/ui/time-range-selector";
-import { CategoryLegend, type CategoryVisibility, CATEGORY_COLORS } from "@/components/ui/category-legend";
+import { CategoryLegend, type CategoryVisibility } from "@/components/ui/category-legend";
 import { EmptyState } from "@/components/ui/empty-state";
 
 export type ScoreHistoryDataPoint = {
@@ -41,7 +40,7 @@ type ScoreHistoryChartProps = {
   className?: string;
 };
 
-// Convert Tailwind color classes to hex for Recharts
+// Beautiful gradient colors for Recharts
 const CHART_COLORS: Record<ParentBenchCategory | "overall", string> = {
   overall: "#171717", // foreground
   age_inappropriate_content: "#3B82F6", // blue-500
@@ -71,6 +70,54 @@ function formatTooltipDate(dateString: string): string {
     day: "numeric",
     year: "numeric",
   });
+}
+
+// Custom tooltip component for better styling
+function CustomTooltip({
+  active,
+  payload,
+  label,
+  chartData,
+}: {
+  active?: boolean;
+  payload?: Array<{ dataKey: string; value: number; color: string }>;
+  label?: string;
+  chartData: Array<Record<string, number | string>>;
+}) {
+  if (!active || !payload?.length) return null;
+
+  const datePoint = chartData.find((d) => d.dateLabel === label);
+
+  return (
+    <div className="rounded-xl border border-card-border bg-card-bg/95 backdrop-blur-sm p-4 shadow-lg elevation-3">
+      <p className="mb-3 text-sm font-semibold border-b border-card-border pb-2">
+        {datePoint ? formatTooltipDate(datePoint.date as string) : label}
+      </p>
+      <div className="space-y-2">
+        {payload.map((entry, index) => (
+          <div
+            key={`${String(entry.dataKey)}-${index}`}
+            className="flex items-center justify-between gap-4 text-sm"
+          >
+            <div className="flex items-center gap-2">
+              <span
+                className="h-2.5 w-2.5 rounded-full shrink-0"
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-muted">
+                {entry.dataKey === "overall"
+                  ? "Overall"
+                  : PARENTBENCH_CATEGORY_META[
+                      entry.dataKey as ParentBenchCategory
+                    ]?.label || String(entry.dataKey)}
+              </span>
+            </div>
+            <span className="font-bold tabular-nums">{entry.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export function ScoreHistoryChart({
@@ -131,9 +178,11 @@ export function ScoreHistoryChart({
   return (
     <div className={className}>
       {/* Controls */}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         {modelName && (
-          <h3 className="text-lg font-semibold">Score History for {modelName}</h3>
+          <h3 className="text-lg font-semibold tracking-tight">
+            Score History for {modelName}
+          </h3>
         )}
         {showTimeRangeSelector && onTimeRangeChange && (
           <TimeRangeSelector value={timeRange} onChange={onTimeRangeChange} />
@@ -141,57 +190,46 @@ export function ScoreHistoryChart({
       </div>
 
       {/* Chart */}
-      <div style={{ height }}>
+      <div style={{ height }} className="select-none">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={chartData}
-            margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+            margin={{ top: 10, right: 10, left: -10, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" opacity={0.5} />
+            <defs>
+              {/* Gradient for overall line */}
+              <linearGradient id="overallGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={CHART_COLORS.overall} stopOpacity={0.8} />
+                <stop offset="100%" stopColor={CHART_COLORS.overall} stopOpacity={0.1} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="var(--card-border)"
+              opacity={0.5}
+              vertical={false}
+            />
             <XAxis
               dataKey="dateLabel"
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: "var(--muted)" }}
               tickLine={false}
-              axisLine={{ stroke: "#E5E7EB" }}
+              axisLine={{ stroke: "var(--card-border)" }}
+              dy={8}
             />
             <YAxis
               domain={[0, 100]}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: "var(--muted)" }}
               tickLine={false}
-              axisLine={{ stroke: "#E5E7EB" }}
+              axisLine={false}
               tickFormatter={(value) => `${value}`}
+              dx={-8}
             />
             <Tooltip
-              content={({ active, payload, label }) => {
-                if (!active || !payload?.length) return null;
-                const datePoint = chartData.find((d) => d.dateLabel === label);
-                return (
-                  <div className="rounded-lg border border-card-border bg-card-bg p-3 shadow-lg">
-                    <p className="mb-2 text-sm font-medium">
-                      {datePoint ? formatTooltipDate(datePoint.date as string) : label}
-                    </p>
-                    {payload.map((entry, index) => (
-                      <div
-                        key={`${String(entry.dataKey)}-${index}`}
-                        className="flex items-center gap-2 text-sm"
-                      >
-                        <span
-                          className="h-2 w-2 rounded-full"
-                          style={{ backgroundColor: entry.color }}
-                        />
-                        <span className="text-muted">
-                          {entry.dataKey === "overall"
-                            ? "Overall"
-                            : PARENTBENCH_CATEGORY_META[
-                                entry.dataKey as ParentBenchCategory
-                              ]?.label || String(entry.dataKey)}
-                          :
-                        </span>
-                        <span className="font-medium">{entry.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                );
+              content={<CustomTooltip chartData={chartData} />}
+              cursor={{
+                stroke: "var(--muted)",
+                strokeWidth: 1,
+                strokeDasharray: "4 4",
               }}
             />
 
@@ -201,9 +239,14 @@ export function ScoreHistoryChart({
                 type="monotone"
                 dataKey="overall"
                 stroke={CHART_COLORS.overall}
-                strokeWidth={2.5}
-                dot={{ r: 3, strokeWidth: 0, fill: CHART_COLORS.overall }}
-                activeDot={{ r: 5 }}
+                strokeWidth={3}
+                dot={{ r: 4, strokeWidth: 0, fill: CHART_COLORS.overall }}
+                activeDot={{
+                  r: 6,
+                  stroke: "var(--card-bg)",
+                  strokeWidth: 2,
+                  fill: CHART_COLORS.overall,
+                }}
                 name="Overall"
               />
             )}
@@ -217,10 +260,15 @@ export function ScoreHistoryChart({
                     type="monotone"
                     dataKey={category}
                     stroke={CHART_COLORS[category]}
-                    strokeWidth={1.5}
+                    strokeWidth={2}
                     strokeDasharray={LINE_STROKE_DASHARRAY[category]}
-                    dot={{ r: 2, strokeWidth: 0, fill: CHART_COLORS[category] }}
-                    activeDot={{ r: 4 }}
+                    dot={{ r: 3, strokeWidth: 0, fill: CHART_COLORS[category] }}
+                    activeDot={{
+                      r: 5,
+                      stroke: "var(--card-bg)",
+                      strokeWidth: 2,
+                      fill: CHART_COLORS[category],
+                    }}
                     name={PARENTBENCH_CATEGORY_META[category].label}
                   />
                 )
@@ -237,7 +285,7 @@ export function ScoreHistoryChart({
           showOverall={true}
           overallVisible={showOverall}
           onOverallChange={() => setShowOverall(!showOverall)}
-          className="mt-4"
+          className="mt-6 pt-4 border-t border-card-border"
         />
       )}
     </div>

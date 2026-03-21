@@ -19,10 +19,11 @@ describe("TimeRangeSelector", () => {
     const onChange = vi.fn();
     render(<TimeRangeSelector value="6M" onChange={onChange} />);
 
-    const button6M = screen.getByText("6M");
+    // The aria-pressed is on the button element, which contains the text in a span
+    const button6M = screen.getByText("6M").closest("button");
     expect(button6M).toHaveAttribute("aria-pressed", "true");
 
-    const button1M = screen.getByText("1M");
+    const button1M = screen.getByText("1M").closest("button");
     expect(button1M).toHaveAttribute("aria-pressed", "false");
   });
 

@@ -11,7 +11,8 @@ describe("ScoreDelta", () => {
 
   it("renders negative delta with minus sign", () => {
     render(<ScoreDelta delta={-3.2} />);
-    expect(screen.getByText("-3.2")).toBeInTheDocument();
+    // Uses proper minus sign (−) not hyphen (-)
+    expect(screen.getByText("−3.2")).toBeInTheDocument();
   });
 
   it("renders zero delta without sign", () => {
