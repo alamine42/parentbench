@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { getModelBySlug, getModelScoreHistory } from "@/db/queries/models";
+import {
+  getModelBySlug,
+  getModelScoreHistoryWithCategories,
+  calculateScoreTrend,
+  type TimeRange,
+} from "@/db/queries/models";
 
 type Params = {
   params: Promise<{ slug: string }>;
@@ -7,7 +12,13 @@ type Params = {
 
 /**
  * GET /api/internal/models/[slug]/scores
- * Returns score history for a model
+ *
+ * Returns score history for a model with category breakdown.
+ *
+ * Query params:
+ * - range: "1M" | "3M" | "6M" | "1Y" | "ALL" (default: "ALL")
+ * - limit: number (default: 100)
+ * - categories: boolean - include category scores (default: true)
  */
 export async function GET(request: Request, { params }: Params) {
   try {
@@ -26,18 +37,51 @@ export async function GET(request: Request, { params }: Params) {
       );
     }
 
-    // Get URL params for limit
+    // Parse URL params
     const url = new URL(request.url);
-    const limit = parseInt(url.searchParams.get("limit") || "30", 10);
+    const rangeParam = url.searchParams.get("range")?.toUpperCase() || "ALL";
+    const limit = parseInt(url.searchParams.get("limit") || "100", 10);
+    const includeCategories = url.searchParams.get("categories") !== "false";
 
-    const history = await getModelScoreHistory(model.id, limit);
+    // Validate time range
+    const validRanges: TimeRange[] = ["1M", "3M", "6M", "1Y", "ALL"];
+    const timeRange: TimeRange = validRanges.includes(rangeParam as TimeRange)
+      ? (rangeParam as TimeRange)
+      : "ALL";
+
+    // Fetch history and trend in parallel
+    const [history, trend] = await Promise.all([
+      getModelScoreHistoryWithCategories(model.id, { timeRange, limit }),
+      calculateScoreTrend(model.id, timeRange),
+    ]);
+
+    // Transform history data
+    const historyData = history.map((entry) => ({
+      date: entry.computedAt.toISOString(),
+      overallScore: entry.overallScore,
+      overallGrade: entry.overallGrade,
+      ...(includeCategories && { categoryScores: entry.categoryScores }),
+    }));
+
+    // Reverse to get chronological order (oldest first) for charts
+    historyData.reverse();
 
     return NextResponse.json({
       success: true,
       data: {
+        modelId: model.id,
         modelSlug: slug,
         modelName: model.name,
-        history,
+        provider: model.provider,
+        timeRange,
+        history: historyData,
+        trend: {
+          direction: trend.direction,
+          changePercent: trend.changePercent,
+          changeAbsolute: trend.changeAbsolute,
+          periodStart: trend.periodStart?.toISOString() ?? null,
+          periodEnd: trend.periodEnd?.toISOString() ?? null,
+        },
       },
     });
   } catch (error) {

@@ -88,9 +88,30 @@ export default async function ModelPage({ params }: Props) {
             <LetterGradeBadge grade={parentBenchResult.overallGrade} size="lg" />
           </div>
         </div>
-        <p className="mt-4 text-sm text-muted">
-          Evaluated on {new Date(parentBenchResult.evaluatedDate).toLocaleDateString("en-US")} · Methodology v{parentBenchResult.methodologyVersion}
-        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-4">
+          <p className="text-sm text-muted">
+            Evaluated on {new Date(parentBenchResult.evaluatedDate).toLocaleDateString("en-US")} · Methodology v{parentBenchResult.methodologyVersion}
+          </p>
+          <Link
+            href={`/model/${slug}/history`}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 3v18h18" />
+              <path d="M7 12l4-4 4 4 5-5" />
+            </svg>
+            View score history
+          </Link>
+        </div>
       </header>
 
       <section className="mt-8 rounded-2xl border border-card-border bg-card-bg p-6">
