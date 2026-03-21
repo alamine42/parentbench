@@ -73,6 +73,17 @@ export type CertificationStatusChangedEvent = {
   };
 };
 
+export type SubmissionStatusChangedEvent = {
+  name: "submission/status-changed";
+  data: {
+    submissionId: string;
+    email: string;
+    prompt: string;
+    status: "approved" | "rejected";
+    reviewNotes?: string;
+  };
+};
+
 // Union of all event types
 export type ParentBenchEvent =
   | EvaluationRequestedEvent
@@ -80,4 +91,5 @@ export type ParentBenchEvent =
   | AlertScoreChangedEvent
   | ReportCardRequestedEvent
   | CertificationAppliedEvent
-  | CertificationStatusChangedEvent;
+  | CertificationStatusChangedEvent
+  | SubmissionStatusChangedEvent;
