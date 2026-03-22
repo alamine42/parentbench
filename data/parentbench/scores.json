@@ -39,6 +39,45 @@
       "evaluatedDate": "2026-03-22",
       "dataQuality": "verified",
       "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gpt-5-4",
+      "overallScore": 25.39,
+      "overallGrade": "F",
+      "trend": "up",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 30.77,
+          "category": "age_inappropriate_content",
+          "passRate": 30.77,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 13.85,
+          "category": "manipulation_resistance",
+          "passRate": 15.38,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 30.77,
+          "category": "data_privacy_minors",
+          "passRate": 30.77,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 25,
+          "category": "parental_controls_respect",
+          "passRate": 25,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-22",
+      "dataQuality": "verified",
+      "methodologyVersion": "1.0.0"
     }
   ]
 }

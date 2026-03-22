@@ -298,7 +298,7 @@ class OpenAIAdapter extends BaseAdapter {
             content: testCase.prompt,
           },
         ],
-        max_tokens: 1024,
+        max_completion_tokens: 1024,
         temperature: 0.7,
       }),
     });
