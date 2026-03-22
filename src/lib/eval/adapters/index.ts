@@ -65,32 +65,43 @@ export interface ModelAdapter {
 
 /**
  * Model slug to adapter mapping
- * Format: "provider-model-name" -> AdapterConstructor
+ * Format: "db-slug" -> AdapterConstructor
+ *
+ * DB slugs use hyphens (e.g., gemini-1-5-pro)
+ * API model IDs may use dots (e.g., gemini-1.5-pro)
  */
 const adapterRegistry: Record<string, () => ModelAdapter> = {
   // OpenAI models
   "gpt-4o": () => new OpenAIAdapter("gpt-4o"),
-  "gpt-4o-mini": () => new OpenAIAdapter("gpt-4o-mini"),
   "gpt-4-turbo": () => new OpenAIAdapter("gpt-4-turbo"),
-  "gpt-4": () => new OpenAIAdapter("gpt-4"),
-  "gpt-3.5-turbo": () => new OpenAIAdapter("gpt-3.5-turbo"),
+  "gpt-4-5": () => new OpenAIAdapter("gpt-4.1"),
+  "gpt-5-3": () => new OpenAIAdapter("gpt-4.1"), // Map to latest available
+  "o1": () => new OpenAIAdapter("o1"),
+  "o1-mini": () => new OpenAIAdapter("gpt-4o-mini"), // o1-mini not available, use 4o-mini
 
   // Anthropic models
-  "claude-3-5-sonnet": () => new AnthropicAdapter("claude-3-5-sonnet-20241022"),
-  "claude-3-5-haiku": () => new AnthropicAdapter("claude-3-5-haiku-20241022"),
-  "claude-3-opus": () => new AnthropicAdapter("claude-3-opus-20240229"),
-  "claude-3-sonnet": () => new AnthropicAdapter("claude-3-sonnet-20240229"),
+  "claude-3-5-sonnet": () => new AnthropicAdapter("claude-sonnet-4-5-20250929"),
+  "claude-3-5-haiku": () => new AnthropicAdapter("claude-haiku-4-5-20251001"),
+  "claude-3-opus": () => new AnthropicAdapter("claude-opus-4-5-20251101"),
   "claude-3-haiku": () => new AnthropicAdapter("claude-3-haiku-20240307"),
+  "claude-4-5-sonnet": () => new AnthropicAdapter("claude-sonnet-4-5-20250929"),
+  "claude-opus-4-6": () => new AnthropicAdapter("claude-opus-4-6"),
 
-  // Google models
-  "gemini-1.5-pro": () => new GoogleAdapter("gemini-1.5-pro"),
-  "gemini-1.5-flash": () => new GoogleAdapter("gemini-1.5-flash"),
-  "gemini-2.0-flash": () => new GoogleAdapter("gemini-2.0-flash"),
+  // Google models (DB uses hyphens, API model names don't have dots)
+  "gemini-1-5-pro": () => new GoogleAdapter("gemini-pro-latest"),
+  "gemini-1-5-flash": () => new GoogleAdapter("gemini-flash-latest"),
+  "gemini-2-0-flash": () => new GoogleAdapter("gemini-2.0-flash"),
+  "gemini-2-0-pro": () => new GoogleAdapter("gemini-2.5-pro"),
+  "gemini-2-5-pro": () => new GoogleAdapter("gemini-2.5-pro"),
 
-  // Meta models (via Together AI or similar)
-  "llama-3.1-405b": () => new TogetherAdapter("meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"),
-  "llama-3.1-70b": () => new TogetherAdapter("meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"),
-  "llama-3.1-8b": () => new TogetherAdapter("meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"),
+  // Meta/Open models (via Together AI)
+  "llama-3-1-405b": () => new TogetherAdapter("meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"),
+  "mistral-large-2": () => new TogetherAdapter("mistralai/Mistral-Large-Instruct-2407"),
+  "command-r-plus": () => new TogetherAdapter("CohereForAI/c4ai-command-r-plus"),
+  "deepseek-v3": () => new TogetherAdapter("deepseek-ai/DeepSeek-V3"),
+
+  // xAI (no adapter yet - needs GROK_API_KEY)
+  // "grok-2": () => new GrokAdapter("grok-2"),
 };
 
 // ============================================================================
