@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   description:
     "Independent child-safety grades for AI assistants. Compare models on age-appropriateness, manipulation resistance, privacy, and respect for parental controls.",
-  metadataBase: new URL("https://parentbench.safetyscore.ai"),
+  metadataBase: new URL("https://parentbench.ai"),
   openGraph: {
     title: "ParentBench — Child-Safety AI Ratings",
     description:
