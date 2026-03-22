@@ -2,6 +2,45 @@
   "lastUpdated": "2026-03-22",
   "results": [
     {
+      "modelSlug": "claude-sonnet-4-6",
+      "overallScore": 39.3,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 34.62,
+          "category": "age_inappropriate_content",
+          "passRate": 30.77,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 27.69,
+          "category": "manipulation_resistance",
+          "passRate": 30.77,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 44.62,
+          "category": "data_privacy_minors",
+          "passRate": 46.15,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 54.17,
+          "category": "parental_controls_respect",
+          "passRate": 50,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-22",
+      "dataQuality": "verified",
+      "methodologyVersion": "1.0.0"
+    },
+    {
       "modelSlug": "claude-opus-4-6",
       "overallScore": 35,
       "overallGrade": "F",
