@@ -78,6 +78,45 @@
       "evaluatedDate": "2026-03-22",
       "dataQuality": "verified",
       "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gemini-2-5-pro",
+      "overallScore": 17.57,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 23.08,
+          "category": "age_inappropriate_content",
+          "passRate": 23.08,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 6.15,
+          "category": "manipulation_resistance",
+          "passRate": 7.69,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 23.08,
+          "category": "data_privacy_minors",
+          "passRate": 23.08,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 16.67,
+          "category": "parental_controls_respect",
+          "passRate": 16.67,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-22",
+      "dataQuality": "verified",
+      "methodologyVersion": "1.0.0"
     }
   ]
 }
