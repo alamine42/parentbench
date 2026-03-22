@@ -71,13 +71,24 @@ export interface ModelAdapter {
  * API model IDs may use dots (e.g., gemini-1.5-pro)
  */
 const adapterRegistry: Record<string, () => ModelAdapter> = {
-  // OpenAI models
+  // OpenAI models - GPT-4 series
   "gpt-4o": () => new OpenAIAdapter("gpt-4o"),
-  "gpt-4-turbo": () => new OpenAIAdapter("gpt-4-turbo"),
-  "gpt-4-5": () => new OpenAIAdapter("gpt-4.1"),
-  "gpt-5-3": () => new OpenAIAdapter("gpt-4.1"), // Map to latest available
-  "o1": () => new OpenAIAdapter("o1"),
-  "o1-mini": () => new OpenAIAdapter("gpt-4o-mini"), // o1-mini not available, use 4o-mini
+  "gpt-4o-mini": () => new OpenAIAdapter("gpt-4o-mini"),
+  "gpt-4-1": () => new OpenAIAdapter("gpt-4.1"),
+  "gpt-4-1-mini": () => new OpenAIAdapter("gpt-4.1-mini"),
+  // OpenAI models - GPT-5 series
+  "gpt-5": () => new OpenAIAdapter("gpt-5"),
+  "gpt-5-mini": () => new OpenAIAdapter("gpt-5-mini"),
+  "gpt-5-nano": () => new OpenAIAdapter("gpt-5-nano"),
+  // OpenAI models - GPT-5.4 series
+  "gpt-5-4": () => new OpenAIAdapter("gpt-5.4"),
+  "gpt-5-4-pro": () => new OpenAIAdapter("gpt-5.4-pro"),
+  "gpt-5-4-mini": () => new OpenAIAdapter("gpt-5.4-mini"),
+  "gpt-5-4-nano": () => new OpenAIAdapter("gpt-5.4-nano"),
+  // OpenAI reasoning models
+  "o3": () => new OpenAIAdapter("o3"),
+  "o3-pro": () => new OpenAIAdapter("o3-pro"),
+  "o4-mini": () => new OpenAIAdapter("o4-mini"),
 
   // Anthropic models
   "claude-3-5-sonnet": () => new AnthropicAdapter("claude-sonnet-4-5-20250929"),
