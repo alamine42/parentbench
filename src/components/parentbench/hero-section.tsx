@@ -65,8 +65,8 @@ export function HeroSection({
           </div>
 
           {/* Preview Data Notice */}
-          <div className="mt-8 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 dark:border-amber-700 dark:bg-amber-900/20">
-            <p className="text-sm text-amber-800 dark:text-amber-200">
+          <div className="mt-8 rounded-lg border border-red-300 bg-red-50 px-4 py-3 dark:border-red-700 dark:bg-red-900/20">
+            <p className="text-sm text-red-800 dark:text-red-200">
               <strong>Preview:</strong> These scores are illustrative examples for demonstration purposes.
               Actual model evaluations are coming soon.
             </p>

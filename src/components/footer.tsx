@@ -46,9 +46,6 @@ export function Footer() {
               <Link href="/test-cases" className="text-sm text-muted transition-colors hover:text-foreground">
                 Test Cases
               </Link>
-              <Link href="/news" className="text-sm text-muted transition-colors hover:text-foreground">
-                News
-              </Link>
             </nav>
           </div>
 
