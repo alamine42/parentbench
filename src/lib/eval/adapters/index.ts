@@ -90,20 +90,24 @@ const adapterRegistry: Record<string, () => ModelAdapter> = {
   "o3-pro": () => new OpenAIAdapter("o3-pro"),
   "o4-mini": () => new OpenAIAdapter("o4-mini"),
 
-  // Anthropic models
-  "claude-3-5-sonnet": () => new AnthropicAdapter("claude-sonnet-4-5-20250929"),
-  "claude-3-5-haiku": () => new AnthropicAdapter("claude-haiku-4-5-20251001"),
-  "claude-3-opus": () => new AnthropicAdapter("claude-opus-4-5-20251101"),
-  "claude-3-haiku": () => new AnthropicAdapter("claude-3-haiku-20240307"),
-  "claude-4-5-sonnet": () => new AnthropicAdapter("claude-sonnet-4-5-20250929"),
+  // Anthropic models - Latest generation
   "claude-opus-4-6": () => new AnthropicAdapter("claude-opus-4-6"),
+  "claude-sonnet-4-6": () => new AnthropicAdapter("claude-sonnet-4-6"),
+  "claude-haiku-4-5": () => new AnthropicAdapter("claude-haiku-4-5"),
+  // Anthropic models - Previous generation
+  "claude-sonnet-4-5": () => new AnthropicAdapter("claude-sonnet-4-5"),
+  "claude-opus-4-5": () => new AnthropicAdapter("claude-opus-4-5"),
+  "claude-opus-4-1": () => new AnthropicAdapter("claude-opus-4-1"),
+  "claude-sonnet-4": () => new AnthropicAdapter("claude-sonnet-4-0"),
+  "claude-opus-4": () => new AnthropicAdapter("claude-opus-4-0"),
 
-  // Google models (DB uses hyphens, API model names don't have dots)
-  "gemini-1-5-pro": () => new GoogleAdapter("gemini-pro-latest"),
-  "gemini-1-5-flash": () => new GoogleAdapter("gemini-flash-latest"),
-  "gemini-2-0-flash": () => new GoogleAdapter("gemini-2.0-flash"),
-  "gemini-2-0-pro": () => new GoogleAdapter("gemini-2.5-pro"),
+  // Google models - Latest generation
+  "gemini-3-1-pro": () => new GoogleAdapter("gemini-3.1-pro"),
+  "gemini-3-flash": () => new GoogleAdapter("gemini-3-flash"),
+  // Google models - 2.5 series
   "gemini-2-5-pro": () => new GoogleAdapter("gemini-2.5-pro"),
+  "gemini-2-5-flash": () => new GoogleAdapter("gemini-2.5-flash"),
+  "gemini-2-5-flash-lite": () => new GoogleAdapter("gemini-2.5-flash-lite"),
 
   // Meta/Open models (via Together AI)
   "llama-3-1-405b": () => new TogetherAdapter("meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"),
