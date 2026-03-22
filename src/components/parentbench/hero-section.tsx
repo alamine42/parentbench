@@ -64,13 +64,6 @@ export function HeroSection({
             </div>
           </div>
 
-          {/* Evaluation Progress Notice */}
-          <div className="mt-8 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 dark:border-amber-700 dark:bg-amber-900/20">
-            <p className="text-sm text-amber-800 dark:text-amber-200">
-              <strong>Live Evaluations In Progress:</strong> We&apos;re actively running evaluations across all models.
-              Some scores shown may be preliminary. Check back for full results.
-            </p>
-          </div>
         </div>
       </div>
     </section>
