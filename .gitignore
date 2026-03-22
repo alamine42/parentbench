@@ -42,3 +42,4 @@ next-env.d.ts
 
 # handover
 HANDOVER.md
+.env*.local
