@@ -1,6 +1,216 @@
 {
-  "lastUpdated": "2025-02-16",
+  "lastUpdated": "2026-03-23",
   "models": [
+    {
+      "slug": "claude-haiku-4-5",
+      "name": "Claude Haiku 4.5",
+      "provider": {
+        "name": "Anthropic",
+        "slug": "anthropic",
+        "logo": "/logos/anthropic.svg"
+      },
+      "releaseDate": "2026-01-15",
+      "parameterCount": null,
+      "overallScore": 61.73,
+      "overallGrade": "D-",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "claude-sonnet-4-5",
+      "name": "Claude Sonnet 4.5",
+      "provider": {
+        "name": "Anthropic",
+        "slug": "anthropic",
+        "logo": "/logos/anthropic.svg"
+      },
+      "releaseDate": "2026-01-20",
+      "parameterCount": null,
+      "overallScore": 56.47,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "claude-sonnet-4",
+      "name": "Claude Sonnet 4",
+      "provider": {
+        "name": "Anthropic",
+        "slug": "anthropic",
+        "logo": "/logos/anthropic.svg"
+      },
+      "releaseDate": "2025-10-01",
+      "parameterCount": null,
+      "overallScore": 46.27,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "claude-sonnet-4-6",
+      "name": "Claude Sonnet 4.6",
+      "provider": {
+        "name": "Anthropic",
+        "slug": "anthropic",
+        "logo": "/logos/anthropic.svg"
+      },
+      "releaseDate": "2026-02-01",
+      "parameterCount": null,
+      "overallScore": 45.68,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "claude-opus-4-5",
+      "name": "Claude Opus 4.5",
+      "provider": {
+        "name": "Anthropic",
+        "slug": "anthropic",
+        "logo": "/logos/anthropic.svg"
+      },
+      "releaseDate": "2026-01-20",
+      "parameterCount": null,
+      "overallScore": 46.27,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "claude-opus-4",
+      "name": "Claude Opus 4",
+      "provider": {
+        "name": "Anthropic",
+        "slug": "anthropic",
+        "logo": "/logos/anthropic.svg"
+      },
+      "releaseDate": "2025-10-01",
+      "parameterCount": null,
+      "overallScore": 44.9,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "claude-opus-4-1",
+      "name": "Claude Opus 4.1",
+      "provider": {
+        "name": "Anthropic",
+        "slug": "anthropic",
+        "logo": "/logos/anthropic.svg"
+      },
+      "releaseDate": "2025-11-01",
+      "parameterCount": null,
+      "overallScore": 44.31,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gpt-4-1",
+      "name": "GPT-4.1",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/logos/openai.svg"
+      },
+      "releaseDate": "2025-08-01",
+      "parameterCount": null,
+      "overallScore": 47.45,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gpt-4-1-mini",
+      "name": "GPT-4.1 Mini",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/logos/openai.svg"
+      },
+      "releaseDate": "2025-08-01",
+      "parameterCount": null,
+      "overallScore": 36.08,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gpt-5-4",
+      "name": "GPT-5.4",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/logos/openai.svg"
+      },
+      "releaseDate": "2026-02-15",
+      "parameterCount": null,
+      "overallScore": 42.94,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gpt-5-4-mini",
+      "name": "GPT-5.4 Mini",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/logos/openai.svg"
+      },
+      "releaseDate": "2026-02-15",
+      "parameterCount": null,
+      "overallScore": 35.69,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gpt-5-4-nano",
+      "name": "GPT-5.4 Nano",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/logos/openai.svg"
+      },
+      "releaseDate": "2026-02-15",
+      "parameterCount": null,
+      "overallScore": 39.02,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gemini-2-5-flash",
+      "name": "Gemini 2.5 Flash",
+      "provider": {
+        "name": "Google",
+        "slug": "google",
+        "logo": "/logos/google.svg"
+      },
+      "releaseDate": "2026-01-01",
+      "parameterCount": null,
+      "overallScore": 47.25,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gemini-2-5-flash-lite",
+      "name": "Gemini 2.5 Flash Lite",
+      "provider": {
+        "name": "Google",
+        "slug": "google",
+        "logo": "/logos/google.svg"
+      },
+      "releaseDate": "2026-01-01",
+      "parameterCount": null,
+      "overallScore": 51.96,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
     {
       "slug": "claude-3-5-sonnet",
       "name": "Claude 3.5 Sonnet",
@@ -45,6 +255,21 @@
         "straight_talk": 78
       },
       "evaluatedDate": "2025-02-16",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gpt-4o-mini",
+      "name": "GPT-4o Mini",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/logos/openai.svg"
+      },
+      "releaseDate": "2024-07-18",
+      "parameterCount": null,
+      "overallScore": 44.12,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
       "dataQuality": "verified"
     },
     {

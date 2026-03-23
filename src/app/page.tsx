@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { HeroSection } from "@/components/parentbench/hero-section";
 import { NewsletterSignup } from "@/components/newsletter-signup";
 import { LetterGradeBadge } from "@/components/ui/letter-grade";
@@ -51,10 +52,21 @@ export default async function HomePage() {
               className="rounded-2xl border border-card-border bg-card-bg p-5 shadow-sm transition hover:shadow-lg"
             >
               <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted">#{index + 1}</p>
-                  <h3 className="text-lg font-semibold">{score.modelName}</h3>
-                  <p className="text-sm text-muted">{score.provider?.name ?? "Unknown provider"}</p>
+                <div className="flex items-start gap-3">
+                  {score.provider?.logo && (
+                    <Image
+                      src={score.provider.logo}
+                      alt={score.provider.name}
+                      width={40}
+                      height={40}
+                      className="rounded-lg shrink-0"
+                    />
+                  )}
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">#{index + 1}</p>
+                    <h3 className="text-lg font-semibold">{score.modelName}</h3>
+                    <p className="text-sm text-muted">{score.provider?.name ?? "Unknown provider"}</p>
+                  </div>
                 </div>
                 <LetterGradeBadge grade={score.overallGrade} size="sm" />
               </div>

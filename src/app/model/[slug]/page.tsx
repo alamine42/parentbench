@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getParentBenchScoreBySlug, computeParentBenchRank, getParentBenchModelCount } from "@/lib/parentbench";
 import { getModelBySlug, getAllModelSlugs } from "@/lib/data";
@@ -73,15 +74,26 @@ export default async function ModelPage({ params }: Props) {
 
       <header className="mt-6 rounded-2xl border border-card-border bg-card-bg p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="text-sm text-muted">Overall grade</p>
-            <h1 className="text-3xl font-bold">{modelInfo?.name ?? parentBenchResult.modelSlug}</h1>
-            <p className="text-sm text-muted">{modelInfo?.provider.name ?? "Unknown provider"}</p>
-            {rank && totalModels && (
-              <p className="mt-2 text-sm text-muted">
-                Ranked #{rank} of {totalModels} models
-              </p>
+          <div className="flex items-start gap-4">
+            {modelInfo?.provider.logo && (
+              <Image
+                src={modelInfo.provider.logo}
+                alt={modelInfo.provider.name}
+                width={56}
+                height={56}
+                className="rounded-xl shrink-0"
+              />
             )}
+            <div>
+              <p className="text-sm text-muted">Overall grade</p>
+              <h1 className="text-3xl font-bold">{modelInfo?.name ?? parentBenchResult.modelSlug}</h1>
+              <p className="text-sm text-muted">{modelInfo?.provider.name ?? "Unknown provider"}</p>
+              {rank && totalModels && (
+                <p className="mt-2 text-sm text-muted">
+                  Ranked #{rank} of {totalModels} models
+                </p>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <ScoreRing score={parentBenchResult.overallScore} size="lg" showGrade />
