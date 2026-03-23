@@ -1,6 +1,279 @@
 {
-  "lastUpdated": "2026-03-22",
+  "lastUpdated": "2026-03-23",
   "results": [
+    {
+      "modelSlug": "claude-haiku-4-5",
+      "overallScore": 61.73,
+      "overallGrade": "D-",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "D-",
+          "score": 61.54,
+          "category": "age_inappropriate_content",
+          "passRate": 61.54,
+          "testCount": 13
+        },
+        {
+          "grade": "C+",
+          "score": 78.46,
+          "category": "manipulation_resistance",
+          "passRate": 84.62,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 44.62,
+          "category": "data_privacy_minors",
+          "passRate": 46.15,
+          "testCount": 13
+        },
+        {
+          "grade": "D-",
+          "score": 62.5,
+          "category": "parental_controls_respect",
+          "passRate": 58.33,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "claude-sonnet-4-5",
+      "overallScore": 56.47,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 53.85,
+          "category": "age_inappropriate_content",
+          "passRate": 53.85,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 35.38,
+          "category": "manipulation_resistance",
+          "passRate": 38.46,
+          "testCount": 13
+        },
+        {
+          "grade": "D+",
+          "score": 69.23,
+          "category": "data_privacy_minors",
+          "passRate": 69.23,
+          "testCount": 13
+        },
+        {
+          "grade": "C-",
+          "score": 70.83,
+          "category": "parental_controls_respect",
+          "passRate": 66.67,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gemini-2-5-flash-lite",
+      "overallScore": 48.68,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "D-",
+          "score": 62.31,
+          "category": "age_inappropriate_content",
+          "passRate": 61.54,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 40,
+          "category": "manipulation_resistance",
+          "passRate": 46.15,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 44.62,
+          "category": "data_privacy_minors",
+          "passRate": 46.15,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 44.17,
+          "category": "parental_controls_respect",
+          "passRate": 41.67,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gemini-2-5-flash",
+      "overallScore": 46.78,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "C",
+          "score": 75.38,
+          "category": "age_inappropriate_content",
+          "passRate": 76.92,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 23.08,
+          "category": "manipulation_resistance",
+          "passRate": 23.08,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 36.92,
+          "category": "data_privacy_minors",
+          "passRate": 38.46,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 45.83,
+          "category": "parental_controls_respect",
+          "passRate": 41.67,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gpt-4-1",
+      "overallScore": 44.74,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 46.15,
+          "category": "age_inappropriate_content",
+          "passRate": 46.15,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 15.38,
+          "category": "manipulation_resistance",
+          "passRate": 15.38,
+          "testCount": 13
+        },
+        {
+          "grade": "D-",
+          "score": 61.54,
+          "category": "data_privacy_minors",
+          "passRate": 61.54,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 58.33,
+          "category": "parental_controls_respect",
+          "passRate": 58.33,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "claude-opus-4-5",
+      "overallScore": 41.92,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 38.46,
+          "category": "age_inappropriate_content",
+          "passRate": 38.46,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 43.08,
+          "category": "manipulation_resistance",
+          "passRate": 46.15,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 38.46,
+          "category": "data_privacy_minors",
+          "passRate": 38.46,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 50,
+          "category": "parental_controls_respect",
+          "passRate": 50,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "claude-sonnet-4",
+      "overallScore": 39.61,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 34.62,
+          "category": "age_inappropriate_content",
+          "passRate": 30.77,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 29.23,
+          "category": "manipulation_resistance",
+          "passRate": 30.77,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 52.31,
+          "category": "data_privacy_minors",
+          "passRate": 53.85,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 44.17,
+          "category": "parental_controls_respect",
+          "passRate": 41.67,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
     {
       "modelSlug": "claude-sonnet-4-6",
       "overallScore": 39.3,
@@ -80,6 +353,162 @@
       "methodologyVersion": "1.0.0"
     },
     {
+      "modelSlug": "gpt-4o",
+      "overallScore": 32.88,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 46.15,
+          "category": "age_inappropriate_content",
+          "passRate": 46.15,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 15.38,
+          "category": "manipulation_resistance",
+          "passRate": 15.38,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 40.77,
+          "category": "data_privacy_minors",
+          "passRate": 38.46,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 25,
+          "category": "parental_controls_respect",
+          "passRate": 25,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "claude-opus-4",
+      "overallScore": 31.86,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 38.46,
+          "category": "age_inappropriate_content",
+          "passRate": 38.46,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 13.85,
+          "category": "manipulation_resistance",
+          "passRate": 15.38,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 50.77,
+          "category": "data_privacy_minors",
+          "passRate": 53.85,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 20.83,
+          "category": "parental_controls_respect",
+          "passRate": 16.67,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "claude-opus-4-1",
+      "overallScore": 31.6,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 42.31,
+          "category": "age_inappropriate_content",
+          "passRate": 38.46,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 13.85,
+          "category": "manipulation_resistance",
+          "passRate": 15.38,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 38.46,
+          "category": "data_privacy_minors",
+          "passRate": 38.46,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 29.17,
+          "category": "parental_controls_respect",
+          "passRate": 25,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gpt-4o-mini",
+      "overallScore": 28.91,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 34.62,
+          "category": "age_inappropriate_content",
+          "passRate": 30.77,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 6.15,
+          "category": "manipulation_resistance",
+          "passRate": 7.69,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 44.62,
+          "category": "data_privacy_minors",
+          "passRate": 46.15,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 29.17,
+          "category": "parental_controls_respect",
+          "passRate": 25,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
       "modelSlug": "gpt-5-4",
       "overallScore": 25.39,
       "overallGrade": "F",
@@ -119,6 +548,84 @@
       "methodologyVersion": "1.0.0"
     },
     {
+      "modelSlug": "gpt-5-4-nano",
+      "overallScore": 25.26,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 30.77,
+          "category": "age_inappropriate_content",
+          "passRate": 30.77,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 15.38,
+          "category": "manipulation_resistance",
+          "passRate": 15.38,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 15.38,
+          "category": "data_privacy_minors",
+          "passRate": 15.38,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 41.67,
+          "category": "parental_controls_respect",
+          "passRate": 41.67,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gpt-4-1-mini",
+      "overallScore": 22.95,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 46.15,
+          "category": "age_inappropriate_content",
+          "passRate": 46.15,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 0,
+          "category": "manipulation_resistance",
+          "passRate": 0,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 23.08,
+          "category": "data_privacy_minors",
+          "passRate": 23.08,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 16.67,
+          "category": "parental_controls_respect",
+          "passRate": 16.67,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
+      "methodologyVersion": "1.0.0"
+    },
+    {
       "modelSlug": "gemini-2-5-pro",
       "overallScore": 17.57,
       "overallGrade": "F",
@@ -155,6 +662,45 @@
       ],
       "evaluatedDate": "2026-03-22",
       "dataQuality": "verified",
+      "methodologyVersion": "1.0.0"
+    },
+    {
+      "modelSlug": "gpt-5-4-mini",
+      "overallScore": 16.34,
+      "overallGrade": "F",
+      "trend": "new",
+      "categoryScores": [
+        {
+          "grade": "F",
+          "score": 26.92,
+          "category": "age_inappropriate_content",
+          "passRate": 23.08,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 7.69,
+          "category": "manipulation_resistance",
+          "passRate": 7.69,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 15.38,
+          "category": "data_privacy_minors",
+          "passRate": 15.38,
+          "testCount": 13
+        },
+        {
+          "grade": "F",
+          "score": 12.5,
+          "category": "parental_controls_respect",
+          "passRate": 8.33,
+          "testCount": 12
+        }
+      ],
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "estimated",
       "methodologyVersion": "1.0.0"
     }
   ]
