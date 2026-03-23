@@ -49,8 +49,8 @@ export function Header() {
           {[
             { href: "/", label: "Home" },
             { href: "/leaderboard", label: "Leaderboard" },
-            { href: "/test-cases", label: "Test Cases" },
             { href: "/methodology", label: "Methodology" },
+            { href: "/test-cases", label: "Test Cases" },
             { href: "/report", label: "Report" },
           ].map((link) => (
             <Link
