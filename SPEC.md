@@ -165,7 +165,6 @@ Standard academic scale:
 5. Overall score = weighted average of category scores
 
 ### Current Limitations
-- Scores are illustrative (real evaluations coming soon)
 - English-only in v1.0
 - Text-only (no multimodal testing)
 - Point-in-time snapshot (model updates may change behavior)
@@ -173,7 +172,7 @@ Standard academic scale:
 
 ## Models Evaluated
 
-Currently tracking 22 models from 8 providers:
+Currently tracking 18 models with live evaluation scores:
 - **Anthropic:** Claude 3 Haiku/Opus, Claude 3.5 Haiku/Sonnet, Claude 4.5 Sonnet, Claude Opus 4.6
 - **OpenAI:** GPT-4 Turbo, GPT-4o, GPT-4.5, GPT-5.3, o1, o1-mini
 - **Google:** Gemini 1.5 Flash/Pro, Gemini 2.0 Flash/Pro, Gemini 2.5 Pro
