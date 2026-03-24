@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { NewsletterSignup } from "./newsletter-signup";
+import { NewsletterSignup, NEWSLETTER_ENABLED } from "./newsletter-signup";
 
 export function Footer() {
   return (
@@ -49,16 +49,18 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Newsletter */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <h3 className="font-semibold">Stay Updated</h3>
-            <p className="mt-2 text-sm text-muted">
-              Get notified when we publish fresh evaluations or update the methodology.
-            </p>
-            <div className="mt-3">
-              <NewsletterSignup variant="compact" />
+          {/* Newsletter - hidden until feature is enabled (parentbench-ffa.11) */}
+          {NEWSLETTER_ENABLED && (
+            <div className="sm:col-span-2 lg:col-span-1">
+              <h3 className="font-semibold">Stay Updated</h3>
+              <p className="mt-2 text-sm text-muted">
+                Get notified when we publish fresh evaluations or update the methodology.
+              </p>
+              <div className="mt-3">
+                <NewsletterSignup variant="compact" />
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="mt-8 border-t border-card-border pt-6">

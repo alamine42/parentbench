@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { HeroSection } from "@/components/parentbench/hero-section";
-import { NewsletterSignup } from "@/components/newsletter-signup";
+import { NewsletterSignup, NEWSLETTER_ENABLED } from "@/components/newsletter-signup";
 import { LetterGradeBadge } from "@/components/ui/letter-grade";
 import { ScoreRing } from "@/components/ui/score-ring";
 import { ColorBar } from "@/components/ui/color-bar";
@@ -155,21 +155,24 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <div className="grid gap-8 rounded-2xl border border-card-border bg-card-bg p-8 lg:grid-cols-2">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-muted">Stay in the loop</p>
-            <h2 className="mt-2 text-3xl font-bold">Get new safety grades in your inbox.</h2>
-            <p className="mt-2 text-muted">
-              We only email when we publish new model evaluations, release methodology updates, or open-source new test cases.
-            </p>
+      {/* Newsletter section - hidden until feature is enabled (parentbench-ffa.11) */}
+      {NEWSLETTER_ENABLED && (
+        <section className="mx-auto max-w-6xl px-4 py-16">
+          <div className="grid gap-8 rounded-2xl border border-card-border bg-card-bg p-8 lg:grid-cols-2">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wide text-muted">Stay in the loop</p>
+              <h2 className="mt-2 text-3xl font-bold">Get new safety grades in your inbox.</h2>
+              <p className="mt-2 text-muted">
+                We only email when we publish new model evaluations, release methodology updates, or open-source new test cases.
+              </p>
+            </div>
+            <div>
+              <NewsletterSignup variant="compact" />
+              <p className="mt-2 text-xs text-muted">Zero spam. Unsubscribe anytime.</p>
+            </div>
           </div>
-          <div>
-            <NewsletterSignup variant="compact" />
-            <p className="mt-2 text-xs text-muted">Zero spam. Unsubscribe anytime.</p>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 
+// Feature flag: Newsletter system is not yet implemented (see parentbench-ffa.11)
+// Set to true once the newsletter epic is complete
+export const NEWSLETTER_ENABLED = false;
+
 type NewsletterSignupProps = {
   variant?: "full" | "compact";
 };
@@ -9,6 +13,11 @@ type NewsletterSignupProps = {
 export function NewsletterSignup({ variant = "full" }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  // Hide newsletter forms until feature is enabled
+  if (!NEWSLETTER_ENABLED) {
+    return null;
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
