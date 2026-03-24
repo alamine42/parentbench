@@ -1,9 +1,13 @@
 import { inngest } from "../client";
 import { db } from "@/db";
-import { evaluations, testCases, evalResults, scores, models } from "@/db/schema";
+import { evaluations, testCases, evalResults, scores, models, categories } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { runModelAdapter } from "@/lib/eval/adapters";
 import { computeScore } from "@/lib/eval/scorer";
+import { judgeResponse } from "@/lib/eval/judge";
+
+// Feature flag to enable LLM-as-judge (defaults to true)
+const USE_LLM_JUDGE = process.env.USE_LLM_JUDGE !== "false";
 
 /**
  * Fan-out/fan-in evaluation job
@@ -41,12 +45,20 @@ export const runEvaluation = inngest.createFunction(
       return eval_;
     });
 
-    // Step 2: Get all active test cases
+    // Step 2: Get all active test cases and categories (avoid N+1 queries)
     const activeTestCases = await step.run("get-test-cases", async () => {
       return db
         .select()
         .from(testCases)
         .where(eq(testCases.isActive, true));
+    });
+
+    // Prefetch all categories for efficient lookup
+    const categoryMap = await step.run("get-categories", async () => {
+      const allCategories = await db.select().from(categories);
+      return Object.fromEntries(
+        allCategories.map((c) => [c.id, c.name])
+      ) as Record<string, string>;
     });
 
     // Update total test case count
@@ -66,6 +78,7 @@ export const runEvaluation = inngest.createFunction(
       response?: string;
       error?: string;
       latencyMs?: number;
+      metadata?: Record<string, unknown>;
     }> = [];
 
     for (let i = 0; i < activeTestCases.length; i += batchSize) {
@@ -82,12 +95,39 @@ export const runEvaluation = inngest.createFunction(
               const result = await runModelAdapter(modelSlug, testCase);
               const latencyMs = Date.now() - startTime;
 
+              // Use LLM-as-judge if enabled
+              let finalPassed = result.passed;
+              let finalScore = result.score;
+              let metadata: Record<string, unknown> = { ...(result.metadata ?? {}) };
+
+              if (USE_LLM_JUDGE && result.response) {
+                try {
+                  const categoryName = categoryMap[testCase.categoryId] || "age_inappropriate_content";
+                  const judgeResult = await judgeResponse(testCase, result.response, categoryName);
+
+                  finalPassed = judgeResult.passed;
+                  finalScore = judgeResult.score;
+                  metadata = {
+                    ...metadata,
+                    judgeReasoning: judgeResult.reasoning,
+                    judgeConfidence: judgeResult.confidence,
+                    heuristicPassed: result.passed,
+                    heuristicScore: result.score,
+                  };
+                } catch (judgeError) {
+                  // Fall back to heuristic if judge fails
+                  console.error("Judge evaluation failed, using heuristic:", judgeError);
+                  metadata.judgeError = judgeError instanceof Error ? judgeError.message : "Unknown judge error";
+                }
+              }
+
               batchResults.push({
                 testCaseId: testCase.id,
-                passed: result.passed,
-                score: result.score,
+                passed: finalPassed,
+                score: finalScore,
                 response: result.response,
                 latencyMs,
+                metadata,
               });
             } catch (error) {
               batchResults.push({
@@ -131,6 +171,7 @@ export const runEvaluation = inngest.createFunction(
           passed: result.passed,
           latencyMs: result.latencyMs,
           errorMessage: result.error,
+          metadata: result.metadata,
         });
       }
     });
