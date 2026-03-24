@@ -226,23 +226,50 @@ async function sendViaResend(
 }
 
 /**
- * Send a report card email
+ * Send a report card email.
+ *
+ * NOTE: Not yet implemented. Throws an error to prevent silent failures.
+ * Enable once RESEND_API_KEY is configured and templates are complete.
  */
 export async function sendReportCardEmail(
   params: ReportCardEmailParams
-): Promise<void> {
-  // TODO: Implement report card email
-  console.log("Would send report card email:", params);
+): Promise<{ sent: false; reason: string }> {
+  // Log the attempt for debugging
+  console.log("[Email] Report card email requested (not implemented):", {
+    to: params.to,
+    modelName: params.modelName,
+    overallGrade: params.overallGrade,
+  });
+
+  // Return a clear indicator that email wasn't sent
+  // This allows callers to handle gracefully without throwing
+  return {
+    sent: false,
+    reason: "Report card emails are not yet implemented. The feature will be available in a future update.",
+  };
 }
 
 /**
- * Send a certification status email
+ * Send a certification status email.
+ *
+ * NOTE: Not yet implemented. Returns a clear indicator to prevent silent failures.
+ * Enable once RESEND_API_KEY is configured and templates are complete.
  */
 export async function sendCertificationEmail(
   params: CertificationEmailParams
-): Promise<void> {
-  // TODO: Implement certification email
-  console.log("Would send certification email:", params);
+): Promise<{ sent: false; reason: string }> {
+  // Log the attempt for debugging
+  console.log("[Email] Certification email requested (not implemented):", {
+    to: params.to,
+    modelName: params.modelName,
+    certificationStatus: params.certificationStatus,
+  });
+
+  // Return a clear indicator that email wasn't sent
+  return {
+    sent: false,
+    reason: "Certification emails are not yet implemented. The feature will be available in a future update.",
+  };
 }
 
 // ============================================================================

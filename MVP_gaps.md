@@ -2,15 +2,23 @@
 
 **Date:** 2026-03-24
 **Status:** Pre-Launch Assessment
-**Overall Readiness:** ~70% (5 critical blockers remain)
+**Overall Readiness:** ~95% (2 operational items remain)
 
 ---
 
 ## Executive Summary
 
-ParentBench core functionality is solid. The benchmarking system, public pages, and admin panel are functional. However, 5 critical blockers must be addressed before public MVP launch.
+ParentBench core functionality is solid. The benchmarking system, public pages, and admin panel are functional. Most critical blockers have been addressed:
 
-**Estimated effort to launch-ready:** 8-12 engineering hours
+- ✅ LLM-as-Judge integrated
+- ✅ Admin authentication implemented
+- ✅ Error boundaries and 404 pages added
+- ✅ Direct database reads (with JSON fallback)
+- ✅ Email functions properly stubbed
+
+**Remaining operational items:**
+1. Set `ADMIN_PASSWORD` in Vercel environment variables (~2 min)
+2. Re-run evaluations with LLM-as-Judge (~30 min automated)
 
 ---
 
@@ -33,38 +41,36 @@ ParentBench core functionality is solid. The benchmarking system, public pages, 
 ### 1.3 Add Error Boundaries
 - **Issue:** No error handling for failed data loads
 - **Impact:** JSON corruption or API failure → 500 error with no fallback UI
-- **Files missing:**
-  - `src/app/error.tsx` (global error boundary)
-  - `src/app/not-found.tsx` (404 page)
-  - Try-catch in `src/lib/parentbench.ts`
-- **Fix:** Add error boundaries and graceful fallbacks
+- **Files added:**
+  - `src/app/error.tsx` (global error boundary) ✅
+  - `src/app/not-found.tsx` (404 page) ✅
+  - Error handling in `src/lib/parentbench.ts` ✅
+- **Fix:** Added error boundaries and graceful fallbacks
 - **Effort:** ~1 hour
-- **Status:** ⏳ Pending
+- **Status:** ✅ DONE
 
 ### 1.4 Fix Data Freshness (JSON vs Database)
 - **Issue:** Scores stored in static JSON (`data/parentbench/scores.json`)
 - **Impact:** After evaluation, homepage/leaderboard show stale data until manual export + redeploy
-- **Current flow:**
+- **Solution implemented:** Option B - Direct database reads with JSON fallback
+- **New flow:**
   1. Evaluation runs → saves to database
-  2. Must manually run `scripts/export-scores.ts`
-  3. Must redeploy to pick up new JSON
-- **Fix options:**
-  - **Option A:** Enable ISR (Incremental Static Regeneration) in `next.config.ts`
-  - **Option B:** Switch to direct database reads instead of JSON files
-  - **Option C:** Auto-run export script in CI/CD pipeline
-- **Recommended:** Option B (direct DB reads) for real-time accuracy
+  2. `parentbench.ts` reads directly from DB (automatic)
+  3. Falls back to JSON if DB unavailable
+- **Files modified:**
+  - `src/lib/parentbench.ts` - Now reads from DB with JSON fallback
 - **Effort:** ~2 hours
-- **Status:** ⏳ Pending
+- **Status:** ✅ DONE
 
 ### 1.5 Stub/Disable Email Features
 - **Issue:** Email functions have TODO comments, not implemented
 - **Impact:** Admin tries to send report card → code doesn't exist → error
-- **Locations:**
-  - `src/lib/email.ts:234` - "TODO: Implement report card email"
-  - `src/lib/email.ts:244` - "TODO: Implement certification email"
-- **Fix:** Either implement or hide email buttons in admin UI
+- **Solution:** Functions now return `{ sent: false, reason: string }` instead of throwing
+- **Files modified:**
+  - `src/lib/email.ts` - `sendReportCardEmail()` and `sendCertificationEmail()` properly stubbed
+- **Behavior:** Logs attempt and returns clear "not implemented" message
 - **Effort:** ~30 min
-- **Status:** ⏳ Pending
+- **Status:** ✅ DONE
 
 ---
 
@@ -187,19 +193,19 @@ vercel --prod             # Deploy to production
 - [ ] Re-run evaluations for all models with LLM-as-Judge
 - [ ] Verify admin login works in production
 
-### Phase 2: Robustness (Highly Recommended)
-- [ ] Add `src/app/error.tsx` error boundary
-- [ ] Add `src/app/not-found.tsx` 404 page
-- [ ] Add try-catch to `src/lib/parentbench.ts` data loaders
-- [ ] Add loading states to pages
+### Phase 2: Robustness (Highly Recommended) ✅ COMPLETE
+- [x] Add `src/app/error.tsx` error boundary
+- [x] Add `src/app/not-found.tsx` 404 page
+- [x] Add try-catch to `src/lib/parentbench.ts` data loaders
+- [ ] Add loading states to pages (deferred - pages work without explicit loaders)
 
-### Phase 3: Data Architecture (Recommended)
-- [ ] Switch from JSON files to direct database reads
-- [ ] OR enable ISR in `next.config.ts`
-- [ ] Ensure leaderboard shows real-time scores
+### Phase 3: Data Architecture (Recommended) ✅ COMPLETE
+- [x] Switch from JSON files to direct database reads
+- [x] JSON fallback for resilience if DB unavailable
+- [x] Leaderboard shows real-time scores from DB
 
-### Phase 4: Cleanup (Nice to Have)
-- [ ] Stub or hide email features in admin
+### Phase 4: Cleanup (Mostly Complete)
+- [x] Stub or hide email features in admin
 - [ ] Add Sentry for error tracking
 - [ ] Run accessibility audit
 - [ ] Add rate limiting
@@ -233,12 +239,15 @@ vercel --prod             # Deploy to production
 
 ## Appendix: File Locations
 
-### Key Files to Modify
-- `src/app/error.tsx` - Create (error boundary)
-- `src/app/not-found.tsx` - Create (404 page)
-- `src/lib/parentbench.ts` - Add error handling
-- `next.config.ts` - Enable ISR (if using Option A)
-- `src/lib/email.ts` - Implement or stub emails
+### Files Modified in This Sprint
+- `src/app/error.tsx` - ✅ Created (error boundary)
+- `src/app/not-found.tsx` - ✅ Created (404 page)
+- `src/lib/parentbench.ts` - ✅ Direct DB reads with JSON fallback, error handling
+- `src/lib/email.ts` - ✅ Email functions properly stubbed
+- `src/inngest/functions/run-evaluation.ts` - ✅ LLM-as-Judge integration
+- `src/app/api/admin/auth/route.ts` - ✅ Created (admin authentication)
+- `src/app/(admin-login)/admin/login/page.tsx` - ✅ Created (login page)
+- `src/app/admin/layout.tsx` - ✅ Updated auth check
 
 ### Data Files
 - `data/parentbench/scores.json` - Current score source
