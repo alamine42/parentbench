@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { evaluations, models, providers } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import Link from "next/link";
+import { EvaluationsList } from "./evaluations-list";
 
 // ============================================================================
 // DATA LOADING
@@ -36,7 +37,18 @@ async function getEvaluations() {
     .orderBy(desc(evaluations.createdAt))
     .limit(100);
 
-  return allEvaluations;
+  // Check if any are running
+  const hasRunning = allEvaluations.some(e => e.status === "running" || e.status === "pending");
+
+  // Serialize dates for client component
+  const serialized = allEvaluations.map(e => ({
+    ...e,
+    startedAt: e.startedAt?.toISOString() ?? null,
+    completedAt: e.completedAt?.toISOString() ?? null,
+    createdAt: e.createdAt.toISOString(),
+  }));
+
+  return { evaluations: serialized, hasRunning };
 }
 
 // ============================================================================
@@ -44,7 +56,7 @@ async function getEvaluations() {
 // ============================================================================
 
 export default async function EvaluationsPage() {
-  const evaluationsData = await getEvaluations();
+  const { evaluations: evaluationsData, hasRunning } = await getEvaluations();
 
   return (
     <div className="space-y-6">
@@ -85,137 +97,11 @@ export default async function EvaluationsPage() {
         </Link>
       </div>
 
-      {/* Evaluations table */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-900/50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Model
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Progress
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Triggered By
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Started
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            {evaluationsData.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={6}
-                  className="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
-                >
-                  No evaluations yet. Run your first evaluation to get started.
-                </td>
-              </tr>
-            ) : (
-              evaluationsData.map((evaluation) => (
-                <tr
-                  key={evaluation.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-900/50"
-                >
-                  <td className="px-6 py-4">
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-gray-100">
-                        {evaluation.model.name}
-                      </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {evaluation.provider.name}
-                      </p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <StatusBadge status={evaluation.status} />
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2 w-24">
-                        <div
-                          className="bg-indigo-600 h-2 rounded-full"
-                          style={{
-                            width: `${
-                              evaluation.totalTestCases > 0
-                                ? (evaluation.completedTestCases /
-                                    evaluation.totalTestCases) *
-                                  100
-                                : 0
-                            }%`,
-                          }}
-                        />
-                      </div>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {evaluation.completedTestCases}/{evaluation.totalTestCases}
-                      </span>
-                    </div>
-                    {evaluation.failedTestCases > 0 && (
-                      <p className="text-xs text-red-600 dark:text-red-400 mt-1">
-                        {evaluation.failedTestCases} failed
-                      </p>
-                    )}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="capitalize text-gray-700 dark:text-gray-300">
-                      {evaluation.triggeredBy || "Unknown"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
-                    {evaluation.startedAt
-                      ? new Date(evaluation.startedAt).toLocaleString()
-                      : "Not started"}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <Link
-                      href={`/admin/evaluations/${evaluation.id}`}
-                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
-                    >
-                      View Details
-                    </Link>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      {/* Evaluations list with auto-refresh */}
+      <EvaluationsList
+        initialEvaluations={evaluationsData}
+        initialHasRunning={hasRunning}
+      />
     </div>
-  );
-}
-
-// ============================================================================
-// SUB COMPONENTS
-// ============================================================================
-
-function StatusBadge({ status }: { status: string }) {
-  const colors: Record<string, string> = {
-    pending: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
-    running:
-      "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 animate-pulse",
-    completed:
-      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-    failed: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
-    partial:
-      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
-  };
-
-  return (
-    <span
-      className={`px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
-        colors[status] || colors.pending
-      }`}
-    >
-      {status}
-    </span>
   );
 }

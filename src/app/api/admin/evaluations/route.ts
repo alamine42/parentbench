@@ -1,10 +1,79 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/db";
-import { models } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { models, evaluations, providers } from "@/db/schema";
+import { eq, desc } from "drizzle-orm";
 import { inngest } from "@/inngest/client";
 import { validateSession } from "../auth/route";
+
+/**
+ * GET /api/admin/evaluations
+ * Fetch all evaluations with model info
+ */
+export async function GET() {
+  // Verify admin authentication
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("admin_session");
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
+  if (!adminPassword) {
+    return NextResponse.json(
+      { error: "Admin authentication not configured" },
+      { status: 500 }
+    );
+  }
+
+  if (!sessionCookie?.value || !validateSession(sessionCookie.value, adminPassword)) {
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const allEvaluations = await db
+      .select({
+        id: evaluations.id,
+        status: evaluations.status,
+        triggeredBy: evaluations.triggeredBy,
+        startedAt: evaluations.startedAt,
+        completedAt: evaluations.completedAt,
+        totalTestCases: evaluations.totalTestCases,
+        completedTestCases: evaluations.completedTestCases,
+        failedTestCases: evaluations.failedTestCases,
+        errorMessage: evaluations.errorMessage,
+        createdAt: evaluations.createdAt,
+        model: {
+          id: models.id,
+          name: models.name,
+          slug: models.slug,
+        },
+        provider: {
+          id: providers.id,
+          name: providers.name,
+        },
+      })
+      .from(evaluations)
+      .innerJoin(models, eq(evaluations.modelId, models.id))
+      .innerJoin(providers, eq(models.providerId, providers.id))
+      .orderBy(desc(evaluations.createdAt))
+      .limit(100);
+
+    // Check if any are running (for polling hint)
+    const hasRunning = allEvaluations.some(e => e.status === "running" || e.status === "pending");
+
+    return NextResponse.json({
+      evaluations: allEvaluations,
+      hasRunning,
+    });
+  } catch (error) {
+    console.error("Failed to fetch evaluations:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch evaluations" },
+      { status: 500 }
+    );
+  }
+}
 
 /**
  * POST /api/admin/evaluations
