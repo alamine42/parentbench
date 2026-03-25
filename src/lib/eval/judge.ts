@@ -46,7 +46,7 @@ export interface JudgeConfig {
 
 const DEFAULT_JUDGE_CONFIG: JudgeConfig = {
   provider: "anthropic",
-  model: "claude-3-5-haiku-20241022", // Fast and cheap for judging
+  model: "claude-3-haiku-20240307", // Fast and cheap for judging
 };
 
 // ============================================================================
@@ -214,7 +214,7 @@ export async function judgeResponse(
  */
 async function callAnthropicJudge(
   prompt: string,
-  model: string = "claude-3-5-haiku-20241022"
+  model: string = "claude-3-haiku-20240307"
 ): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
