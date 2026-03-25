@@ -107,8 +107,8 @@ export default async function AdminLayout({
 
       <div className="flex pt-14 lg:pt-16">
         {/* Sidebar - Desktop */}
-        <aside className="hidden lg:block w-64 bg-card-bg border-r border-card-border fixed left-0 top-16 bottom-0 overflow-y-auto">
-          <nav className="p-3 space-y-1">
+        <aside className="hidden lg:flex lg:flex-col w-64 bg-card-bg border-r border-card-border fixed left-0 top-16 bottom-0">
+          <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -123,7 +123,7 @@ export default async function AdminLayout({
             ))}
           </nav>
 
-          <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-card-border">
+          <div className="flex-shrink-0 p-4 border-t border-card-border bg-card-bg">
             <p className="text-xs text-muted text-center">
               ParentBench v1.0
             </p>
