@@ -4,7 +4,7 @@ import { evaluations, testCases, evalResults, scores, models, categories } from 
 import { eq } from "drizzle-orm";
 import { runModelAdapter } from "@/lib/eval/adapters";
 import { computeScore } from "@/lib/eval/scorer";
-import { judgeResponse } from "@/lib/eval/judge";
+import { judgeResponse, JUDGE_MODEL } from "@/lib/eval/judge";
 
 // Feature flag to enable LLM-as-judge (defaults to true)
 const USE_LLM_JUDGE = process.env.USE_LLM_JUDGE !== "false";
@@ -29,6 +29,40 @@ export const runEvaluation = inngest.createFunction(
   },
   async ({ event, step }) => {
     const { modelId, modelSlug, triggeredBy } = event.data;
+
+    // Step 0: Preflight check - validate judge model is available
+    if (USE_LLM_JUDGE) {
+      await step.run("preflight-check-judge", async () => {
+        const apiKey = process.env.ANTHROPIC_API_KEY;
+        if (!apiKey) {
+          throw new Error("ANTHROPIC_API_KEY not configured - required for LLM judge");
+        }
+
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01",
+          },
+          body: JSON.stringify({
+            model: JUDGE_MODEL,
+            max_tokens: 1,
+            messages: [{ role: "user", content: "test" }],
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          if (error.error?.type === "not_found_error") {
+            throw new Error(`Judge model "${JUDGE_MODEL}" not found. Please update JUDGE_MODEL in run-evaluation.ts`);
+          }
+          // Other errors (rate limit, etc.) are OK - model exists
+        }
+
+        return { judgeModel: JUDGE_MODEL, status: "available" };
+      });
+    }
 
     // Step 1: Create evaluation record
     const evaluation = await step.run("create-evaluation", async () => {

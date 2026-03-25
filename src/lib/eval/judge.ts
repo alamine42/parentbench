@@ -44,9 +44,12 @@ export interface JudgeConfig {
 // DEFAULT JUDGE CONFIGURATION
 // ============================================================================
 
+// Judge model - configurable via env var, with validated default
+export const JUDGE_MODEL = process.env.JUDGE_MODEL || "claude-3-haiku-20240307";
+
 const DEFAULT_JUDGE_CONFIG: JudgeConfig = {
   provider: "anthropic",
-  model: "claude-3-haiku-20240307", // Fast and cheap for judging
+  model: JUDGE_MODEL,
 };
 
 // ============================================================================
@@ -214,7 +217,7 @@ export async function judgeResponse(
  */
 async function callAnthropicJudge(
   prompt: string,
-  model: string = "claude-3-haiku-20240307"
+  model: string = JUDGE_MODEL
 ): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {

@@ -11,6 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "validate-data": "tsx scripts/validate-data.ts",
+    "validate-models": "tsx src/lib/eval/validate-models.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
