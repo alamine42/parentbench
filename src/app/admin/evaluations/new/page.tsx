@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -12,6 +12,19 @@ interface Model {
   hasScore: boolean;
 }
 
+interface RunningEvaluation {
+  id: string;
+  status: string;
+  totalTestCases: number;
+  completedTestCases: number;
+  failedTestCases: number;
+  model: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
 export default function NewEvaluationPage() {
   const router = useRouter();
   const [models, setModels] = useState<Model[]>([]);
@@ -20,6 +33,45 @@ export default function NewEvaluationPage() {
   const [triggering, setTriggering] = useState(false);
   const [results, setResults] = useState<Array<{ modelName: string; success: boolean; error?: string }>>([]);
   const [filter, setFilter] = useState<"all" | "unevaluated">("all");
+  const [runningEvaluations, setRunningEvaluations] = useState<RunningEvaluation[]>([]);
+  const [hasTriggered, setHasTriggered] = useState(false);
+
+  // Fetch running evaluations
+  const fetchRunningEvaluations = useCallback(async () => {
+    try {
+      const response = await fetch("/api/admin/evaluations");
+      if (response.ok) {
+        const data = await response.json();
+        const running = data.evaluations.filter(
+          (e: RunningEvaluation) => e.status === "running" || e.status === "pending"
+        );
+        setRunningEvaluations(running);
+
+        // If all evaluations are complete, refresh models list to update "Evaluated" badges
+        if (running.length === 0 && hasTriggered) {
+          const modelsResponse = await fetch("/api/admin/models");
+          if (modelsResponse.ok) {
+            const modelsData = await modelsResponse.json();
+            setModels(modelsData.models || []);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch evaluations:", error);
+    }
+  }, [hasTriggered]);
+
+  // Auto-refresh when evaluations are running
+  useEffect(() => {
+    if (!hasTriggered) return;
+
+    // Initial fetch
+    fetchRunningEvaluations();
+
+    // Poll every 3 seconds
+    const interval = setInterval(fetchRunningEvaluations, 3000);
+    return () => clearInterval(interval);
+  }, [hasTriggered, fetchRunningEvaluations]);
 
   // Fetch models on mount
   useEffect(() => {
@@ -98,6 +150,7 @@ export default function NewEvaluationPage() {
     }
 
     setTriggering(false);
+    setHasTriggered(true);
   };
 
   const successCount = results.filter(r => r.success).length;
@@ -243,6 +296,83 @@ export default function NewEvaluationPage() {
                 </span>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Live Progress */}
+      {runningEvaluations.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+            </span>
+            <h3 className="font-medium text-gray-900 dark:text-gray-100">
+              Live Progress ({runningEvaluations.length} running)
+            </h3>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              Auto-refreshing every 3s
+            </span>
+          </div>
+          <div className="space-y-4">
+            {runningEvaluations.map((evaluation) => (
+              <div key={evaluation.id} className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                    {evaluation.model.name}
+                  </span>
+                  <span className="text-gray-600 dark:text-gray-400 tabular-nums">
+                    {evaluation.completedTestCases}/{evaluation.totalTestCases} test cases
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div
+                      className="h-2 rounded-full bg-indigo-600 transition-all duration-300"
+                      style={{
+                        width: `${
+                          evaluation.totalTestCases > 0
+                            ? (evaluation.completedTestCases / evaluation.totalTestCases) * 100
+                            : 0
+                        }%`,
+                      }}
+                    />
+                  </div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums w-12 text-right">
+                    {evaluation.totalTestCases > 0
+                      ? Math.round((evaluation.completedTestCases / evaluation.totalTestCases) * 100)
+                      : 0}%
+                  </span>
+                </div>
+                {evaluation.failedTestCases > 0 && (
+                  <p className="text-xs text-red-600 dark:text-red-400">
+                    {evaluation.failedTestCases} test case(s) failed
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Completed message */}
+      {hasTriggered && runningEvaluations.length === 0 && results.length > 0 && (
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
+          <div className="flex gap-3">
+            <svg className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <div className="text-sm text-green-800 dark:text-green-200">
+              <p className="font-medium">All evaluations complete!</p>
+              <p className="mt-1 text-green-700 dark:text-green-300">
+                View results on the{" "}
+                <Link href="/admin/evaluations" className="underline hover:no-underline">
+                  evaluations page
+                </Link>
+                .
+              </p>
+            </div>
           </div>
         </div>
       )}
