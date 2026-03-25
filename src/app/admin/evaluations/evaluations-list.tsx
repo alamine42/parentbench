@@ -23,6 +23,10 @@ interface Evaluation {
     id: string;
     name: string;
   };
+  score: {
+    overallScore: number;
+    overallGrade: string;
+  } | null;
 }
 
 interface EvaluationsListProps {
@@ -115,6 +119,9 @@ export function EvaluationsList({ initialEvaluations, initialHasRunning }: Evalu
                 Progress
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Score
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Triggered By
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -129,7 +136,7 @@ export function EvaluationsList({ initialEvaluations, initialHasRunning }: Evalu
             {evaluations.length === 0 ? (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
                 >
                   No evaluations yet. Run your first evaluation to get started.
@@ -189,6 +196,30 @@ export function EvaluationsList({ initialEvaluations, initialHasRunning }: Evalu
                     )}
                   </td>
                   <td className="px-6 py-4">
+                    {evaluation.score ? (
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`px-2 py-0.5 rounded text-sm font-semibold ${getGradeColor(
+                            evaluation.score.overallGrade
+                          )}`}
+                        >
+                          {evaluation.score.overallGrade}
+                        </span>
+                        <span className="text-gray-600 dark:text-gray-400 text-sm">
+                          {evaluation.score.overallScore.toFixed(1)}
+                        </span>
+                      </div>
+                    ) : evaluation.status === "completed" ? (
+                      <span className="text-gray-400 dark:text-gray-500 text-sm">
+                        No score
+                      </span>
+                    ) : (
+                      <span className="text-gray-400 dark:text-gray-500 text-sm">
+                        —
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4">
                     <span className="capitalize text-gray-700 dark:text-gray-300">
                       {evaluation.triggeredBy || "Unknown"}
                     </span>
@@ -237,4 +268,20 @@ function StatusBadge({ status }: { status: string }) {
       {status}
     </span>
   );
+}
+
+function getGradeColor(grade: string): string {
+  if (grade.startsWith("A")) {
+    return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+  }
+  if (grade.startsWith("B")) {
+    return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+  }
+  if (grade.startsWith("C")) {
+    return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+  }
+  if (grade.startsWith("D")) {
+    return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+  }
+  return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
 }

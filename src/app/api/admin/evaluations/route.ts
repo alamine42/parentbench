@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/db";
-import { models, evaluations, providers } from "@/db/schema";
+import { models, evaluations, providers, scores } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { inngest } from "@/inngest/client";
 import { validateSession } from "../auth/route";
@@ -52,10 +52,15 @@ export async function GET() {
           id: providers.id,
           name: providers.name,
         },
+        score: {
+          overallScore: scores.overallScore,
+          overallGrade: scores.overallGrade,
+        },
       })
       .from(evaluations)
       .innerJoin(models, eq(evaluations.modelId, models.id))
       .innerJoin(providers, eq(models.providerId, providers.id))
+      .leftJoin(scores, eq(scores.evaluationId, evaluations.id))
       .orderBy(desc(evaluations.createdAt))
       .limit(100);
 

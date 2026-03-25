@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { evaluations, models, providers } from "@/db/schema";
+import { evaluations, models, providers, scores } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import Link from "next/link";
 import { EvaluationsList } from "./evaluations-list";
@@ -30,10 +30,15 @@ async function getEvaluations() {
         id: providers.id,
         name: providers.name,
       },
+      score: {
+        overallScore: scores.overallScore,
+        overallGrade: scores.overallGrade,
+      },
     })
     .from(evaluations)
     .innerJoin(models, eq(evaluations.modelId, models.id))
     .innerJoin(providers, eq(models.providerId, providers.id))
+    .leftJoin(scores, eq(scores.evaluationId, evaluations.id))
     .orderBy(desc(evaluations.createdAt))
     .limit(100);
 
