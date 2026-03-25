@@ -105,6 +105,9 @@ export default async function ModelsPage() {
                 Latest Score
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Latest Eval
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -116,7 +119,7 @@ export default async function ModelsPage() {
             {modelsData.length === 0 ? (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
                 >
                   No models found. Add your first model to get started.
@@ -159,6 +162,11 @@ export default async function ModelsPage() {
                         Not evaluated
                       </span>
                     )}
+                  </td>
+                  <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
+                    {model.latestScore?.computedAt
+                      ? new Date(model.latestScore.computedAt).toLocaleString()
+                      : "—"}
                   </td>
                   <td className="px-6 py-4">
                     {model.isActive ? (
