@@ -265,10 +265,12 @@ class MockAdapter extends BaseAdapter {
 // ============================================================================
 
 /**
- * OpenAI reasoning models that don't support temperature parameter
- * These models use internal reasoning and don't accept temperature/top_p
+ * OpenAI models that don't support temperature parameter
+ * - Reasoning models (o1, o3, o4) use internal reasoning
+ * - GPT-5 series models only support temperature=1
  */
-const OPENAI_REASONING_MODELS = [
+const OPENAI_NO_TEMPERATURE_MODELS = [
+  // Reasoning models
   "o1",
   "o1-mini",
   "o1-preview",
@@ -276,6 +278,10 @@ const OPENAI_REASONING_MODELS = [
   "o3-mini",
   "o3-pro",
   "o4-mini",
+  // GPT-5 series (only support temperature=1)
+  "gpt-5",
+  "gpt-5-mini",
+  "gpt-5-nano",
 ];
 
 class OpenAIAdapter extends BaseAdapter {
@@ -291,10 +297,10 @@ class OpenAIAdapter extends BaseAdapter {
   }
 
   /**
-   * Check if this is a reasoning model that doesn't support temperature
+   * Check if this model doesn't support temperature parameter
    */
-  private isReasoningModel(): boolean {
-    return OPENAI_REASONING_MODELS.some(
+  private skipTemperature(): boolean {
+    return OPENAI_NO_TEMPERATURE_MODELS.some(
       (m) => this.modelId === m || this.modelId.startsWith(`${m}-`)
     );
   }
@@ -323,7 +329,7 @@ class OpenAIAdapter extends BaseAdapter {
     };
 
     // Only add temperature for non-reasoning models
-    if (!this.isReasoningModel()) {
+    if (!this.skipTemperature()) {
       requestBody.temperature = 0.7;
     }
 
