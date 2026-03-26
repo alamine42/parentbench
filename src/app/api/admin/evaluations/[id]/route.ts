@@ -41,6 +41,7 @@ export async function GET(
         id: evaluations.id,
         status: evaluations.status,
         triggeredBy: evaluations.triggeredBy,
+        inngestRunId: evaluations.inngestRunId,
         startedAt: evaluations.startedAt,
         completedAt: evaluations.completedAt,
         totalTestCases: evaluations.totalTestCases,

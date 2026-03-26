@@ -192,6 +192,7 @@ export const evaluations = pgTable("evaluations", {
     .references(() => models.id, { onDelete: "cascade" }),
   status: evaluationStatusEnum("status").default("pending").notNull(),
   triggeredBy: text("triggered_by"), // 'manual', 'scheduled', 'webhook'
+  inngestRunId: text("inngest_run_id"), // Inngest function run ID for debugging
   startedAt: timestamp("started_at"),
   completedAt: timestamp("completed_at"),
   totalTestCases: integer("total_test_cases").default(0).notNull(),

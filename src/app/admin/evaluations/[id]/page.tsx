@@ -7,6 +7,7 @@ interface EvaluationDetail {
   id: string;
   status: string;
   triggeredBy: string | null;
+  inngestRunId: string | null;
   startedAt: string | null;
   completedAt: string | null;
   totalTestCases: number;
@@ -207,6 +208,31 @@ export default function EvaluationDetailPage({
           )}
         </div>
       </div>
+
+      {/* Inngest Run Info */}
+      {evaluation.inngestRunId && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Inngest Run</p>
+              <code className="text-sm font-mono text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900/50 px-2 py-1 rounded">
+                {evaluation.inngestRunId}
+              </code>
+            </div>
+            <a
+              href={`https://app.inngest.com/env/production/runs/${evaluation.inngestRunId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-1.5 text-sm bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              View in Inngest
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* Category scores */}
       {score?.categoryScores && Object.keys(score.categoryScores).length > 0 && (

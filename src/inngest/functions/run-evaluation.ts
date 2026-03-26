@@ -56,7 +56,7 @@ export const runEvaluation = inngest.createFunction(
     },
     triggers: [{ event: "eval/requested" }],
   },
-  async ({ event, step }) => {
+  async ({ event, step, runId }) => {
     const { modelId, modelSlug, triggeredBy } = event.data;
 
     // Step 0: Preflight check - validate judge model is available
@@ -101,6 +101,7 @@ export const runEvaluation = inngest.createFunction(
           modelId,
           status: "running",
           triggeredBy,
+          inngestRunId: runId,
           startedAt: new Date(),
         })
         .returning();
