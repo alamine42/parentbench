@@ -28,6 +28,13 @@ interface RunningEvaluation {
   };
 }
 
+interface CostEstimate {
+  estimatedCostUsd: number;
+  basedOnEvaluations: number;
+  confidence: "high" | "medium" | "low" | "none";
+  pricePerEval: number | null;
+}
+
 export default function NewEvaluationPage() {
   const router = useRouter();
   const [models, setModels] = useState<Model[]>([]);
@@ -38,6 +45,8 @@ export default function NewEvaluationPage() {
   const [filter, setFilter] = useState<"all" | "unevaluated">("all");
   const [runningEvaluations, setRunningEvaluations] = useState<RunningEvaluation[]>([]);
   const [hasTriggered, setHasTriggered] = useState(false);
+  const [costEstimates, setCostEstimates] = useState<Map<string, CostEstimate>>(new Map());
+  const [loadingEstimates, setLoadingEstimates] = useState(false);
 
   // Fetch running evaluations
   const fetchRunningEvaluations = useCallback(async () => {
@@ -93,6 +102,48 @@ export default function NewEvaluationPage() {
     }
     fetchModels();
   }, []);
+
+  // Fetch cost estimates when selection changes
+  useEffect(() => {
+    if (selectedModels.size === 0) {
+      setCostEstimates(new Map());
+      return;
+    }
+
+    async function fetchEstimates() {
+      setLoadingEstimates(true);
+      const newEstimates = new Map<string, CostEstimate>();
+
+      for (const modelId of selectedModels) {
+        // Check if we already have this estimate
+        if (costEstimates.has(modelId)) {
+          newEstimates.set(modelId, costEstimates.get(modelId)!);
+          continue;
+        }
+
+        try {
+          const response = await fetch(`/api/admin/costs/estimate?modelId=${modelId}`);
+          if (response.ok) {
+            const estimate = await response.json();
+            newEstimates.set(modelId, estimate);
+          }
+        } catch (error) {
+          console.error(`Failed to fetch estimate for ${modelId}:`, error);
+        }
+      }
+
+      setCostEstimates(newEstimates);
+      setLoadingEstimates(false);
+    }
+
+    fetchEstimates();
+  }, [selectedModels]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Calculate total estimated cost
+  const totalEstimatedCost = Array.from(selectedModels).reduce((sum, modelId) => {
+    const estimate = costEstimates.get(modelId);
+    return sum + (estimate?.estimatedCostUsd ?? 0);
+  }, 0);
 
   const filteredModels = filter === "all"
     ? models
@@ -428,6 +479,40 @@ export default function NewEvaluationPage() {
                 .
               </p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cost estimate */}
+      {selectedModels.size > 0 && (
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+                <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-medium text-gray-900 dark:text-gray-100">
+                  Estimated Cost: {loadingEstimates ? (
+                    <span className="text-gray-500">calculating...</span>
+                  ) : (
+                    <span className="text-amber-700 dark:text-amber-300">${totalEstimatedCost.toFixed(3)}</span>
+                  )}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Based on historical averages for {selectedModels.size} model{selectedModels.size !== 1 ? "s" : ""}
+                </p>
+              </div>
+            </div>
+            {!loadingEstimates && costEstimates.size > 0 && (
+              <div className="text-right text-sm">
+                <p className="text-gray-600 dark:text-gray-400">
+                  ~${selectedModels.size > 0 ? (totalEstimatedCost / selectedModels.size).toFixed(4) : "0"}/eval avg
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}

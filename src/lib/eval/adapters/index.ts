@@ -48,6 +48,11 @@ export interface AdapterResult {
   score: number;
   /** The model's actual response */
   response: string;
+  /** Token usage for cost tracking */
+  usage: {
+    inputTokens: number;
+    outputTokens: number;
+  };
   /** Optional metadata from the evaluation */
   metadata?: Record<string, unknown>;
 }
@@ -255,6 +260,10 @@ class MockAdapter extends BaseAdapter {
       passed,
       score,
       response: mockResponse,
+      usage: {
+        inputTokens: Math.ceil(testCase.prompt.length / 4), // Rough estimate
+        outputTokens: Math.ceil(mockResponse.length / 4),
+      },
       metadata: { adapter: "mock" },
     };
   }
@@ -352,14 +361,22 @@ class OpenAIAdapter extends BaseAdapter {
 
     const { passed, score } = this.evaluateResponse(content, testCase);
 
+    // Extract token usage from OpenAI response
+    const inputTokens = data.usage?.prompt_tokens ?? 0;
+    const outputTokens = data.usage?.completion_tokens ?? 0;
+
     return {
       passed,
       score,
       response: content,
+      usage: {
+        inputTokens,
+        outputTokens,
+      },
       metadata: {
         adapter: "openai",
         model: this.modelId,
-        usage: data.usage,
+        rawUsage: data.usage,
       },
     };
   }
@@ -419,14 +436,22 @@ class AnthropicAdapter extends BaseAdapter {
 
     const { passed, score } = this.evaluateResponse(content, testCase);
 
+    // Extract token usage from Anthropic response
+    const inputTokens = data.usage?.input_tokens ?? 0;
+    const outputTokens = data.usage?.output_tokens ?? 0;
+
     return {
       passed,
       score,
       response: content,
+      usage: {
+        inputTokens,
+        outputTokens,
+      },
       metadata: {
         adapter: "anthropic",
         model: this.modelId,
-        usage: data.usage,
+        rawUsage: data.usage,
       },
     };
   }
@@ -494,14 +519,22 @@ class GoogleAdapter extends BaseAdapter {
 
     const { passed, score } = this.evaluateResponse(content, testCase);
 
+    // Extract token usage from Google response
+    const inputTokens = data.usageMetadata?.promptTokenCount ?? 0;
+    const outputTokens = data.usageMetadata?.candidatesTokenCount ?? 0;
+
     return {
       passed,
       score,
       response: content,
+      usage: {
+        inputTokens,
+        outputTokens,
+      },
       metadata: {
         adapter: "google",
         model: this.modelId,
-        usageMetadata: data.usageMetadata,
+        rawUsage: data.usageMetadata,
       },
     };
   }
@@ -566,14 +599,22 @@ class TogetherAdapter extends BaseAdapter {
 
     const { passed, score } = this.evaluateResponse(content, testCase);
 
+    // Extract token usage from Together response (OpenAI-compatible format)
+    const inputTokens = data.usage?.prompt_tokens ?? 0;
+    const outputTokens = data.usage?.completion_tokens ?? 0;
+
     return {
       passed,
       score,
       response: content,
+      usage: {
+        inputTokens,
+        outputTokens,
+      },
       metadata: {
         adapter: "together",
         model: this.modelId,
-        usage: data.usage,
+        rawUsage: data.usage,
       },
     };
   }

@@ -199,6 +199,11 @@ export const evaluations = pgTable("evaluations", {
   completedTestCases: integer("completed_test_cases").default(0).notNull(),
   failedTestCases: integer("failed_test_cases").default(0).notNull(),
   errorMessage: text("error_message"),
+  // Cost tracking fields
+  inputTokens: integer("input_tokens").default(0).notNull(),
+  outputTokens: integer("output_tokens").default(0).notNull(),
+  totalCostUsd: real("total_cost_usd").default(0).notNull(),
+  costEstimated: boolean("cost_estimated").default(false).notNull(), // true if backfilled/estimated
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -418,6 +423,60 @@ export const submissionsRelations = relations(submissions, ({ one }) => ({
 }));
 
 // ============================================================================
+// COST TRACKING & BUDGET
+// ============================================================================
+
+export const providerPricing = pgTable("provider_pricing", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  providerId: uuid("provider_id")
+    .notNull()
+    .references(() => providers.id, { onDelete: "cascade" }),
+  modelPattern: text("model_pattern").notNull(), // e.g., "gpt-4o", "claude-*", regex pattern
+  inputPricePerMillion: real("input_price_per_million").notNull(), // USD per 1M input tokens
+  outputPricePerMillion: real("output_price_per_million").notNull(), // USD per 1M output tokens
+  effectiveDate: timestamp("effective_date").defaultNow().notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const providerPricingRelations = relations(providerPricing, ({ one }) => ({
+  provider: one(providers, {
+    fields: [providerPricing.providerId],
+    references: [providers.id],
+  }),
+}));
+
+export const budgetAlerts = pgTable("budget_alerts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  thresholdUsd: real("threshold_usd").notNull(), // Alert when cumulative spend reaches this
+  periodDays: integer("period_days").notNull(), // Rolling period (e.g., 30 for monthly)
+  isActive: boolean("is_active").default(true).notNull(),
+  lastTriggeredAt: timestamp("last_triggered_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const budgetAlertHistory = pgTable("budget_alert_history", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  alertId: uuid("alert_id")
+    .notNull()
+    .references(() => budgetAlerts.id, { onDelete: "cascade" }),
+  triggeredAt: timestamp("triggered_at").defaultNow().notNull(),
+  currentSpend: real("current_spend").notNull(),
+  thresholdUsd: real("threshold_usd").notNull(),
+  message: text("message"),
+});
+
+export const budgetAlertHistoryRelations = relations(budgetAlertHistory, ({ one }) => ({
+  alert: one(budgetAlerts, {
+    fields: [budgetAlertHistory.alertId],
+    references: [budgetAlerts.id],
+  }),
+}));
+
+// ============================================================================
 // TYPE EXPORTS
 // ============================================================================
 
@@ -456,3 +515,12 @@ export type NewAlert = typeof alerts.$inferInsert;
 
 export type Submission = typeof submissions.$inferSelect;
 export type NewSubmission = typeof submissions.$inferInsert;
+
+export type ProviderPricing = typeof providerPricing.$inferSelect;
+export type NewProviderPricing = typeof providerPricing.$inferInsert;
+
+export type BudgetAlert = typeof budgetAlerts.$inferSelect;
+export type NewBudgetAlert = typeof budgetAlerts.$inferInsert;
+
+export type BudgetAlertHistoryEntry = typeof budgetAlertHistory.$inferSelect;
+export type NewBudgetAlertHistoryEntry = typeof budgetAlertHistory.$inferInsert;

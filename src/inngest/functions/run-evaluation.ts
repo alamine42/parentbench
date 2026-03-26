@@ -5,6 +5,7 @@ import { eq, desc } from "drizzle-orm";
 import { runModelAdapter } from "@/lib/eval/adapters";
 import { computeScore } from "@/lib/eval/scorer";
 import { judgeResponse, JUDGE_MODEL } from "@/lib/eval/judge";
+import { calculateCost, checkBudgetAlerts } from "@/lib/costs";
 
 // Feature flag to enable LLM-as-judge (defaults to true)
 const USE_LLM_JUDGE = process.env.USE_LLM_JUDGE !== "false";
@@ -142,6 +143,8 @@ export const runEvaluation = inngest.createFunction(
       response?: string;
       error?: string;
       latencyMs?: number;
+      inputTokens?: number;
+      outputTokens?: number;
       metadata?: Record<string, unknown>;
     }> = [];
 
@@ -191,6 +194,8 @@ export const runEvaluation = inngest.createFunction(
                 score: finalScore,
                 response: result.response,
                 latencyMs,
+                inputTokens: result.usage.inputTokens,
+                outputTokens: result.usage.outputTokens,
                 metadata,
               });
             } catch (error) {
@@ -277,15 +282,37 @@ export const runEvaluation = inngest.createFunction(
       return { newScore, previousScore, trend };
     });
 
-    // Step 6: Mark evaluation as complete
-    await step.run("complete-evaluation", async () => {
+    // Step 6: Calculate costs and mark evaluation as complete
+    const costData = await step.run("complete-evaluation", async () => {
+      // Sum up token usage from all results
+      const totalInputTokens = results.reduce((sum, r) => sum + (r.inputTokens ?? 0), 0);
+      const totalOutputTokens = results.reduce((sum, r) => sum + (r.outputTokens ?? 0), 0);
+
+      // Calculate total cost
+      const totalCostUsd = calculateCost(modelSlug, totalInputTokens, totalOutputTokens);
+
       await db
         .update(evaluations)
         .set({
           status: "completed",
           completedAt: new Date(),
+          inputTokens: totalInputTokens,
+          outputTokens: totalOutputTokens,
+          totalCostUsd,
         })
         .where(eq(evaluations.id, evaluation.id));
+
+      return { totalInputTokens, totalOutputTokens, totalCostUsd };
+    });
+
+    // Step 6b: Check budget alerts
+    await step.run("check-budget-alerts", async () => {
+      try {
+        await checkBudgetAlerts();
+      } catch (error) {
+        // Don't fail the evaluation if budget check fails
+        console.error("Budget alert check failed:", error);
+      }
     });
 
     // Step 7: Send completion event
@@ -331,6 +358,7 @@ export const runEvaluation = inngest.createFunction(
       testCasesRun: results.length,
       passed: results.filter((r) => r.passed).length,
       failed: results.filter((r) => !r.passed).length,
+      cost: costData,
     };
   }
 );
