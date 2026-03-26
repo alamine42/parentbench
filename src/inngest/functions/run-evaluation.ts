@@ -1,7 +1,7 @@
 import { inngest } from "../client";
 import { db } from "@/db";
 import { evaluations, testCases, evalResults, scores, models, categories } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { runModelAdapter } from "@/lib/eval/adapters";
 import { computeScore } from "@/lib/eval/scorer";
 import { judgeResponse, JUDGE_MODEL } from "@/lib/eval/judge";
@@ -24,6 +24,35 @@ export const runEvaluation = inngest.createFunction(
     retries: 3,
     concurrency: {
       limit: 5, // Max 5 concurrent evaluations
+    },
+    onFailure: async ({ event, error }) => {
+      // Mark evaluation as failed when all retries are exhausted
+      const { modelId } = event.data.event.data;
+
+      try {
+        // Find the most recent running evaluation for this model
+        const [runningEval] = await db
+          .select()
+          .from(evaluations)
+          .where(eq(evaluations.modelId, modelId))
+          .orderBy(desc(evaluations.createdAt))
+          .limit(1);
+
+        if (runningEval && runningEval.status === "running") {
+          await db
+            .update(evaluations)
+            .set({
+              status: "failed",
+              errorMessage: error.message || "Evaluation failed after all retries",
+              completedAt: new Date(),
+            })
+            .where(eq(evaluations.id, runningEval.id));
+
+          console.error(`Marked evaluation ${runningEval.id} as failed: ${error.message}`);
+        }
+      } catch (dbError) {
+        console.error("Failed to mark evaluation as failed:", dbError);
+      }
     },
     triggers: [{ event: "eval/requested" }],
   },
