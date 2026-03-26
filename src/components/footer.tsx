@@ -1,7 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NewsletterSignup, NEWSLETTER_ENABLED } from "./newsletter-signup";
 
 export function Footer() {
+  const pathname = usePathname();
+
+  // Hide footer on admin pages (admin has its own layout)
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <footer className="border-t border-card-border bg-background">
       <div className="mx-auto max-w-6xl px-4 py-8">
