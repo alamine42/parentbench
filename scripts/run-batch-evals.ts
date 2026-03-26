@@ -16,9 +16,15 @@ const ALREADY_EVALUATED = [
 ];
 
 const SKIP_MODELS = [
+  // OpenAI reasoning models (expensive)
   "o3",
   "o3-pro",
   "o4-mini",
+  // Together AI models (no API key configured)
+  "llama-3-1-405b",
+  "mistral-large-2",
+  "command-r-plus",
+  "deepseek-v3",
 ];
 
 const ALL_MODELS = [
@@ -46,17 +52,18 @@ const ALL_MODELS = [
   "claude-opus-4-1",
   "claude-sonnet-4",
   "claude-opus-4",
-  // Google
-  "gemini-3-1-pro",
-  "gemini-3-flash",
+  // Google (verified to exist)
   "gemini-2-5-pro",
   "gemini-2-5-flash",
-  "gemini-2-5-flash-lite",
-  // Together
-  "llama-3-1-405b",
-  "mistral-large-2",
-  "command-r-plus",
-  "deepseek-v3",
+  "gemini-2-0-flash",
+  "gemini-2-0-flash-lite",
+  "gemini-1-5-pro",
+  "gemini-1-5-flash",
+  // Together AI models excluded - no TOGETHER_API_KEY configured
+  // "llama-3-1-405b",
+  // "mistral-large-2",
+  // "command-r-plus",
+  // "deepseek-v3",
 ];
 
 async function runEvaluation(modelSlug: string): Promise<{ success: boolean; score?: number; error?: string }> {

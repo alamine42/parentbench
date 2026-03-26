@@ -10,6 +10,9 @@ interface Model {
   slug: string;
   provider: string;
   hasScore: boolean;
+  latestScore: number | null;
+  latestGrade: string | null;
+  latestEvalDate: string | null;
 }
 
 interface RunningEvaluation {
@@ -224,7 +227,7 @@ export default function NewEvaluationPage() {
         </div>
       </div>
 
-      {/* Models list */}
+      {/* Models table */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
         {loading ? (
           <div className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
@@ -235,39 +238,91 @@ export default function NewEvaluationPage() {
             {filter === "unevaluated" ? "All models have been evaluated!" : "No models found"}
           </div>
         ) : (
-          <div className="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-auto">
-            {filteredModels.map((model) => (
-              <label
-                key={model.id}
-                className={`flex items-center gap-4 px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-900/50 cursor-pointer ${
-                  selectedModels.has(model.id) ? "bg-indigo-50 dark:bg-indigo-900/20" : ""
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedModels.has(model.id)}
-                  onChange={() => toggleModel(model.id)}
-                  className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                />
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900 dark:text-gray-100">
-                    {model.name}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {model.provider} &middot; {model.slug}
-                  </p>
-                </div>
-                {model.hasScore ? (
-                  <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                    Evaluated
-                  </span>
-                ) : (
-                  <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
-                    Not evaluated
-                  </span>
-                )}
-              </label>
-            ))}
+          <div className="max-h-[28rem] overflow-y-auto">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-900/50 sticky top-0">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-10">
+                    <span className="sr-only">Select</span>
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Model
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Latest Score
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Last Evaluated
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {filteredModels.map((model) => (
+                  <tr
+                    key={model.id}
+                    onClick={() => toggleModel(model.id)}
+                    className={`cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/50 ${
+                      selectedModels.has(model.id) ? "bg-indigo-50 dark:bg-indigo-900/20" : ""
+                    }`}
+                  >
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedModels.has(model.id)}
+                        onChange={() => toggleModel(model.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-gray-900 dark:text-gray-100">
+                        {model.name}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {model.provider}
+                      </p>
+                    </td>
+                    <td className="px-4 py-3">
+                      {model.latestGrade ? (
+                        <div className="flex items-center gap-2">
+                          <span className={`px-2 py-0.5 rounded text-sm font-semibold ${getGradeColor(model.latestGrade)}`}>
+                            {model.latestGrade}
+                          </span>
+                          <span className="text-gray-600 dark:text-gray-400 text-sm">
+                            {model.latestScore?.toFixed(1)}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-gray-400 dark:text-gray-500 text-sm">—</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                      {model.latestEvalDate ? (
+                        <span title={new Date(model.latestEvalDate).toLocaleString()}>
+                          {formatRelativeTime(model.latestEvalDate)}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400 dark:text-gray-500">Never</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      {model.hasScore ? (
+                        <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                          Evaluated
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                          Needs eval
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
@@ -414,4 +469,36 @@ export default function NewEvaluationPage() {
       </div>
     </div>
   );
+}
+
+function getGradeColor(grade: string): string {
+  if (grade.startsWith("A")) {
+    return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+  }
+  if (grade.startsWith("B")) {
+    return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+  }
+  if (grade.startsWith("C")) {
+    return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+  }
+  if (grade.startsWith("D")) {
+    return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400";
+  }
+  return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+}
+
+function formatRelativeTime(dateStr: string): string {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+
+  return date.toLocaleDateString();
 }

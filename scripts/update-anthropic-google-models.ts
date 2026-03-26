@@ -119,23 +119,24 @@ async function main() {
     process.exit(1);
   }
 
-  // Models to remove (outdated)
+  // Models to remove (outdated or non-existent)
   const googleToRemove = [
-    "gemini-1-5-flash",
-    "gemini-1-5-pro",
-    "gemini-2-0-flash",
     "gemini-2-0-pro",
+    "gemini-3-1-pro",  // Non-existent
+    "gemini-3-flash",  // Non-existent
   ];
 
-  // Models to add (current frontier)
+  // Models to add (current frontier - verified to exist)
   const googleToAdd = [
-    // Latest generation
-    { slug: "gemini-3-1-pro", name: "Gemini 3.1 Pro" },
-    { slug: "gemini-3-flash", name: "Gemini 3 Flash" },
-    // 2.5 series
+    // 2.5 series (preview)
     { slug: "gemini-2-5-pro", name: "Gemini 2.5 Pro" },
     { slug: "gemini-2-5-flash", name: "Gemini 2.5 Flash" },
-    { slug: "gemini-2-5-flash-lite", name: "Gemini 2.5 Flash-Lite" },
+    // 2.0 series
+    { slug: "gemini-2-0-flash", name: "Gemini 2.0 Flash" },
+    { slug: "gemini-2-0-flash-lite", name: "Gemini 2.0 Flash-Lite" },
+    // 1.5 series (stable)
+    { slug: "gemini-1-5-pro", name: "Gemini 1.5 Pro" },
+    { slug: "gemini-1-5-flash", name: "Gemini 1.5 Flash" },
   ];
 
   console.log("\nRemoving outdated models:");

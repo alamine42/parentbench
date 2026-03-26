@@ -44,11 +44,16 @@ export async function GET() {
       .where(eq(models.isActive, true))
       .orderBy(models.name);
 
-    // Check which models have scores
+    // Check which models have scores and get latest eval info
     const modelsWithStatus = await Promise.all(
       allModels.map(async (model) => {
         const [latestScore] = await db
-          .select({ id: scores.id })
+          .select({
+            id: scores.id,
+            overallScore: scores.overallScore,
+            overallGrade: scores.overallGrade,
+            computedAt: scores.computedAt,
+          })
           .from(scores)
           .where(eq(scores.modelId, model.id))
           .orderBy(desc(scores.computedAt))
@@ -57,9 +62,25 @@ export async function GET() {
         return {
           ...model,
           hasScore: !!latestScore,
+          latestScore: latestScore?.overallScore ?? null,
+          latestGrade: latestScore?.overallGrade ?? null,
+          latestEvalDate: latestScore?.computedAt?.toISOString() ?? null,
         };
       })
     );
+
+    // Sort: unevaluated first, then oldest evaluated first
+    modelsWithStatus.sort((a, b) => {
+      // Unevaluated models come first
+      if (!a.latestEvalDate && b.latestEvalDate) return -1;
+      if (a.latestEvalDate && !b.latestEvalDate) return 1;
+      // Both unevaluated: sort by name
+      if (!a.latestEvalDate && !b.latestEvalDate) {
+        return a.name.localeCompare(b.name);
+      }
+      // Both evaluated: oldest first
+      return new Date(a.latestEvalDate!).getTime() - new Date(b.latestEvalDate!).getTime();
+    });
 
     return NextResponse.json({ models: modelsWithStatus });
   } catch (error) {
