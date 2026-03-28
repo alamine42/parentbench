@@ -4,17 +4,20 @@ import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { useEffect } from "react";
 
+// Support both env var names
+const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY || process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
+const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
+
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Only initialize in production and if key is set
     if (
       typeof window !== "undefined" &&
-      process.env.NEXT_PUBLIC_POSTHOG_KEY &&
+      POSTHOG_KEY &&
       process.env.NODE_ENV === "production"
     ) {
-      posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-        api_host:
-          process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com",
+      posthog.init(POSTHOG_KEY, {
+        api_host: POSTHOG_HOST,
         person_profiles: "identified_only",
         capture_pageview: true,
         capture_pageleave: true,
@@ -33,7 +36,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   // In development or without key, just render children
   if (
     typeof window === "undefined" ||
-    !process.env.NEXT_PUBLIC_POSTHOG_KEY ||
+    !POSTHOG_KEY ||
     process.env.NODE_ENV !== "production"
   ) {
     return <>{children}</>;
