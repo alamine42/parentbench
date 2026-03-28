@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import "./globals.css";
@@ -49,18 +50,20 @@ export default function RootLayout({
         className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
       >
         <ThemeProvider>
-          {/* Skip link for keyboard navigation - WCAG 2.4.1 */}
-          <a
-            href="#main-content"
-            className="skip-link sr-only focus:not-sr-only"
-          >
-            Skip to main content
-          </a>
-          <Header />
-          <main id="main-content" className="min-h-screen bg-background" tabIndex={-1}>
-            {children}
-          </main>
-          <Footer />
+          <PostHogProvider>
+            {/* Skip link for keyboard navigation - WCAG 2.4.1 */}
+            <a
+              href="#main-content"
+              className="skip-link sr-only focus:not-sr-only"
+            >
+              Skip to main content
+            </a>
+            <Header />
+            <main id="main-content" className="min-h-screen bg-background" tabIndex={-1}>
+              {children}
+            </main>
+            <Footer />
+          </PostHogProvider>
         </ThemeProvider>
       </body>
     </html>
