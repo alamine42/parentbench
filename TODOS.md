@@ -1,5 +1,15 @@
 # TODOS
 
+> **DEPRECATED:** This file has been migrated to Beads (`.beads/issues.jsonl`).
+> Use `/backlog` to view the project backlog.
+> See CLAUDE.md for task tracking conventions.
+
+---
+
+*The content below is kept for historical reference only. Do not update.*
+
+---
+
 Deferred work from plan reviews and implementation. Organized by priority.
 
 ## P1 - High Priority (Pre-Launch or Soon After)

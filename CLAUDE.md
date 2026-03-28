@@ -2,6 +2,24 @@
 
 Project-specific instructions for Claude Code.
 
+## Task Tracking
+
+**Single source of truth:** `.beads/issues.jsonl`
+
+- All epics and tasks live in Beads (`.beads/issues.jsonl`)
+- Use `/backlog` to view the project backlog
+- Session tasks (`TaskList`/`TaskCreate`) are ephemeral — sync important ones to Beads
+- `TODOS.md` is deprecated — all items migrated to Beads
+
+### Viewing the backlog
+```bash
+# List open epics
+grep '"issue_type":"epic"' .beads/issues.jsonl | grep '"status":"open"' | jq -r '.id + " - " + .title'
+
+# List tasks for an epic
+grep 'parentbench-er1' .beads/issues.jsonl | grep '"issue_type":"task"' | jq -r '.id + " - " + .title'
+```
+
 ## gstack
 
 Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude-in-chrome__*` tools.
