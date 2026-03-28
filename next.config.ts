@@ -2,25 +2,23 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
-  // instrumentation.ts is automatically enabled in Next.js 16+
+  // Next.js 16+ automatically supports instrumentation.ts
 };
 
-// Sentry configuration options
-const sentryWebpackPluginOptions = {
-  // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options
+export default withSentryConfig(nextConfig, {
+  // Sentry organization and project (set via env vars or directly)
+  org: process.env.SENTRY_ORG ?? "parentbench",
+  project: process.env.SENTRY_PROJECT ?? "javascript-nextjs",
 
-  // Only upload source maps in production builds
-  silent: true,
-
-  // Organization and project are set via env vars:
-  // SENTRY_ORG, SENTRY_PROJECT, SENTRY_AUTH_TOKEN
-
-  // Hides source maps from generated client bundles
-  hideSourceMaps: true,
+  // Auth token for source map uploads
+  authToken: process.env.SENTRY_AUTH_TOKEN,
 
   // Upload a larger set of source maps for better stack traces
   widenClientFileUpload: true,
-};
 
-export default withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+  // Route to tunnel Sentry requests (bypasses ad-blockers)
+  tunnelRoute: "/monitoring",
+
+  // Only show upload logs in CI
+  silent: !process.env.CI,
+});

@@ -3,25 +3,27 @@ import * as Sentry from "@sentry/nextjs";
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-  // Performance Monitoring
-  tracesSampleRate: 0.1, // 10% of transactions for performance monitoring
+  // Capture 10% of transactions for performance monitoring in prod, 100% in dev
+  tracesSampleRate: process.env.NODE_ENV === "development" ? 1.0 : 0.1,
 
-  // Session Replay - capture 1% of sessions, 100% on error
-  replaysSessionSampleRate: 0.01,
+  // Session Replay: capture 10% of sessions, 100% when errors occur
+  replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
 
-  // Only enable in production
-  enabled: process.env.NODE_ENV === "production",
+  // Enable structured logging
+  enableLogs: true,
 
-  // Set environment
-  environment: process.env.NODE_ENV,
+  // Integrations
+  integrations: [
+    Sentry.replayIntegration(),
+  ],
 
-  // Ignore common non-actionable errors
+  // Filter out common non-actionable errors
   ignoreErrors: [
     // Browser extensions
     /extensions\//i,
     /^chrome:\/\//i,
-    // Network errors that users can't control
+    // Network errors users can't control
     "Network request failed",
     "Failed to fetch",
     "Load failed",
@@ -29,9 +31,8 @@ Sentry.init({
     "NEXT_REDIRECT",
   ],
 
-  // Before sending, filter out sensitive data
+  // Redact PII from error messages
   beforeSend(event) {
-    // Remove any potential PII from error messages
     if (event.exception?.values) {
       event.exception.values.forEach((exception) => {
         if (exception.value) {
@@ -46,3 +47,6 @@ Sentry.init({
     return event;
   },
 });
+
+// Export for Next.js App Router navigation tracking
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
