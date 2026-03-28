@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 
-// Feature flag: Newsletter system is not yet implemented (see parentbench-ffa.11)
-// Set to true once the newsletter epic is complete
-export const NEWSLETTER_ENABLED = false;
+// Feature flag for newsletter signup
+export const NEWSLETTER_ENABLED = true;
 
 type NewsletterSignupProps = {
   variant?: "full" | "compact";
@@ -24,17 +23,15 @@ export function NewsletterSignup({ variant = "full" }: NewsletterSignupProps) {
     setStatus("loading");
 
     try {
-      const formData = new FormData();
-      formData.append("form-name", "newsletter");
-      formData.append("email", email);
-
-      const response = await fetch("/", {
+      const response = await fetch("/api/newsletter/subscribe", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData as unknown as Record<string, string>).toString(),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
       });
 
-      if (response.ok) {
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         setStatus("success");
         setEmail("");
       } else {
@@ -65,8 +62,7 @@ export function NewsletterSignup({ variant = "full" }: NewsletterSignupProps) {
 
   if (variant === "compact") {
     return (
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row" data-netlify="true" name="newsletter" aria-label="Newsletter signup">
-        <input type="hidden" name="form-name" value="newsletter" />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row" aria-label="Newsletter signup">
         <label htmlFor="newsletter-email-compact" className="sr-only">Email address</label>
         <input
           type="email"
@@ -95,11 +91,6 @@ export function NewsletterSignup({ variant = "full" }: NewsletterSignupProps) {
 
   return (
     <div className="rounded-2xl border border-card-border bg-gradient-to-br from-green-50/50 to-background p-8 dark:from-green-950/20">
-      {/* Hidden form for Netlify detection */}
-      <form name="newsletter" data-netlify="true" hidden>
-        <input type="email" name="email" />
-      </form>
-
       <div className="mx-auto max-w-xl text-center">
         <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600 dark:text-green-400">
@@ -113,8 +104,7 @@ export function NewsletterSignup({ variant = "full" }: NewsletterSignupProps) {
           No spam, just safety insights.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6" data-netlify="true" name="newsletter" aria-label="Newsletter signup">
-          <input type="hidden" name="form-name" value="newsletter" />
+        <form onSubmit={handleSubmit} className="mt-6" aria-label="Newsletter signup">
           <div className="flex flex-col gap-3 sm:flex-row sm:gap-2">
             <label htmlFor="newsletter-email-full" className="sr-only">Email address</label>
             <input
