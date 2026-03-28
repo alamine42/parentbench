@@ -3,12 +3,15 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 
+type EvalTier = "active" | "standard" | "maintenance" | "paused";
+
 interface Model {
   id: string;
   name: string;
   slug: string;
   description: string | null;
   isActive: boolean;
+  evalTier: EvalTier;
   createdAt: Date;
   provider: {
     id: string;
@@ -27,14 +30,46 @@ interface ModelsTableProps {
   providers: string[];
 }
 
-type SortKey = "name" | "provider" | "score" | "evalDate" | "status";
+type SortKey = "name" | "provider" | "score" | "evalDate" | "status" | "tier";
 type SortOrder = "asc" | "desc";
+
+const TIER_ORDER: Record<EvalTier, number> = {
+  active: 0,
+  standard: 1,
+  maintenance: 2,
+  paused: 3,
+};
+
+const TIER_INFO: Record<EvalTier, { label: string; description: string; color: string }> = {
+  active: {
+    label: "Active",
+    description: "Weekly (3 runs)",
+    color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+  },
+  standard: {
+    label: "Standard",
+    description: "Bi-weekly (3 runs)",
+    color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+  },
+  maintenance: {
+    label: "Maintenance",
+    description: "Monthly (3 runs)",
+    color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+  },
+  paused: {
+    label: "Paused",
+    description: "Manual only",
+    color: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400",
+  },
+};
 
 export function ModelsTable({ models, providers }: ModelsTableProps) {
   const [providerFilter, setProviderFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [tierFilter, setTierFilter] = useState<string>("all");
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
+  const [updatingTier, setUpdatingTier] = useState<string | null>(null);
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -42,6 +77,27 @@ export function ModelsTable({ models, providers }: ModelsTableProps) {
     } else {
       setSortKey(key);
       setSortOrder("asc");
+    }
+  };
+
+  const handleTierChange = async (modelId: string, newTier: EvalTier) => {
+    setUpdatingTier(modelId);
+    try {
+      const response = await fetch("/api/admin/models", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: modelId, evalTier: newTier }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update tier");
+      }
+      // Refresh the page to show updated data
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to update tier:", error);
+      alert("Failed to update evaluation tier");
+    } finally {
+      setUpdatingTier(null);
     }
   };
 
@@ -57,6 +113,11 @@ export function ModelsTable({ models, providers }: ModelsTableProps) {
     if (statusFilter !== "all") {
       const isActive = statusFilter === "active";
       result = result.filter((m) => m.isActive === isActive);
+    }
+
+    // Apply tier filter
+    if (tierFilter !== "all") {
+      result = result.filter((m) => m.evalTier === tierFilter);
     }
 
     // Apply sorting
@@ -87,13 +148,16 @@ export function ModelsTable({ models, providers }: ModelsTableProps) {
         case "status":
           comparison = (a.isActive ? 1 : 0) - (b.isActive ? 1 : 0);
           break;
+        case "tier":
+          comparison = TIER_ORDER[a.evalTier] - TIER_ORDER[b.evalTier];
+          break;
       }
 
       return sortOrder === "asc" ? comparison : -comparison;
     });
 
     return result;
-  }, [models, providerFilter, statusFilter, sortKey, sortOrder]);
+  }, [models, providerFilter, statusFilter, tierFilter, sortKey, sortOrder]);
 
   const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
     if (sortKey !== columnKey) {
@@ -153,6 +217,24 @@ export function ModelsTable({ models, providers }: ModelsTableProps) {
           </select>
         </div>
 
+        <div className="flex items-center gap-2">
+          <label htmlFor="tier-filter" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Eval Tier:
+          </label>
+          <select
+            id="tier-filter"
+            value={tierFilter}
+            onChange={(e) => setTierFilter(e.target.value)}
+            className="px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          >
+            <option value="all">All Tiers</option>
+            <option value="active">Active (Weekly)</option>
+            <option value="standard">Standard (Bi-weekly)</option>
+            <option value="maintenance">Maintenance (Monthly)</option>
+            <option value="paused">Paused (Manual)</option>
+          </select>
+        </div>
+
         <div className="text-sm text-gray-500 dark:text-gray-400 ml-auto">
           Showing {filteredAndSortedModels.length} of {models.length} models
         </div>
@@ -208,6 +290,15 @@ export function ModelsTable({ models, providers }: ModelsTableProps) {
                   <SortIcon columnKey="status" />
                 </div>
               </th>
+              <th
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                onClick={() => handleSort("tier")}
+              >
+                <div className="flex items-center gap-1">
+                  Eval Tier
+                  <SortIcon columnKey="tier" />
+                </div>
+              </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Actions
               </th>
@@ -217,7 +308,7 @@ export function ModelsTable({ models, providers }: ModelsTableProps) {
             {filteredAndSortedModels.length === 0 ? (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
                 >
                   No models match the selected filters.
@@ -276,6 +367,21 @@ export function ModelsTable({ models, providers }: ModelsTableProps) {
                         Inactive
                       </span>
                     )}
+                  </td>
+                  <td className="px-6 py-4">
+                    <select
+                      value={model.evalTier}
+                      onChange={(e) => handleTierChange(model.id, e.target.value as EvalTier)}
+                      disabled={updatingTier === model.id}
+                      className={`px-2 py-1 text-xs font-medium rounded-lg border-0 cursor-pointer focus:ring-2 focus:ring-indigo-500 ${TIER_INFO[model.evalTier].color} ${updatingTier === model.id ? "opacity-50 cursor-wait" : ""}`}
+                      title={TIER_INFO[model.evalTier].description}
+                    >
+                      {(Object.keys(TIER_INFO) as EvalTier[]).map((tier) => (
+                        <option key={tier} value={tier}>
+                          {TIER_INFO[tier].label}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">

@@ -16,6 +16,7 @@ async function getModels() {
       slug: models.slug,
       description: models.description,
       isActive: models.isActive,
+      evalTier: models.evalTier,
       createdAt: models.createdAt,
       provider: {
         id: providers.id,

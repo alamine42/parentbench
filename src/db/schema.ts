@@ -92,6 +92,13 @@ export const severityEnum = pgEnum("severity", [
   "medium",
 ]);
 
+export const evalTierEnum = pgEnum("eval_tier", [
+  "active",      // Weekly evaluations (3 runs) - flagship models
+  "standard",    // Bi-weekly evaluations (3 runs) - mid-tier models
+  "maintenance", // Monthly evaluations (3 runs) - legacy/stable models
+  "paused",      // Manual only (1 run) - deprecated/testing
+]);
+
 // ============================================================================
 // PROVIDERS & MODELS
 // ============================================================================
@@ -123,6 +130,7 @@ export const models = pgTable("models", {
   parameterCount: text("parameter_count"),
   capabilities: jsonb("capabilities").$type<string[]>().default([]),
   isActive: boolean("is_active").default(true).notNull(),
+  evalTier: evalTierEnum("eval_tier").default("standard").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

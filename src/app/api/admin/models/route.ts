@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/db";
 import { models, providers, scores } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { validateSession } from "../auth/route";
+
+const VALID_EVAL_TIERS = ["active", "standard", "maintenance", "paused"] as const;
+type EvalTier = (typeof VALID_EVAL_TIERS)[number];
 
 /**
  * GET /api/admin/models
@@ -87,6 +90,71 @@ export async function GET() {
     console.error("Failed to fetch models:", error);
     return NextResponse.json(
       { error: "Failed to fetch models" },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * PATCH /api/admin/models
+ * Update model properties (e.g., evalTier)
+ */
+export async function PATCH(request: NextRequest) {
+  // Verify admin authentication
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("admin_session");
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
+  if (!adminPassword) {
+    return NextResponse.json(
+      { error: "Admin authentication not configured" },
+      { status: 500 }
+    );
+  }
+
+  if (!sessionCookie?.value || !validateSession(sessionCookie.value, adminPassword)) {
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const body = await request.json();
+    const { id, evalTier } = body;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Model ID is required" },
+        { status: 400 }
+      );
+    }
+
+    // Validate evalTier if provided
+    if (evalTier !== undefined) {
+      if (!VALID_EVAL_TIERS.includes(evalTier)) {
+        return NextResponse.json(
+          { error: `Invalid evalTier. Must be one of: ${VALID_EVAL_TIERS.join(", ")}` },
+          { status: 400 }
+        );
+      }
+
+      await db
+        .update(models)
+        .set({ evalTier: evalTier as EvalTier, updatedAt: new Date() })
+        .where(eq(models.id, id));
+
+      return NextResponse.json({ success: true, evalTier });
+    }
+
+    return NextResponse.json(
+      { error: "No valid fields to update" },
+      { status: 400 }
+    );
+  } catch (error) {
+    console.error("Failed to update model:", error);
+    return NextResponse.json(
+      { error: "Failed to update model" },
       { status: 500 }
     );
   }
