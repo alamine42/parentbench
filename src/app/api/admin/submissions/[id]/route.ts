@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import {
   getSubmissionById,
   updateSubmissionStatus,
   convertSubmissionToTestCase,
 } from "@/db/queries/submissions";
 import { inngest } from "@/inngest/client";
+import { validateSession } from "../../auth/route";
 
 // ============================================================================
 // AUTH CHECK
@@ -12,20 +14,25 @@ import { inngest } from "@/inngest/client";
 
 /**
  * Check if request is from an authorized admin
- * Mirrors the logic from admin layout for API routes
+ * Uses the same session validation as other admin routes
  */
 async function checkAdminAuth(): Promise<boolean> {
-  // In development or with bypass flag, allow access
-  const isDev = process.env.NODE_ENV === "development";
-  const adminBypass = process.env.ADMIN_BYPASS === "true";
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("admin_session");
+  const adminPassword = process.env.ADMIN_PASSWORD;
 
-  if (isDev || adminBypass) {
-    return true;
+  // Fail closed: if no password configured, deny access
+  if (!adminPassword) {
+    console.error("ADMIN_PASSWORD not configured");
+    return false;
   }
 
-  // In production, would verify session/JWT from request headers
-  // For now, deny access in production without bypass
-  return false;
+  // Validate session cookie
+  if (!sessionCookie?.value) {
+    return false;
+  }
+
+  return validateSession(sessionCookie.value, adminPassword);
 }
 
 // ============================================================================

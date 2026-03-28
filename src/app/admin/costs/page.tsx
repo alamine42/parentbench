@@ -87,11 +87,11 @@ function CostsPageSkeleton() {
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
         <div className="h-5 w-40 bg-gray-200 dark:bg-gray-700 rounded mb-4" />
         <div className="h-48 flex items-end gap-1">
-          {[...Array(14)].map((_, i) => (
+          {[20, 45, 30, 65, 40, 75, 55, 85, 35, 60, 50, 70, 25, 80].map((height, i) => (
             <div
               key={i}
-              className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-t"
-              style={{ height: `${Math.random() * 80 + 20}%` }}
+              className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-t animate-pulse"
+              style={{ height: `${height}%` }}
             />
           ))}
         </div>

@@ -107,22 +107,36 @@ export const getDbModels = cache(async (): Promise<DbModel[]> => {
 
 /**
  * Get all models with their latest scores, sorted by score (cached)
+ * Uses a single query for all scores to avoid N+1 problem
  */
 export const getDbModelsWithScores = cache(async (): Promise<DbModelWithScore[]> => {
   const allModels = await getDbModels();
-  const modelsWithScores: DbModelWithScore[] = [];
 
-  for (const model of allModels) {
-    const latestScoreResult = await db
-      .select()
-      .from(scores)
-      .where(eq(scores.modelId, model.id))
-      .orderBy(desc(scores.computedAt))
-      .limit(1);
+  if (allModels.length === 0) {
+    return [];
+  }
 
-    const latestScore = latestScoreResult[0];
+  // Get all model IDs
+  const modelIds = allModels.map(m => m.id);
 
-    modelsWithScores.push({
+  // Fetch all scores in a single query, ordered by computedAt desc
+  const allScoresResult = await db
+    .select()
+    .from(scores)
+    .orderBy(desc(scores.computedAt));
+
+  // Build a map of modelId -> latest score (first occurrence since sorted desc)
+  const latestScoresByModel = new Map<string, typeof allScoresResult[0]>();
+  for (const score of allScoresResult) {
+    if (modelIds.includes(score.modelId) && !latestScoresByModel.has(score.modelId)) {
+      latestScoresByModel.set(score.modelId, score);
+    }
+  }
+
+  // Combine models with their scores
+  const modelsWithScores: DbModelWithScore[] = allModels.map(model => {
+    const latestScore = latestScoresByModel.get(model.id);
+    return {
       ...model,
       latestScore: latestScore
         ? {
@@ -132,12 +146,12 @@ export const getDbModelsWithScores = cache(async (): Promise<DbModelWithScore[]>
             overallGrade: latestScore.overallGrade,
             trend: latestScore.trend,
             dataQuality: latestScore.dataQuality,
-            categoryScores: latestScore.categoryScores as DbScore["categoryScores"],
+            categoryScores: (latestScore.categoryScores || []) as DbScore["categoryScores"],
             computedAt: latestScore.computedAt,
           }
         : null,
-    });
-  }
+    };
+  });
 
   // Sort by overall score descending
   return modelsWithScores.sort((a, b) => {

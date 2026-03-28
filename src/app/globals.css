@@ -230,3 +230,115 @@ select:focus-visible,
     opacity: 0.7;
   }
 }
+
+/* ============================================================================
+   STRIPE-LEVEL POLISH: Premium Micro-interactions
+   ============================================================================ */
+
+/* Smooth button press effect */
+.btn-press {
+  @apply transition-all duration-150 ease-out;
+  @apply active:scale-[0.98] active:shadow-sm;
+}
+
+/* Input focus glow - subtle but noticeable */
+.input-glow:focus {
+  box-shadow:
+    0 0 0 3px var(--accent-alpha, rgba(37, 99, 235, 0.1)),
+    0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+/* Card hover lift effect */
+.card-hover {
+  @apply transition-all duration-200 ease-out;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 25px -5px rgb(0 0 0 / 0.08),
+    0 8px 10px -6px rgb(0 0 0 / 0.04);
+}
+.dark .card-hover:hover {
+  box-shadow:
+    0 10px 25px -5px rgb(0 0 0 / 0.3),
+    0 8px 10px -6px rgb(0 0 0 / 0.2);
+}
+
+/* Smooth link underline animation */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.2s ease-out;
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Nav item active indicator */
+.nav-active {
+  position: relative;
+}
+.nav-active::before {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent) 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Smooth spring animation for selections */
+@keyframes spring-select {
+  0% { transform: scale(0.95); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.spring-select {
+  animation: spring-select 0.3s ease-out;
+}
+
+/* Mobile-first responsive utilities */
+@media (max-width: 640px) {
+  /* Larger touch targets on mobile */
+  .mobile-touch-target {
+    min-height: 48px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  /* Better text sizing for mobile */
+  .mobile-text-base {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

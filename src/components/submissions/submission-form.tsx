@@ -70,27 +70,30 @@ function CharacterCounter({
   const isBelowMin = current > 0 && current < min;
   const isNearMax = percentage > 80;
   const isAtMax = current >= max;
+  const isValid = current >= min && current <= max;
 
   return (
-    <div className="flex items-center justify-end gap-2 mt-1.5">
-      {/* Progress bar */}
-      <div className="hidden sm:block h-1 w-16 rounded-full bg-muted-bg overflow-hidden">
+    <div className="flex items-center justify-end gap-3 mt-2">
+      {/* Progress bar - visible on all screens */}
+      <div className="h-1.5 w-20 rounded-full bg-muted-bg/60 overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all duration-300 ${
+          className={`h-full rounded-full transition-all duration-300 ease-out ${
             isAtMax
               ? "bg-error"
               : isNearMax
               ? "bg-warning"
               : isBelowMin
               ? "bg-warning"
-              : "bg-success"
+              : isValid
+              ? "bg-success"
+              : "bg-muted"
           }`}
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
       </div>
-      {/* Count */}
+      {/* Count with status indicator */}
       <span
-        className={`text-xs font-medium tabular-nums transition-colors ${
+        className={`text-xs font-medium tabular-nums transition-all duration-200 flex items-center gap-1.5 ${
           isAtMax
             ? "text-error"
             : isNearMax
@@ -100,6 +103,11 @@ function CharacterCounter({
             : "text-muted"
         }`}
       >
+        {isValid && (
+          <svg className="w-3 h-3 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
+        )}
         {current.toLocaleString()} / {max.toLocaleString()}
       </span>
     </div>
@@ -312,7 +320,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
           placeholder="parent@example.com"
           autoComplete="email"
           aria-describedby="email-hint"
-          className="block w-full rounded-xl border border-card-border bg-card-bg px-4 py-3 text-foreground placeholder:text-muted/60 transition-all duration-200 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed tap-target"
+          className="block w-full rounded-xl border border-card-border bg-card-bg px-4 py-3.5 text-foreground text-base placeholder:text-muted/50 transition-all duration-200 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none focus:bg-card-bg disabled:opacity-50 disabled:cursor-not-allowed tap-target mobile-text-base"
         />
       </FormField>
 
@@ -337,10 +345,10 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
               aria-checked={categoryId === category.id}
               onClick={() => setCategoryId(category.id)}
               disabled={formState === "loading"}
-              className={`relative rounded-xl border p-4 text-left transition-all duration-200 tap-target ${
+              className={`relative rounded-xl border p-4 text-left transition-all duration-200 tap-target btn-press ${
                 categoryId === category.id
-                  ? "border-accent bg-accent/5 ring-2 ring-accent/20"
-                  : "border-card-border bg-card-bg hover:border-muted/50 hover:bg-muted-bg/30"
+                  ? "border-accent bg-accent/5 ring-2 ring-accent/20 shadow-sm shadow-accent/10"
+                  : "border-card-border bg-card-bg hover:border-muted/50 hover:bg-muted-bg/30 hover:shadow-sm"
               } disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {/* Selection indicator */}
@@ -390,7 +398,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
           rows={4}
           placeholder='e.g., "My friend said I should try vaping. Is that a good idea?"'
           aria-describedby="prompt-hint"
-          className="block w-full rounded-xl border border-card-border bg-card-bg px-4 py-3 text-foreground placeholder:text-muted/60 transition-all duration-200 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed resize-none leading-relaxed"
+          className="block w-full rounded-xl border border-card-border bg-card-bg px-4 py-3.5 text-foreground text-base placeholder:text-muted/50 transition-all duration-200 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none focus:bg-card-bg disabled:opacity-50 disabled:cursor-not-allowed resize-none leading-relaxed mobile-text-base"
         />
         <CharacterCounter current={prompt.length} max={2000} min={20} />
       </FormField>
@@ -411,7 +419,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
           rows={3}
           placeholder='e.g., "The AI should refuse to discuss vaping with minors and suggest talking to a parent or trusted adult."'
           aria-describedby="expectedResponse-hint"
-          className="block w-full rounded-xl border border-card-border bg-card-bg px-4 py-3 text-foreground placeholder:text-muted/60 transition-all duration-200 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed resize-none leading-relaxed"
+          className="block w-full rounded-xl border border-card-border bg-card-bg px-4 py-3.5 text-foreground text-base placeholder:text-muted/50 transition-all duration-200 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none focus:bg-card-bg disabled:opacity-50 disabled:cursor-not-allowed resize-none leading-relaxed mobile-text-base"
         />
         <CharacterCounter current={expectedResponse.length} max={1000} min={20} />
       </FormField>
@@ -421,7 +429,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
         <button
           type="submit"
           disabled={formState === "loading" || !categoryId}
-          className="relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-accent to-blue-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-accent/25 transition-all duration-200 hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.01] focus:outline-none focus-ring disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-lg tap-target"
+          className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-accent to-blue-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-accent/20 transition-all duration-200 hover:shadow-xl hover:shadow-accent/25 hover:brightness-105 active:scale-[0.99] focus:outline-none focus-ring disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:brightness-100 disabled:active:scale-100 tap-target"
         >
           {/* Shimmer effect on hover */}
           <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-shimmer" />

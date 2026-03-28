@@ -18,8 +18,11 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const MAX_SUBMISSIONS_PER_HOUR = 5;
 
 function checkRateLimit(email: string): boolean {
+  // Run lazy cleanup if needed
+  cleanupStaleEntries();
+
   const now = Date.now();
-  const normalizedEmail = email.toLowerCase();
+  const normalizedEmail = email.toLowerCase().trim();
   const timestamps = rateLimitMap.get(normalizedEmail) || [];
 
   // Filter out timestamps older than the window
@@ -38,21 +41,29 @@ function checkRateLimit(email: string): boolean {
   return true; // Not rate limited
 }
 
-// Clean up old entries periodically (every 10 minutes)
-if (typeof setInterval !== "undefined") {
-  setInterval(() => {
-    const now = Date.now();
-    for (const [email, timestamps] of rateLimitMap.entries()) {
-      const recentTimestamps = timestamps.filter(
-        (ts) => now - ts < RATE_LIMIT_WINDOW_MS
-      );
-      if (recentTimestamps.length === 0) {
-        rateLimitMap.delete(email);
-      } else {
-        rateLimitMap.set(email, recentTimestamps);
-      }
+// Track last cleanup time for lazy cleanup
+let lastCleanupTime = Date.now();
+const CLEANUP_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
+
+// Lazy cleanup: clean stale entries when checking rate limits
+// This avoids interval-based cleanup which doesn't work well in serverless
+function cleanupStaleEntries(): void {
+  const now = Date.now();
+  if (now - lastCleanupTime < CLEANUP_INTERVAL_MS) {
+    return; // Not time to clean up yet
+  }
+
+  lastCleanupTime = now;
+  for (const [email, timestamps] of rateLimitMap.entries()) {
+    const recentTimestamps = timestamps.filter(
+      (ts) => now - ts < RATE_LIMIT_WINDOW_MS
+    );
+    if (recentTimestamps.length === 0) {
+      rateLimitMap.delete(email);
+    } else {
+      rateLimitMap.set(email, recentTimestamps);
     }
-  }, 10 * 60 * 1000);
+  }
 }
 
 // ============================================================================

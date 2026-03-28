@@ -107,9 +107,11 @@ export async function POST(request: NextRequest) {
   try {
     const { modelId } = await request.json();
 
-    if (!modelId) {
+    // Validate modelId is a non-empty string with UUID format
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!modelId || typeof modelId !== "string" || !UUID_REGEX.test(modelId)) {
       return NextResponse.json(
-        { error: "modelId is required" },
+        { error: "Invalid modelId format" },
         { status: 400 }
       );
     }

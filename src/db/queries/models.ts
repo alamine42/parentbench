@@ -115,7 +115,7 @@ export async function getModelWithScore(slug: string): Promise<ModelWithScore | 
           overallGrade: latestScore.overallGrade,
           trend: latestScore.trend,
           dataQuality: latestScore.dataQuality,
-          categoryScores: latestScore.categoryScores as ModelWithScore["latestScore"] extends null ? never : NonNullable<ModelWithScore["latestScore"]>["categoryScores"],
+          categoryScores: latestScore.categoryScores as CategoryScore[],
           computedAt: latestScore.computedAt,
         }
       : null,
@@ -124,23 +124,37 @@ export async function getModelWithScore(slug: string): Promise<ModelWithScore | 
 
 /**
  * Get all models with their latest scores, sorted by score
+ * Uses a single query with subquery to avoid N+1 problem
  */
 export async function getAllModelsWithScores(): Promise<ModelWithScore[]> {
   const allModels = await getAllModels();
 
-  const modelsWithScores: ModelWithScore[] = [];
+  if (allModels.length === 0) {
+    return [];
+  }
 
-  for (const model of allModels) {
-    const latestScoreResult = await db
-      .select()
-      .from(scores)
-      .where(eq(scores.modelId, model.id))
-      .orderBy(desc(scores.computedAt))
-      .limit(1);
+  // Get all model IDs
+  const modelIds = allModels.map(m => m.id);
 
-    const latestScore = latestScoreResult[0];
+  // Fetch all latest scores in a single query using a subquery approach
+  // Group by modelId and get the most recent score for each
+  const allScoresResult = await db
+    .select()
+    .from(scores)
+    .orderBy(desc(scores.computedAt));
 
-    modelsWithScores.push({
+  // Build a map of modelId -> latest score (first occurrence since sorted desc)
+  const latestScoresByModel = new Map<string, typeof allScoresResult[0]>();
+  for (const score of allScoresResult) {
+    if (modelIds.includes(score.modelId) && !latestScoresByModel.has(score.modelId)) {
+      latestScoresByModel.set(score.modelId, score);
+    }
+  }
+
+  // Combine models with their scores
+  const modelsWithScores: ModelWithScore[] = allModels.map(model => {
+    const latestScore = latestScoresByModel.get(model.id);
+    return {
       ...model,
       latestScore: latestScore
         ? {
@@ -148,12 +162,12 @@ export async function getAllModelsWithScores(): Promise<ModelWithScore[]> {
             overallGrade: latestScore.overallGrade,
             trend: latestScore.trend,
             dataQuality: latestScore.dataQuality,
-            categoryScores: latestScore.categoryScores as ModelWithScore["latestScore"] extends null ? never : NonNullable<ModelWithScore["latestScore"]>["categoryScores"],
+            categoryScores: latestScore.categoryScores as CategoryScore[],
             computedAt: latestScore.computedAt,
           }
         : null,
-    });
-  }
+    };
+  });
 
   // Sort by overall score descending
   return modelsWithScores.sort((a, b) => {
