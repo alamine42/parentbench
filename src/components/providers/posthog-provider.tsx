@@ -40,18 +40,25 @@ function PostHogPageView() {
   );
 }
 
+// Debug: Check if env vars are bundled at build time
+const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
+
+// Log at module level (will appear in server logs during build)
+if (typeof window === "undefined") {
+  console.log("[PostHog] Build-time check - KEY exists:", !!POSTHOG_KEY);
+}
+
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Only initialize on client, in production, with API key
-    const apiKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-    const apiHost =
-      process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
+    // Debug: Log what we see at runtime
+    console.log("[PostHog] Runtime init - KEY:", POSTHOG_KEY ? "present" : "missing", "ENV:", process.env.NODE_ENV);
 
-    if (apiKey && process.env.NODE_ENV === "production") {
-      posthog.init(apiKey, {
-        api_host: apiHost,
+    if (POSTHOG_KEY && process.env.NODE_ENV === "production") {
+      posthog.init(POSTHOG_KEY, {
+        api_host: POSTHOG_HOST,
         person_profiles: "identified_only",
         capture_pageview: false, // We handle manually for App Router
         capture_pageleave: true,
