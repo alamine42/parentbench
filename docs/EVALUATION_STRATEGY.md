@@ -153,15 +153,18 @@ Public leaderboard shows:
 
 ## Implementation Checklist
 
+### Phase 1: Tier System (Completed)
 - [x] Document strategy (this file)
 - [x] Add `evalTier` field to models schema
 - [x] Create tier assignment UI in admin panel
 - [x] Implement scheduled evaluation cron jobs
-- [ ] Track multiple runs per score update
-- [ ] Compute and store median scores
-- [ ] Add confidence indicators to leaderboard
-- [ ] Implement drift detection
-- [ ] Add evaluation queue with priorities
+
+### Phase 2: Statistical Robustness (Epic: eval-robustness)
+- [ ] **Task #7**: Track multiple runs per score update
+- [ ] **Task #8**: Compute and store median scores (blocked by #7)
+- [ ] **Task #9**: Add confidence indicators to leaderboard (blocked by #8)
+- [ ] **Task #10**: Implement drift detection (blocked by #8)
+- [ ] **Task #11**: Add evaluation queue with priorities
 
 ## Maintenance
 
