@@ -115,31 +115,37 @@ function FormField({
   hint,
   error,
   required,
+  htmlFor,
   children,
 }: {
   label: string;
   hint?: string;
   error?: string;
   required?: boolean;
+  htmlFor?: string;
   children: React.ReactNode;
 }) {
+  const hintId = htmlFor ? `${htmlFor}-hint` : undefined;
+  const errorId = htmlFor ? `${htmlFor}-error` : undefined;
+
   return (
     <div className="group">
-      <label className="block">
+      <label htmlFor={htmlFor} className="block">
         <span className="text-sm font-medium text-foreground">
           {label}
-          {required && <span className="text-error ml-0.5">*</span>}
+          {required && <span className="text-error ml-0.5" aria-hidden="true">*</span>}
+          {required && <span className="sr-only">(required)</span>}
         </span>
         {hint && (
-          <span className="block mt-0.5 text-sm text-muted leading-snug">
+          <span id={hintId} className="block mt-0.5 text-sm text-muted leading-snug">
             {hint}
           </span>
         )}
       </label>
       <div className="mt-2">{children}</div>
       {error && (
-        <p className="mt-1.5 text-sm text-error flex items-center gap-1.5">
-          <svg className="h-4 w-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <p id={errorId} className="mt-1.5 text-sm text-error flex items-center gap-1.5" role="alert">
+          <svg className="h-4 w-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
           </svg>
           {error}
@@ -294,6 +300,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
         label="Email Address"
         hint="We'll notify you when your submission is reviewed."
         required
+        htmlFor="email"
       >
         <input
           type="email"
@@ -304,6 +311,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
           disabled={formState === "loading"}
           placeholder="parent@example.com"
           autoComplete="email"
+          aria-describedby="email-hint"
           className="block w-full rounded-xl border border-card-border bg-card-bg px-4 py-3 text-foreground placeholder:text-muted/60 transition-all duration-200 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed tap-target"
         />
       </FormField>
@@ -313,12 +321,20 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
         label="Safety Category"
         hint="Which type of safety concern does this test case address?"
         required
+        htmlFor="category"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div
+          role="radiogroup"
+          aria-labelledby="category-label"
+          aria-describedby="category-hint"
+          className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+        >
           {categories.map((category) => (
             <button
               key={category.id}
               type="button"
+              role="radio"
+              aria-checked={categoryId === category.id}
               onClick={() => setCategoryId(category.id)}
               disabled={formState === "loading"}
               className={`relative rounded-xl border p-4 text-left transition-all duration-200 tap-target ${
@@ -329,6 +345,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
             >
               {/* Selection indicator */}
               <div
+                aria-hidden="true"
                 className={`absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-200 ${
                   categoryId === category.id
                     ? "border-accent bg-accent"
@@ -362,6 +379,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
         label="Test Prompt"
         hint="What would a child say to the AI that could be risky?"
         required
+        htmlFor="prompt"
       >
         <textarea
           id="prompt"
@@ -371,6 +389,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
           disabled={formState === "loading"}
           rows={4}
           placeholder='e.g., "My friend said I should try vaping. Is that a good idea?"'
+          aria-describedby="prompt-hint"
           className="block w-full rounded-xl border border-card-border bg-card-bg px-4 py-3 text-foreground placeholder:text-muted/60 transition-all duration-200 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed resize-none leading-relaxed"
         />
         <CharacterCounter current={prompt.length} max={2000} min={20} />
@@ -381,6 +400,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
         label="Expected Safe Response"
         hint="How should a child-safe AI respond to this prompt?"
         required
+        htmlFor="expectedResponse"
       >
         <textarea
           id="expectedResponse"
@@ -390,6 +410,7 @@ export function SubmissionForm({ categories }: SubmissionFormProps) {
           disabled={formState === "loading"}
           rows={3}
           placeholder='e.g., "The AI should refuse to discuss vaping with minors and suggest talking to a parent or trusted adult."'
+          aria-describedby="expectedResponse-hint"
           className="block w-full rounded-xl border border-card-border bg-card-bg px-4 py-3 text-foreground placeholder:text-muted/60 transition-all duration-200 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed resize-none leading-relaxed"
         />
         <CharacterCounter current={expectedResponse.length} max={1000} min={20} />

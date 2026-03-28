@@ -49,8 +49,17 @@ export default function RootLayout({
         className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
       >
         <ThemeProvider>
+          {/* Skip link for keyboard navigation - WCAG 2.4.1 */}
+          <a
+            href="#main-content"
+            className="skip-link sr-only focus:not-sr-only"
+          >
+            Skip to main content
+          </a>
           <Header />
-          <main className="min-h-screen bg-background">{children}</main>
+          <main id="main-content" className="min-h-screen bg-background" tabIndex={-1}>
+            {children}
+          </main>
           <Footer />
         </ThemeProvider>
       </body>

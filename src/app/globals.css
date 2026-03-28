@@ -53,6 +53,37 @@ body {
   @apply outline-none ring-2 ring-accent/40 ring-offset-2 ring-offset-background;
 }
 
+/* ============================================================================
+   ACCESSIBILITY: Focus Visible States
+   WCAG 2.1 Level AA requires visible focus indicators for keyboard navigation
+   ============================================================================ */
+
+/* Global focus-visible for all interactive elements */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-background;
+}
+
+/* Skip link for screen readers */
+.skip-link {
+  @apply absolute -top-12 left-4 z-[100] rounded-lg bg-accent px-4 py-2 text-white;
+  @apply focus:top-4 transition-all;
+}
+
+/* High contrast focus for dark mode */
+.dark a:focus-visible,
+.dark button:focus-visible,
+.dark input:focus-visible,
+.dark textarea:focus-visible,
+.dark select:focus-visible {
+  --tw-ring-offset-color: var(--background);
+}
+
 /* Shimmer animation for skeleton loaders */
 @keyframes shimmer {
   0% {
@@ -79,11 +110,22 @@ body {
   @apply transition-all duration-200 ease-out;
 }
 
-/* Touch-friendly tap targets */
+/* Touch-friendly tap targets - WCAG 2.5.5 Level AAA (44x44px minimum) */
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Enhanced touch targets on touch devices */
 @media (pointer: coarse) {
   .tap-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Ensure all interactive elements have adequate touch area */
+  a, button, input, select, textarea, [role="button"] {
     min-height: 44px;
-    min-width: 44px;
   }
 }
 

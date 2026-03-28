@@ -22,7 +22,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-card-border bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 rounded-lg p-1 -m-1 transition-colors hover:bg-muted-bg/50">
           <svg
             width="26"
             height="26"
@@ -63,10 +63,10 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors ${
+              className={`rounded-md px-3 py-2 text-sm font-medium transition-colors tap-target ${
                 link.href === "/report"
-                  ? "text-red-600 hover:text-red-500 dark:text-red-400 dark:hover:text-red-300"
-                  : "text-muted hover:text-foreground"
+                  ? "text-red-600 hover:text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-950/30"
+                  : "text-muted hover:text-foreground hover:bg-muted-bg/50"
               }`}
             >
               {link.label}
@@ -76,7 +76,7 @@ export function Header() {
           {mounted && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-lg p-2 text-muted transition-colors hover:bg-muted-bg hover:text-foreground"
+              className="rounded-lg p-2.5 text-muted transition-colors hover:bg-muted-bg hover:text-foreground tap-target"
               aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
             >
               {theme === "dark" ? (

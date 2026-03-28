@@ -65,26 +65,29 @@ export function NewsletterSignup({ variant = "full" }: NewsletterSignupProps) {
 
   if (variant === "compact") {
     return (
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row" data-netlify="true" name="newsletter">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row" data-netlify="true" name="newsletter" aria-label="Newsletter signup">
         <input type="hidden" name="form-name" value="newsletter" />
+        <label htmlFor="newsletter-email-compact" className="sr-only">Email address</label>
         <input
           type="email"
+          id="newsletter-email-compact"
           name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
           required
-          className="flex-1 rounded-lg border border-card-border bg-background px-4 py-2 text-sm placeholder:text-muted focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+          aria-required="true"
+          className="flex-1 rounded-lg border border-card-border bg-background px-4 py-2 text-sm placeholder:text-muted focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 tap-target"
         />
         <button
           type="submit"
           disabled={status === "loading"}
-          className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50"
+          className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50 tap-target"
         >
           {status === "loading" ? "..." : "Subscribe"}
         </button>
         {status === "error" && (
-          <p className="text-sm text-red-600 dark:text-red-400">Something went wrong. Please try again.</p>
+          <p className="text-sm text-red-600 dark:text-red-400" role="alert">Something went wrong. Please try again.</p>
         )}
       </form>
     );
@@ -110,28 +113,31 @@ export function NewsletterSignup({ variant = "full" }: NewsletterSignupProps) {
           No spam, just safety insights.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6" data-netlify="true" name="newsletter">
+        <form onSubmit={handleSubmit} className="mt-6" data-netlify="true" name="newsletter" aria-label="Newsletter signup">
           <input type="hidden" name="form-name" value="newsletter" />
           <div className="flex flex-col gap-3 sm:flex-row sm:gap-2">
+            <label htmlFor="newsletter-email-full" className="sr-only">Email address</label>
             <input
               type="email"
+              id="newsletter-email-full"
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
-              className="flex-1 rounded-lg border border-card-border bg-background px-4 py-3 placeholder:text-muted focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+              aria-required="true"
+              className="flex-1 rounded-lg border border-card-border bg-background px-4 py-3 placeholder:text-muted focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 tap-target"
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="rounded-lg bg-green-600 px-6 py-3 font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50"
+              className="rounded-lg bg-green-600 px-6 py-3 font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50 tap-target"
             >
               {status === "loading" ? "Subscribing..." : "Subscribe"}
             </button>
           </div>
           {status === "error" && (
-            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+            <p className="mt-2 text-sm text-red-600 dark:text-red-400" role="alert">
               Something went wrong. Please try again.
             </p>
           )}
