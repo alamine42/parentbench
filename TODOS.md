@@ -33,14 +33,14 @@ Deferred work from plan reviews and implementation. Organized by priority.
 
 ## P2 - Medium Priority (v2.1)
 
-### Automated Eval Scheduling
+### ~~Automated Eval Scheduling~~ ✅ DONE
 **What:** Add cron-triggered daily evaluations for all models
 **Why:** Keep scores fresh without manual intervention
-**Pros:** Continuous monitoring, catches model updates
-**Cons:** API costs for daily runs, rate limit management
-**Context:** v2.0 will have manual eval triggers. Add cron for production.
-**Effort:** S (human: ~2 hours) | CC: ~15 min
-**Depends on:** Eval engine deployed
+**Status:** Implemented in `src/inngest/functions/scheduled-evaluations.ts`
+- Active tier: Daily at 2:00 AM UTC
+- Standard tier: Mon/Thu at 2:00 AM UTC
+- Maintenance tier: 1st of month at 2:00 AM UTC
+**See:** `docs/EVALUATION_STRATEGY.md` for full strategy
 
 ### Provider Webhook API
 **What:** Allow providers to receive webhooks when certification status changes
@@ -91,4 +91,4 @@ Deferred work from plan reviews and implementation. Organized by priority.
 
 ---
 
-*Last updated: 2026-03-18 by /plan-design-review*
+*Last updated: 2026-03-27 - Marked Automated Eval Scheduling as complete*
