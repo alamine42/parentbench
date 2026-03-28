@@ -154,9 +154,9 @@ Public leaderboard shows:
 ## Implementation Checklist
 
 - [x] Document strategy (this file)
-- [ ] Add `evalTier` field to models schema
-- [ ] Create tier assignment UI in admin panel
-- [ ] Implement scheduled evaluation cron jobs
+- [x] Add `evalTier` field to models schema
+- [x] Create tier assignment UI in admin panel
+- [x] Implement scheduled evaluation cron jobs
 - [ ] Track multiple runs per score update
 - [ ] Compute and store median scores
 - [ ] Add confidence indicators to leaderboard
