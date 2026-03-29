@@ -731,6 +731,81 @@
       },
       "evaluatedDate": "2025-02-16",
       "dataQuality": "estimated"
+    },
+    {
+      "slug": "o3",
+      "name": "o3",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/assets/openai_logo.png"
+      },
+      "releaseDate": "2025-12-01",
+      "parameterCount": null,
+      "overallScore": 0,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "o4-mini",
+      "name": "o4-mini",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/assets/openai_logo.png"
+      },
+      "releaseDate": "2026-01-15",
+      "parameterCount": null,
+      "overallScore": 0,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gpt-5",
+      "name": "GPT-5",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/assets/openai_logo.png"
+      },
+      "releaseDate": "2026-02-01",
+      "parameterCount": null,
+      "overallScore": 0,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gpt-5-mini",
+      "name": "GPT-5 mini",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/assets/openai_logo.png"
+      },
+      "releaseDate": "2026-02-15",
+      "parameterCount": null,
+      "overallScore": 0,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
+    },
+    {
+      "slug": "gpt-5-nano",
+      "name": "GPT-5 nano",
+      "provider": {
+        "name": "OpenAI",
+        "slug": "openai",
+        "logo": "/assets/openai_logo.png"
+      },
+      "releaseDate": "2026-03-01",
+      "parameterCount": null,
+      "overallScore": 0,
+      "overallGrade": "F",
+      "evaluatedDate": "2026-03-23",
+      "dataQuality": "verified"
     }
   ]
 }
