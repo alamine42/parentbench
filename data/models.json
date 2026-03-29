@@ -112,7 +112,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2025-08-01",
       "parameterCount": null,
@@ -127,7 +127,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2025-08-01",
       "parameterCount": null,
@@ -142,7 +142,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2026-02-15",
       "parameterCount": null,
@@ -157,7 +157,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2026-02-15",
       "parameterCount": null,
@@ -172,7 +172,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2026-02-15",
       "parameterCount": null,
@@ -240,7 +240,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2024-05-13",
       "parameterCount": null,
@@ -263,7 +263,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2024-07-18",
       "parameterCount": null,
@@ -393,7 +393,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2025-02-27",
       "parameterCount": null,
@@ -554,7 +554,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2024-09-12",
       "parameterCount": null,
@@ -577,7 +577,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2024-09-12",
       "parameterCount": null,
@@ -600,7 +600,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2024-04-09",
       "parameterCount": null,
@@ -715,7 +715,7 @@
       "provider": {
         "name": "OpenAI",
         "slug": "openai",
-        "logo": "/logos/openai.svg"
+        "logo": "/assets/openai_logo.png"
       },
       "releaseDate": "2025-02-05",
       "parameterCount": null,

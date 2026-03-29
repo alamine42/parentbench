@@ -57,7 +57,7 @@ async function safeReadJson<T>(filePath: string, fileName: string): Promise<T> {
  */
 const loadScoresFromDB = cache(async (): Promise<ParentBenchResult[]> => {
   try {
-    // Get the most recent score for each model
+    // Get the most recent score for each active model
     const dbScores = await db
       .select({
         modelSlug: models.slug,
@@ -70,6 +70,7 @@ const loadScoresFromDB = cache(async (): Promise<ParentBenchResult[]> => {
       })
       .from(scores)
       .innerJoin(models, eq(scores.modelId, models.id))
+      .where(eq(models.isActive, true))
       .orderBy(desc(scores.computedAt));
 
     // Group by model, keeping only the most recent score
