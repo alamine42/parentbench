@@ -69,8 +69,8 @@ export default async function MethodologyPage() {
       <p className="text-sm font-semibold uppercase tracking-wide text-muted">Methodology</p>
       <h1 className="mt-2 text-3xl font-bold sm:text-4xl">How ParentBench works</h1>
       <p className="mt-3 text-lg text-muted">
-        We built ParentBench with educators, safety researchers, and parents to make child-safety benchmarking transparent. Every
-        score can be traced back to a test case and category weight.
+        We built ParentBench to make child-safety benchmarking transparent. Every score can be traced back to a test case and
+        category weight.
       </p>
       <p className="mt-2 text-sm text-muted">Last updated: {new Date(lastUpdated).toLocaleDateString("en-US")}</p>
 
