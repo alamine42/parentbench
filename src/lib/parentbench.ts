@@ -277,9 +277,18 @@ export async function getParentBenchModelCount(): Promise<number> {
 
 /**
  * Get ParentBench last updated date.
- * Returns the most recent date from methodology (static) for consistency.
+ * Returns the most recent evaluation date from scores.
  */
 export async function getParentBenchLastUpdated(): Promise<string> {
-  const methodologyData = await loadMethodologyData();
-  return methodologyData.lastUpdated;
+  const scores = await getParentBenchScores();
+  if (scores.length === 0) {
+    // Fall back to methodology date if no scores
+    const methodologyData = await loadMethodologyData();
+    return methodologyData.lastUpdated;
+  }
+  // Find the most recent evaluatedDate
+  const mostRecent = scores.reduce((latest, score) => {
+    return score.evaluatedDate > latest ? score.evaluatedDate : latest;
+  }, scores[0].evaluatedDate);
+  return mostRecent;
 }
