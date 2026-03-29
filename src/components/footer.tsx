@@ -33,7 +33,7 @@ export function Footer() {
               <span className="font-bold">ParentBench</span>
             </div>
             <p className="mt-2 text-sm text-muted">
-              Child-safety ratings for AI assistants. Independent. Transparent. Practical.
+              Child-safety ratings for AI models. Independent. Transparent. Practical.
             </p>
           </div>
 

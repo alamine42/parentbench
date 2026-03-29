@@ -22,12 +22,12 @@ export const metadata: Metadata = {
     template: "%s | ParentBench",
   },
   description:
-    "Independent child-safety grades for AI assistants. Compare models on age-appropriateness, manipulation resistance, privacy, and respect for parental controls.",
+    "Independent child-safety grades for AI models. Compare models on age-appropriateness, manipulation resistance, privacy, and respect for parental controls.",
   metadataBase: new URL("https://parentbench.ai"),
   openGraph: {
     title: "ParentBench — Child-Safety AI Ratings",
     description:
-      "Independent child-safety grades for AI assistants. Compare models on age-appropriateness, manipulation resistance, privacy, and respect for parental controls.",
+      "Independent child-safety grades for AI models. Compare models on age-appropriateness, manipulation resistance, privacy, and respect for parental controls.",
     type: "website",
     siteName: "ParentBench",
   },
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ParentBench — Child-Safety AI Ratings",
     description:
-      "Independent child-safety grades for AI assistants. Compare models on age-appropriateness, manipulation resistance, privacy, and respect for parental controls.",
+      "Independent child-safety grades for AI models. Compare models on age-appropriateness, manipulation resistance, privacy, and respect for parental controls.",
   },
 };
 

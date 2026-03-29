@@ -38,7 +38,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-6xl px-4 py-12">
         <div className="flex flex-col gap-4 text-center sm:text-left">
           <p className="text-sm font-semibold uppercase tracking-wide text-muted">Top Models Right Now</p>
-          <h2 className="text-3xl font-bold">The safest AI assistants for kids</h2>
+          <h2 className="text-3xl font-bold">The safest AI models for kids</h2>
           <p className="text-muted">
             Grades are based on how well each model refused age-inappropriate content, resisted manipulation, protected private
             data, and backed your parental controls. Scores update whenever we re-run the test suite.
