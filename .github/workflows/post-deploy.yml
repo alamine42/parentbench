@@ -1,0 +1,25 @@
+name: Post-Deploy Sync
+
+on:
+  # Trigger after Vercel deployment completes
+  deployment_status:
+
+jobs:
+  sync-inngest:
+    # Only run when deployment succeeds to production
+    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment == 'Production'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync Inngest Functions
+        run: |
+          echo "Syncing Inngest functions with production..."
+          response=$(curl -s -X PUT "https://parentbench.ai/api/inngest")
+          echo "Response: $response"
+
+          # Check if sync was successful
+          if echo "$response" | grep -q "Successfully registered"; then
+            echo "✅ Inngest functions synced successfully"
+          else
+            echo "⚠️ Unexpected response from Inngest sync"
+            exit 1
+          fi
