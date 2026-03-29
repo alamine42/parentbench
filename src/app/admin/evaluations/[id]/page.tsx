@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface EvaluationDetail {
   id: string;
@@ -59,6 +60,7 @@ export default function EvaluationDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const router = useRouter();
   const [evaluation, setEvaluation] = useState<EvaluationDetail | null>(null);
   const [score, setScore] = useState<Score | null>(null);
   const [results, setResults] = useState<TestResult[]>([]);
@@ -66,6 +68,27 @@ export default function EvaluationDetailPage({
   const [error, setError] = useState<string | null>(null);
   const [expandedResult, setExpandedResult] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "passed" | "failed">("all");
+  const [deleting, setDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      const response = await fetch(`/api/admin/evaluations/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        alert(data.error || "Failed to delete evaluation");
+        setDeleting(false);
+        return;
+      }
+      router.push("/admin/evaluations");
+    } catch (err) {
+      alert("Failed to delete evaluation");
+      setDeleting(false);
+    }
+  };
 
   useEffect(() => {
     async function fetchDetails() {
@@ -146,6 +169,39 @@ export default function EvaluationDetailPage({
             {evaluation.provider.name} &middot; {evaluation.model.slug}
           </p>
         </div>
+        {/* Delete button - only show for non-running evaluations */}
+        {evaluation.status !== "running" && evaluation.status !== "pending" && (
+          <div className="relative">
+            {showDeleteConfirm ? (
+              <div className="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
+                <span className="text-sm text-red-700 dark:text-red-300">Delete this evaluation?</span>
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 disabled:opacity-50"
+                >
+                  {deleting ? "Deleting..." : "Yes, delete"}
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="px-3 py-1 text-gray-600 dark:text-gray-400 text-sm hover:text-gray-800"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="px-4 py-2 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Delete
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Summary cards */}
