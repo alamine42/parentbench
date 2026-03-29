@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getParentBenchScores, getParentBenchMethodology, getParentBenchModelCount, getParentBenchLastUpdated } from "@/lib/parentbench";
 import { getAllModels } from "@/lib/data";
 import { HeroSection } from "@/components/parentbench/hero-section";
 import { LeaderboardTable } from "@/components/parentbench/leaderboard-table";
-import { MethodologySection } from "@/components/parentbench/methodology-section";
 
 export const metadata: Metadata = {
   title: "Leaderboard",
@@ -43,8 +43,23 @@ export default async function LeaderboardPage() {
         <LeaderboardTable scores={enrichedScores} providers={providers} />
       </section>
 
-      <div className="mx-auto max-w-6xl px-4">
-        <MethodologySection methodology={methodology} />
+      <div className="mx-auto max-w-6xl px-4 pb-12">
+        <div className="flex items-center justify-center gap-2 text-muted">
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <Link
+            href="/methodology"
+            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+          >
+            Read about the methodology
+          </Link>
+        </div>
       </div>
     </div>
   );

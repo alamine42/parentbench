@@ -9,6 +9,7 @@ import { ScoreRing } from "@/components/ui/score-ring";
 import { LetterGradeBadge } from "@/components/ui/letter-grade";
 import { ColorBar } from "@/components/ui/color-bar";
 import { PARENTBENCH_CATEGORY_META } from "@/lib/constants";
+import { formatDate } from "@/lib/utils";
 
 type EnrichedScore = ParentBenchResult & {
   modelName: string;
@@ -130,6 +131,9 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
                   {CATEGORY_SHORT_LABELS[cat]}
                 </th>
               ))}
+              <th className="py-3 px-2 text-center text-sm font-semibold text-muted w-28">
+                Last Eval
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -182,6 +186,9 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
                     </td>
                   );
                 })}
+                <td className="py-4 px-2 text-center text-sm text-muted">
+                  {formatDate(score.evaluatedDate)}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -268,6 +275,10 @@ function MobileCard({ score, rank, getCategoryScore }: MobileCardProps) {
             </div>
           );
         })}
+        <div className="flex items-center gap-3 pt-2 border-t border-card-border/50">
+          <span className="text-sm text-muted w-28 shrink-0">Last Eval</span>
+          <span className="text-sm">{formatDate(score.evaluatedDate)}</span>
+        </div>
       </div>
     </details>
   );
