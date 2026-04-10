@@ -153,8 +153,13 @@ export async function updateBatchProgress(
   runResult: UpdateBatchProgressInput
 ) {
   // Validate required fields for successful runs
-  if (runResult.success && runResult.score !== undefined && !runResult.evaluationId) {
-    throw new Error("evaluationId is required when recording a successful run score");
+  if (runResult.success) {
+    if (runResult.score === undefined) {
+      throw new Error("score is required when recording a successful run");
+    }
+    if (!runResult.evaluationId) {
+      throw new Error("evaluationId is required when recording a successful run score");
+    }
   }
 
   return await db.transaction(async (tx) => {
@@ -170,7 +175,7 @@ export async function updateBatchProgress(
     }
 
     if (runResult.success && runResult.score !== undefined && runResult.evaluationId) {
-      // Use atomic increment for completedRuns
+      // Use atomic increment for completedRuns and get the updated value
       const [updated] = await tx
         .update(scoreBatches)
         .set({
@@ -180,11 +185,12 @@ export async function updateBatchProgress(
         .where(eq(scoreBatches.id, batchId))
         .returning();
 
-      // Add run score to batch_run_scores
+      // Add run score to batch_run_scores using the updated counter
+      // to derive the correct runNumber atomically
       await tx.insert(batchRunScores).values({
         batchId,
         evaluationId: runResult.evaluationId,
-        runNumber: batch.completedRuns + 1,
+        runNumber: updated.completedRuns, // Use updated value, not stale
         score: runResult.score,
       });
 
@@ -204,41 +210,52 @@ export async function updateBatchProgress(
       return updated;
     }
 
-    // No changes needed
-    return batch;
+    // This should never be reached due to validation above
+    throw new Error("Invalid run result: success must include score and evaluationId");
   });
 }
 
 /**
  * Handle a failed run with retry tracking.
+ * Uses atomic SQL increments to prevent race conditions.
  */
 export async function handleRunFailure(batchId: string, errorMessage: string) {
-  const batch = await getBatch(batchId);
-  if (!batch) {
-    throw new Error(`Batch ${batchId} not found`);
-  }
+  return await db.transaction(async (tx) => {
+    // First, atomically increment the counters
+    const [updated] = await tx
+      .update(scoreBatches)
+      .set({
+        failedRuns: sql`${scoreBatches.failedRuns} + 1`,
+        retryCount: sql`${scoreBatches.retryCount} + 1`,
+        lastError: errorMessage,
+      })
+      .where(eq(scoreBatches.id, batchId))
+      .returning();
 
-  const updates: Partial<typeof scoreBatches.$inferInsert> = {
-    failedRuns: batch.failedRuns + 1,
-    lastError: errorMessage,
-    retryCount: batch.retryCount + 1,
-  };
+    if (!updated) {
+      throw new Error(`Batch ${batchId} not found`);
+    }
 
-  // Check if we should mark the batch as failed
-  // (all retries exhausted for all runs with no successes)
-  const totalRetries = batch.retryCount + 1;
-  if (totalRetries >= batch.maxRetries * batch.targetRuns && batch.completedRuns === 0) {
-    updates.status = "failed";
-    updates.completedAt = new Date();
-  }
+    // Check if we should mark the batch as failed
+    // (all retries exhausted for all runs with no successes)
+    if (
+      updated.retryCount >= updated.maxRetries * updated.targetRuns &&
+      updated.completedRuns === 0
+    ) {
+      const [failed] = await tx
+        .update(scoreBatches)
+        .set({
+          status: "failed",
+          completedAt: new Date(),
+        })
+        .where(eq(scoreBatches.id, batchId))
+        .returning();
 
-  const [updated] = await db
-    .update(scoreBatches)
-    .set(updates)
-    .where(eq(scoreBatches.id, batchId))
-    .returning();
+      return failed;
+    }
 
-  return updated;
+    return updated;
+  });
 }
 
 /**

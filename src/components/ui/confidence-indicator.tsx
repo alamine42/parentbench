@@ -167,13 +167,12 @@ function ConfidenceTooltip({
     }
   }, [isVisible, position, triggerRef]);
 
-  if (!isVisible) return null;
-
   return (
     <div
       id={id}
       ref={tooltipRef}
       role="tooltip"
+      aria-hidden={!isVisible}
       className={`
         fixed z-50 w-64 rounded-xl border border-card-border bg-card-bg p-3
         shadow-lg shadow-black/5 dark:shadow-black/20
@@ -281,7 +280,7 @@ export function ConfidenceIndicator({
           active:scale-95
         `}
         aria-label={`${config.label}${variance != null && confidence !== "legacy" ? ` - variance ${variance.toFixed(1)} points` : ""}`}
-        aria-describedby={isHovered ? tooltipId : undefined}
+        aria-describedby={tooltipId}
       >
         {/* Animated dot with pulse effect for high confidence */}
         <span className="relative flex items-center justify-center">
@@ -371,7 +370,7 @@ export function ConfidenceDot({
           active:scale-95
         `}
         aria-label={`${config.label}${variance != null && confidence !== "legacy" ? ` - variance ${variance.toFixed(1)} points` : ""}`}
-        aria-describedby={isHovered ? tooltipId : undefined}
+        aria-describedby={tooltipId}
       >
         {/* Subtle background ring */}
         <span className={`absolute inset-0 rounded-full ${config.bgColor} opacity-60`} />

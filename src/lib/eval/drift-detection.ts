@@ -138,8 +138,19 @@ export async function handleDrift(
     };
   }
 
-  // Queue additional run
-  const newTargetRuns = batch.targetRuns + 1;
+  // Queue additional run, clamped to maxRuns
+  const newTargetRuns = Math.min(batch.targetRuns + 1, batch.maxRuns);
+
+  // Don't queue if we're already at the target
+  if (newTargetRuns === batch.targetRuns) {
+    return {
+      driftDetected: true,
+      driftAmount,
+      additionalRunQueued: false,
+      maxRunsReached: true,
+    };
+  }
+
   await queueAdditionalRun(batch.id, batch.modelId, newTargetRuns);
 
   return {
