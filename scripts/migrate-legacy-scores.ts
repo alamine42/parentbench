@@ -3,15 +3,21 @@
  * Migrate Legacy Scores to Statistical Robustness Schema
  *
  * This script:
- * 1. Marks all existing scores without confidence as 'legacy'
- * 2. Sets variance to null for legacy scores (single-run)
- * 3. Sets isPartial to false for legacy scores
+ * 1. Marks all existing scores without batch (single-run) as 'legacy'
+ * 2. Sets variance to null for legacy scores (ensures clean state)
+ * 3. Sets isPartial to false for legacy scores (single-run = complete)
+ *
+ * IMPORTANT: Only marks scores that have NO scoreBatchId (true legacy scores).
+ * Scores with a batch reference are part of the multi-run system and should
+ * NOT be marked as legacy, even if their confidence is currently null.
  *
  * The schema changes (new columns, tables) should be applied first via:
  *   npm run db:push
  *
  * Usage:
  *   npx tsx scripts/migrate-legacy-scores.ts [--dry-run]
+ *
+ * This script is idempotent - safe to run multiple times.
  */
 
 import { config } from "dotenv";
@@ -20,7 +26,7 @@ config({ path: ".env.local" });
 async function main() {
   const { db } = await import("../src/db/index.js");
   const { scores } = await import("../src/db/schema.js");
-  const { isNull, sql } = await import("drizzle-orm");
+  const { isNull, and, sql } = await import("drizzle-orm");
 
   const isDryRun = process.argv.includes("--dry-run");
 
@@ -29,21 +35,27 @@ async function main() {
     console.log("📋 DRY RUN - no changes will be made\n");
   }
 
-  // Step 1: Count scores without confidence (legacy scores)
+  // Step 1: Count true legacy scores (no confidence AND no batch)
+  // This excludes scores that are part of active/pending batches
   const legacyScoresCount = await db
     .select({ count: sql<number>`count(*)` })
     .from(scores)
-    .where(isNull(scores.confidence));
+    .where(
+      and(
+        isNull(scores.confidence),
+        isNull(scores.scoreBatchId)
+      )
+    );
 
   const count = Number(legacyScoresCount[0]?.count ?? 0);
-  console.log(`Found ${count} scores without confidence level (legacy scores)\n`);
+  console.log(`Found ${count} true legacy scores (no confidence AND no batch)\n`);
 
   if (count === 0) {
     console.log("✅ No legacy scores to migrate");
     return;
   }
 
-  // Step 2: Update legacy scores
+  // Step 2: Update legacy scores (only those without a batch)
   if (!isDryRun) {
     console.log("Updating legacy scores...");
 
@@ -54,9 +66,22 @@ async function main() {
         variance: null,
         isPartial: false,
       })
-      .where(isNull(scores.confidence));
+      .where(
+        and(
+          isNull(scores.confidence),
+          isNull(scores.scoreBatchId)
+        )
+      )
+      .returning({ id: scores.id });
 
-    console.log(`\n✅ Updated ${count} scores with confidence='legacy'`);
+    const actualCount = result.length;
+
+    if (actualCount !== count) {
+      console.warn(`⚠️  Warning: Expected to update ${count} rows but updated ${actualCount}`);
+      console.warn("   This may indicate concurrent modifications. Verify results.");
+    }
+
+    console.log(`\n✅ Updated ${actualCount} scores with confidence='legacy'`);
   } else {
     console.log(`Would update ${count} scores with:`);
     console.log("  - confidence = 'legacy'");
