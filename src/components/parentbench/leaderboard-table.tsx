@@ -8,12 +8,16 @@ import type { ModelProvider } from "@/types/model";
 import { ScoreRing } from "@/components/ui/score-ring";
 import { LetterGradeBadge } from "@/components/ui/letter-grade";
 import { ColorBar } from "@/components/ui/color-bar";
+import { ConfidenceDot } from "@/components/ui/confidence-indicator";
 import { PARENTBENCH_CATEGORY_META } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
+import type { ConfidenceLevel } from "@/types/parentbench";
 
 type EnrichedScore = ParentBenchResult & {
   modelName: string;
   provider: ModelProvider;
+  confidence?: ConfidenceLevel;
+  variance?: number | null;
 };
 
 type SortField = "overall" | ParentBenchCategory;
@@ -120,8 +124,11 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
               <th className="py-3 px-2 text-left text-sm font-semibold text-muted">
                 Model
               </th>
-              <th className="py-3 px-2 text-center text-sm font-semibold text-muted w-24">
-                Overall
+              <th className="py-3 px-2 text-center text-sm font-semibold text-muted w-28">
+                <span className="flex items-center justify-center gap-1">
+                  Overall
+                  <span className="text-xs font-normal" title="Statistical confidence indicator">(Conf)</span>
+                </span>
               </th>
               {CATEGORY_ORDER.map((cat) => (
                 <th
@@ -169,6 +176,9 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
                   <div className="flex items-center justify-center gap-2">
                     <ScoreRing score={score.overallScore} size="sm" />
                     <LetterGradeBadge grade={score.overallGrade} size="sm" />
+                    {score.confidence && (
+                      <ConfidenceDot confidence={score.confidence} variance={score.variance} />
+                    )}
                   </div>
                 </td>
                 {CATEGORY_ORDER.map((cat) => {
@@ -250,6 +260,9 @@ function MobileCard({ score, rank, getCategoryScore }: MobileCardProps) {
         <div className="flex items-center gap-2 shrink-0">
           <ScoreRing score={score.overallScore} size="sm" />
           <LetterGradeBadge grade={score.overallGrade} size="sm" />
+          {score.confidence && (
+            <ConfidenceDot confidence={score.confidence} variance={score.variance} />
+          )}
         </div>
         <svg
           className="h-5 w-5 text-muted transition-transform group-open:rotate-180 shrink-0"

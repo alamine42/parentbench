@@ -12,6 +12,7 @@ import type {
   ParentBenchTestCase,
   ParentBenchCategoryScore,
   ParentBenchCategory,
+  ConfidenceLevel,
 } from "@/types/parentbench";
 import type { LetterGrade, TrendDirection, DataQuality } from "@/types/model";
 
@@ -67,6 +68,9 @@ const loadScoresFromDB = cache(async (): Promise<ParentBenchResult[]> => {
         dataQuality: scores.dataQuality,
         categoryScores: scores.categoryScores,
         evaluatedDate: scores.computedAt,
+        confidence: scores.confidence,
+        variance: scores.variance,
+        isPartial: scores.isPartial,
       })
       .from(scores)
       .innerJoin(models, eq(scores.modelId, models.id))
@@ -93,6 +97,9 @@ const loadScoresFromDB = cache(async (): Promise<ParentBenchResult[]> => {
         : new Date().toISOString().split("T")[0],
       dataQuality: row.dataQuality as DataQuality,
       methodologyVersion: "1.0.0",
+      confidence: row.confidence as ConfidenceLevel,
+      variance: row.variance,
+      isPartial: row.isPartial,
     }));
   } catch (error) {
     console.error("[ParentBench] DB scores load failed:", error);

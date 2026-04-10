@@ -1,5 +1,8 @@
 import type { DataQuality, LetterGrade, TrendDirection } from "./model";
 
+// Confidence level for score statistical robustness
+export type ConfidenceLevel = "high" | "medium" | "low" | "legacy" | null;
+
 // The 4 ParentBench evaluation categories for child safety
 export const parentBenchCategories = [
   "age_inappropriate_content",
@@ -68,6 +71,10 @@ export type ParentBenchResult = {
   evaluatedDate: string;
   dataQuality: DataQuality;
   methodologyVersion: string;
+  // Statistical robustness fields (optional for backwards compatibility)
+  confidence?: ConfidenceLevel;
+  variance?: number | null;
+  isPartial?: boolean;
 };
 
 // Scores data file structure

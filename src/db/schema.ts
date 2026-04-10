@@ -99,6 +99,20 @@ export const evalTierEnum = pgEnum("eval_tier", [
   "paused",      // Manual only (1 run) - deprecated/testing
 ]);
 
+export const scoreBatchStatusEnum = pgEnum("score_batch_status", [
+  "pending",
+  "in_progress",
+  "completed",
+  "failed",
+]);
+
+export const confidenceLevelEnum = pgEnum("confidence_level", [
+  "high",     // variance < 5
+  "medium",   // variance 5-15
+  "low",      // variance > 15
+  "legacy",   // single-run scores (pre-batch system)
+]);
+
 // ============================================================================
 // PROVIDERS & MODELS
 // ============================================================================
@@ -252,6 +266,70 @@ export const evalResultsRelations = relations(evalResults, ({ one }) => ({
 }));
 
 // ============================================================================
+// SCORE BATCHES (Multi-run evaluation tracking)
+// ============================================================================
+
+export const scoreBatches = pgTable("score_batches", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  modelId: uuid("model_id")
+    .notNull()
+    .references(() => models.id, { onDelete: "cascade" }),
+  methodologyVersion: text("methodology_version").notNull(),
+  testSuiteHash: text("test_suite_hash").notNull(),
+  modelVersion: text("model_version"),
+  status: scoreBatchStatusEnum("status").default("pending").notNull(),
+  targetRuns: integer("target_runs").default(3).notNull(),
+  completedRuns: integer("completed_runs").default(0).notNull(),
+  failedRuns: integer("failed_runs").default(0).notNull(),
+  maxRuns: integer("max_runs").default(5).notNull(),
+  maxRetries: integer("max_retries").default(3).notNull(),
+  retryCount: integer("retry_count").default(0).notNull(),
+  medianScore: real("median_score"),
+  minScore: real("min_score"),
+  maxScore: real("max_score"),
+  variance: real("variance"),
+  confidence: confidenceLevelEnum("confidence"),
+  lastError: text("last_error"),
+  triggeredBy: text("triggered_by").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
+});
+
+export const scoreBatchesRelations = relations(scoreBatches, ({ one, many }) => ({
+  model: one(models, {
+    fields: [scoreBatches.modelId],
+    references: [models.id],
+  }),
+  runScores: many(batchRunScores),
+  scores: many(scores),
+}));
+
+// Individual run scores within a batch
+export const batchRunScores = pgTable("batch_run_scores", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  batchId: uuid("batch_id")
+    .notNull()
+    .references(() => scoreBatches.id, { onDelete: "cascade" }),
+  evaluationId: uuid("evaluation_id")
+    .notNull()
+    .references(() => evaluations.id, { onDelete: "cascade" }),
+  runNumber: integer("run_number").notNull(),
+  score: real("score").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const batchRunScoresRelations = relations(batchRunScores, ({ one }) => ({
+  batch: one(scoreBatches, {
+    fields: [batchRunScores.batchId],
+    references: [scoreBatches.id],
+  }),
+  evaluation: one(evaluations, {
+    fields: [batchRunScores.evaluationId],
+    references: [evaluations.id],
+  }),
+}));
+
+// ============================================================================
 // SCORES (Historical)
 // ============================================================================
 
@@ -272,6 +350,11 @@ export const scores = pgTable("scores", {
     testCount: number;
   }[]>().notNull(),
   evaluationId: uuid("evaluation_id").references(() => evaluations.id),
+  // Statistical robustness fields
+  scoreBatchId: uuid("score_batch_id").references(() => scoreBatches.id),
+  variance: real("variance"),
+  confidence: confidenceLevelEnum("confidence"),
+  isPartial: boolean("is_partial").default(false).notNull(),
   computedAt: timestamp("computed_at").defaultNow().notNull(),
 });
 
@@ -283,6 +366,10 @@ export const scoresRelations = relations(scores, ({ one }) => ({
   evaluation: one(evaluations, {
     fields: [scores.evaluationId],
     references: [evaluations.id],
+  }),
+  scoreBatch: one(scoreBatches, {
+    fields: [scores.scoreBatchId],
+    references: [scoreBatches.id],
   }),
 }));
 
@@ -532,3 +619,9 @@ export type NewBudgetAlert = typeof budgetAlerts.$inferInsert;
 
 export type BudgetAlertHistoryEntry = typeof budgetAlertHistory.$inferSelect;
 export type NewBudgetAlertHistoryEntry = typeof budgetAlertHistory.$inferInsert;
+
+export type ScoreBatch = typeof scoreBatches.$inferSelect;
+export type NewScoreBatch = typeof scoreBatches.$inferInsert;
+
+export type BatchRunScore = typeof batchRunScores.$inferSelect;
+export type NewBatchRunScore = typeof batchRunScores.$inferInsert;
