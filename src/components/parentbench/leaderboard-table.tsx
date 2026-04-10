@@ -208,7 +208,7 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
                     <ScoreRing score={score.overallScore} size="sm" />
                     <LetterGradeBadge grade={score.overallGrade} size="sm" />
                     {score.confidence && (
-                      <ConfidenceDot confidence={score.confidence} variance={score.variance} />
+                      <ConfidenceDot confidence={score.confidence} variance={score.variance} isPartial={score.isPartial} />
                     )}
                   </div>
                 </td>

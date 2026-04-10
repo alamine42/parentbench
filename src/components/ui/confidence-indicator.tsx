@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, type ReactNode } from "react";
+import { useState, useRef, useEffect, useId, type ReactNode } from "react";
 import type { ConfidenceLevel } from "@/types/parentbench";
 
 // ============================================================================
@@ -126,6 +126,7 @@ const SIZE_CONFIG = {
 // ============================================================================
 
 function ConfidenceTooltip({
+  id,
   confidence,
   variance,
   isPartial,
@@ -133,6 +134,7 @@ function ConfidenceTooltip({
   position,
   triggerRef,
 }: {
+  id: string;
   confidence: Exclude<ConfidenceLevel, null>;
   variance?: number | null;
   isPartial?: boolean;
@@ -169,6 +171,7 @@ function ConfidenceTooltip({
 
   return (
     <div
+      id={id}
       ref={tooltipRef}
       role="tooltip"
       className={`
@@ -243,6 +246,7 @@ export function ConfidenceIndicator({
   const [isHovered, setIsHovered] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState<TooltipPosition>("top");
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const tooltipId = useId();
 
   if (!confidence) return null;
 
@@ -277,7 +281,7 @@ export function ConfidenceIndicator({
           active:scale-95
         `}
         aria-label={`${config.label}${variance != null && confidence !== "legacy" ? ` - variance ${variance.toFixed(1)} points` : ""}`}
-        aria-describedby={isHovered ? "confidence-tooltip" : undefined}
+        aria-describedby={isHovered ? tooltipId : undefined}
       >
         {/* Animated dot with pulse effect for high confidence */}
         <span className="relative flex items-center justify-center">
@@ -307,6 +311,7 @@ export function ConfidenceIndicator({
       </button>
 
       <ConfidenceTooltip
+        id={tooltipId}
         confidence={confidence}
         variance={variance}
         isPartial={isPartial}
@@ -324,14 +329,17 @@ export function ConfidenceIndicator({
 
 export function ConfidenceDot({
   confidence,
-  variance
+  variance,
+  isPartial,
 }: {
   confidence: ConfidenceLevel;
   variance?: number | null;
+  isPartial?: boolean;
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState<TooltipPosition>("top");
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const tooltipId = useId();
 
   if (!confidence) return null;
 
@@ -363,6 +371,7 @@ export function ConfidenceDot({
           active:scale-95
         `}
         aria-label={`${config.label}${variance != null && confidence !== "legacy" ? ` - variance ${variance.toFixed(1)} points` : ""}`}
+        aria-describedby={isHovered ? tooltipId : undefined}
       >
         {/* Subtle background ring */}
         <span className={`absolute inset-0 rounded-full ${config.bgColor} opacity-60`} />
@@ -389,8 +398,10 @@ export function ConfidenceDot({
       </button>
 
       <ConfidenceTooltip
+        id={tooltipId}
         confidence={confidence}
         variance={variance}
+        isPartial={isPartial}
         isVisible={isHovered}
         position={tooltipPosition}
         triggerRef={triggerRef as React.RefObject<HTMLElement>}

@@ -146,47 +146,67 @@ export async function validateRunVersion(batchId: string): Promise<void> {
 
 /**
  * Update batch progress after a run completes.
+ * Uses atomic SQL increments to prevent race conditions with concurrent runs.
  */
 export async function updateBatchProgress(
   batchId: string,
   runResult: UpdateBatchProgressInput
 ) {
-  const batch = await getBatch(batchId);
-  if (!batch) {
-    throw new Error(`Batch ${batchId} not found`);
+  // Validate required fields for successful runs
+  if (runResult.success && runResult.score !== undefined && !runResult.evaluationId) {
+    throw new Error("evaluationId is required when recording a successful run score");
   }
 
-  const updates: Partial<typeof scoreBatches.$inferInsert> = {};
+  return await db.transaction(async (tx) => {
+    // Lock the batch row for update
+    const [batch] = await tx
+      .select()
+      .from(scoreBatches)
+      .where(eq(scoreBatches.id, batchId))
+      .limit(1);
 
-  if (runResult.success && runResult.score !== undefined) {
-    updates.completedRuns = batch.completedRuns + 1;
+    if (!batch) {
+      throw new Error(`Batch ${batchId} not found`);
+    }
 
-    // Add run score to batch_run_scores
-    if (runResult.evaluationId) {
-      await db.insert(batchRunScores).values({
+    if (runResult.success && runResult.score !== undefined && runResult.evaluationId) {
+      // Use atomic increment for completedRuns
+      const [updated] = await tx
+        .update(scoreBatches)
+        .set({
+          completedRuns: sql`${scoreBatches.completedRuns} + 1`,
+          status: batch.status === "pending" ? "in_progress" : batch.status,
+        })
+        .where(eq(scoreBatches.id, batchId))
+        .returning();
+
+      // Add run score to batch_run_scores
+      await tx.insert(batchRunScores).values({
         batchId,
         evaluationId: runResult.evaluationId,
         runNumber: batch.completedRuns + 1,
         score: runResult.score,
       });
+
+      return updated;
+    } else if (!runResult.success) {
+      // Use atomic increment for failedRuns
+      const [updated] = await tx
+        .update(scoreBatches)
+        .set({
+          failedRuns: sql`${scoreBatches.failedRuns} + 1`,
+          lastError: runResult.error ?? null,
+          status: batch.status === "pending" ? "in_progress" : batch.status,
+        })
+        .where(eq(scoreBatches.id, batchId))
+        .returning();
+
+      return updated;
     }
-  } else if (!runResult.success) {
-    updates.failedRuns = batch.failedRuns + 1;
-    updates.lastError = runResult.error ?? null;
-  }
 
-  // Transition from pending to in_progress on first update
-  if (batch.status === "pending") {
-    updates.status = "in_progress";
-  }
-
-  const [updated] = await db
-    .update(scoreBatches)
-    .set(updates)
-    .where(eq(scoreBatches.id, batchId))
-    .returning();
-
-  return updated;
+    // No changes needed
+    return batch;
+  });
 }
 
 /**

@@ -100,6 +100,16 @@ export async function handleDrift(
   // Here we simulate based on batch state
   const existingScores = await getExistingScoresForBatch(batch.id);
 
+  // Need at least 2 existing scores to detect drift (same guard as detectDrift)
+  if (existingScores.length < 2) {
+    return {
+      driftDetected: false,
+      driftAmount: 0,
+      additionalRunQueued: false,
+      maxRunsReached: false,
+    };
+  }
+
   const driftAmount = getDriftAmount(existingScores, newScore);
   const driftDetected = driftAmount > DRIFT_THRESHOLD;
 
