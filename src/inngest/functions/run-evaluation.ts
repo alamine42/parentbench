@@ -7,8 +7,13 @@ import { computeScore } from "@/lib/eval/scorer";
 import { judgeResponse, JUDGE_MODEL } from "@/lib/eval/judge";
 import { calculateCost, checkBudgetAlerts } from "@/lib/costs";
 
-// Feature flag to enable LLM-as-judge (defaults to true)
-const USE_LLM_JUDGE = process.env.USE_LLM_JUDGE !== "false";
+// Global feature flag to enable LLM-as-judge (defaults to true)
+// Can be overridden per-trigger via event.data.useLlmJudge
+const USE_LLM_JUDGE_DEFAULT = process.env.USE_LLM_JUDGE !== "false";
+
+// Number of test cases to sample per category for scheduled runs
+// Set to 0 or negative to disable sampling (run all)
+const SAMPLE_SIZE_PER_CATEGORY = 5;
 
 /**
  * Fan-out/fan-in evaluation job
@@ -60,8 +65,12 @@ export const runEvaluation = inngest.createFunction(
   async ({ event, step, runId }) => {
     const { modelId, modelSlug, triggeredBy } = event.data;
 
+    // Per-trigger overrides (scheduled runs disable judge and enable sampling)
+    const useLlmJudge = event.data.useLlmJudge ?? USE_LLM_JUDGE_DEFAULT;
+    const sampleTestCases = event.data.sampleTestCases ?? false;
+
     // Step 0: Preflight check - validate judge model is available
-    if (USE_LLM_JUDGE) {
+    if (useLlmJudge) {
       await step.run("preflight-check-judge", async () => {
         const apiKey = process.env.ANTHROPIC_API_KEY;
         if (!apiKey) {
@@ -126,11 +135,40 @@ export const runEvaluation = inngest.createFunction(
       ) as Record<string, string>;
     });
 
+    // Step 2b: Sample test cases if requested (stratified by category)
+    const testCasesToRun = await step.run("select-test-cases", async () => {
+      if (!sampleTestCases || SAMPLE_SIZE_PER_CATEGORY <= 0) {
+        return activeTestCases;
+      }
+
+      // Group by category
+      const byCategory = new Map<string, typeof activeTestCases>();
+      for (const tc of activeTestCases) {
+        const group = byCategory.get(tc.categoryId) ?? [];
+        group.push(tc);
+        byCategory.set(tc.categoryId, group);
+      }
+
+      // Sample N from each category using Fisher-Yates partial shuffle
+      const sampled: typeof activeTestCases = [];
+      for (const [, cases] of byCategory) {
+        const n = Math.min(SAMPLE_SIZE_PER_CATEGORY, cases.length);
+        // Shuffle first n elements
+        for (let i = 0; i < n; i++) {
+          const j = i + Math.floor(Math.random() * (cases.length - i));
+          [cases[i], cases[j]] = [cases[j], cases[i]];
+        }
+        sampled.push(...cases.slice(0, n));
+      }
+
+      return sampled;
+    });
+
     // Update total test case count
     await step.run("update-total-count", async () => {
       await db
         .update(evaluations)
-        .set({ totalTestCases: activeTestCases.length })
+        .set({ totalTestCases: testCasesToRun.length })
         .where(eq(evaluations.id, evaluation.id));
     });
 
@@ -148,8 +186,8 @@ export const runEvaluation = inngest.createFunction(
       metadata?: Record<string, unknown>;
     }> = [];
 
-    for (let i = 0; i < activeTestCases.length; i += batchSize) {
-      const batch = activeTestCases.slice(i, i + batchSize);
+    for (let i = 0; i < testCasesToRun.length; i += batchSize) {
+      const batch = testCasesToRun.slice(i, i + batchSize);
 
       const batchResults = await step.run(
         `run-batch-${Math.floor(i / batchSize)}`,
@@ -167,7 +205,7 @@ export const runEvaluation = inngest.createFunction(
               let finalScore = result.score;
               let metadata: Record<string, unknown> = { ...(result.metadata ?? {}) };
 
-              if (USE_LLM_JUDGE && result.response) {
+              if (useLlmJudge && result.response) {
                 try {
                   const categoryName = categoryMap[testCase.categoryId] || "age_inappropriate_content";
                   const judgeResult = await judgeResponse(testCase, result.response, categoryName);
@@ -247,7 +285,7 @@ export const runEvaluation = inngest.createFunction(
 
     // Step 5: Compute and store score
     const finalScore = await step.run("compute-score", async () => {
-      const score = await computeScore(results, activeTestCases);
+      const score = await computeScore(results, testCasesToRun);
 
       // Get previous score for trend
       const [previousScore] = await db

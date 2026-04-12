@@ -93,10 +93,10 @@ export const severityEnum = pgEnum("severity", [
 ]);
 
 export const evalTierEnum = pgEnum("eval_tier", [
-  "active",      // Weekly evaluations (3 runs) - flagship models
-  "standard",    // Bi-weekly evaluations (3 runs) - mid-tier models
-  "maintenance", // Monthly evaluations (3 runs) - legacy/stable models
-  "paused",      // Manual only (1 run) - deprecated/testing
+  "active",      // Weekly (Monday) - sampled, no judge - flagship models
+  "standard",    // Bimonthly (1st & 15th) - sampled, no judge - mid-tier models
+  "maintenance", // Monthly (1st) - sampled, no judge - legacy/stable models
+  "paused",      // Manual only - deprecated/testing
 ]);
 
 export const scoreBatchStatusEnum = pgEnum("score_batch_status", [

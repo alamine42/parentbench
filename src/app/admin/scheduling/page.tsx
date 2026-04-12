@@ -11,24 +11,24 @@ const TIER_CONFIG: Record<
 > = {
   active: {
     label: "Active",
-    frequency: "Daily",
+    frequency: "Weekly",
     color: "text-green-600 dark:text-green-400",
     bgColor: "bg-green-100 dark:bg-green-900/30",
-    description: "Flagship models evaluated every day at 2:00 AM UTC",
+    description: "Flagship models evaluated every Monday at 2:00 AM UTC (sampled, no judge)",
   },
   standard: {
     label: "Standard",
-    frequency: "Twice Weekly",
+    frequency: "Bimonthly",
     color: "text-blue-600 dark:text-blue-400",
     bgColor: "bg-blue-100 dark:bg-blue-900/30",
-    description: "Mid-tier models evaluated Monday & Thursday at 2:00 AM UTC",
+    description: "Mid-tier models evaluated 1st & 15th of month at 2:00 AM UTC (sampled, no judge)",
   },
   maintenance: {
     label: "Maintenance",
     frequency: "Monthly",
     color: "text-gray-600 dark:text-gray-400",
     bgColor: "bg-gray-100 dark:bg-gray-800",
-    description: "Legacy models evaluated on the 1st of each month",
+    description: "Legacy models evaluated on the 1st of each month (sampled, no judge)",
   },
   paused: {
     label: "Paused",

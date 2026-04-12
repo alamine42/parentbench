@@ -36,36 +36,28 @@ export type SchedulingData = {
 function calculateNextRuns(): SchedulingData["nextRuns"] {
   const now = new Date();
 
-  // Active tier: Daily at 2:00 AM UTC
+  // Active tier: Weekly on Monday at 2:00 AM UTC
   const nextActive = new Date(now);
   nextActive.setUTCHours(2, 0, 0, 0);
-  if (nextActive <= now) {
-    nextActive.setUTCDate(nextActive.getUTCDate() + 1);
-  }
+  const activeDay = nextActive.getUTCDay();
+  const daysUntilMonday = activeDay === 1 && nextActive > now
+    ? 0
+    : ((1 - activeDay + 7) % 7) || 7;
+  nextActive.setUTCDate(nextActive.getUTCDate() + (activeDay === 1 && nextActive > now ? 0 : daysUntilMonday));
 
-  // Standard tier: Monday & Thursday at 2:00 AM UTC
+  // Standard tier: 1st & 15th of month at 2:00 AM UTC
   const nextStandard = new Date(now);
   nextStandard.setUTCHours(2, 0, 0, 0);
-  const dayOfWeek = nextStandard.getUTCDay();
-  // Find next Monday (1) or Thursday (4)
-  let daysUntilNext = 0;
-  if (dayOfWeek === 1 || dayOfWeek === 4) {
-    // Today is Monday or Thursday
-    if (nextStandard <= now) {
-      // Already passed today, find next
-      daysUntilNext = dayOfWeek === 1 ? 3 : 4; // Mon->Thu is 3, Thu->Mon is 4
-    }
-  } else if (dayOfWeek < 1) {
-    // Sunday -> Monday
-    daysUntilNext = 1;
-  } else if (dayOfWeek < 4) {
-    // Tue/Wed -> Thursday
-    daysUntilNext = 4 - dayOfWeek;
+  const currentDate = nextStandard.getUTCDate();
+  if (currentDate < 1 || (currentDate === 1 && nextStandard > now)) {
+    nextStandard.setUTCDate(1);
+  } else if (currentDate < 15 || (currentDate === 15 && nextStandard > now)) {
+    nextStandard.setUTCDate(15);
   } else {
-    // Fri/Sat -> Monday
-    daysUntilNext = 8 - dayOfWeek;
+    // Next 1st of following month
+    nextStandard.setUTCMonth(nextStandard.getUTCMonth() + 1);
+    nextStandard.setUTCDate(1);
   }
-  nextStandard.setUTCDate(nextStandard.getUTCDate() + daysUntilNext);
 
   // Maintenance tier: 1st of month at 2:00 AM UTC
   const nextMaintenance = new Date(now);

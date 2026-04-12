@@ -2,11 +2,15 @@
 /**
  * Assign Evaluation Tiers to Models
  *
- * Based on the strategy in docs/EVALUATION_STRATEGY.md:
- * - active: Weekly (3 runs) - Flagship models, recently updated
- * - standard: Bi-weekly (3 runs) - Mid-tier models, stable but relevant
- * - maintenance: Monthly (3 runs) - Legacy models, open-source
- * - paused: Manual only (1 run) - Deprecated, testing
+ * Cost-optimized tier strategy:
+ * - active: Weekly (Monday) - cheap/mid-price flagship models only
+ * - standard: Bimonthly (1st & 15th) - mid-tier models
+ * - maintenance: Monthly (1st) - expensive models + legacy + open-source
+ * - paused: Manual only - deprecated/testing
+ *
+ * Key cost principle: expensive models (>$5/1M output tokens) go to
+ * maintenance tier. Their scores rarely change, so monthly checks suffice.
+ * Cheaper models that may get frequent updates go to active/standard.
  *
  * Usage:
  *   npx tsx scripts/assign-eval-tiers.ts [--dry-run]
@@ -15,50 +19,52 @@
 import { config } from "dotenv";
 config({ path: ".env.local" });
 
-// Tier assignments based on documented strategy
+// Tier assignments optimized for cost
 // Using EXACT slugs from the database (use --verbose to see actual slugs)
 const TIER_ASSIGNMENTS: Record<string, string[]> = {
-  // Active Tier (Weekly) - Flagship models, recently updated
+  // Active Tier (Weekly) - cheap-to-mid flagship models only
   active: [
-    // Claude flagship
-    "claude-opus-4-5",
-    "claude-opus-4-6",
-    "claude-sonnet-4-5",
+    // Affordable Claude models
     "claude-sonnet-4-6",
-    // GPT flagship (exact slugs)
-    "gpt-5",
-    "gpt-5-4",
-    "gpt-5-4-pro",
-    // Reasoning models
-    "o3",
-    "o3-pro",
-    "o4-mini",
-    // Gemini flagship
-    "gemini-2-5-pro",
-  ],
-
-  // Standard Tier (Bi-weekly) - Mid-tier models
-  standard: [
-    // Claude mid-tier
     "claude-haiku-4-5",
-    "claude-opus-4",
-    "claude-opus-4-1",
-    "claude-sonnet-4",
-    // GPT mid-tier (exact slugs)
-    "gpt-4-1",
-    "gpt-4-1-mini",
+    // Affordable GPT models
     "gpt-5-mini",
     "gpt-5-4-mini",
-    // Gemini mid-tier
+    "o4-mini",
+    // Gemini (very cheap)
+    "gemini-2-5-pro",
     "gemini-2-5-flash",
+  ],
+
+  // Standard Tier (Bimonthly) - mid-tier and mid-price models
+  standard: [
+    // Claude
+    "claude-sonnet-4-5",
+    "claude-sonnet-4",
+    // GPT
+    "gpt-4-1",
+    "gpt-4-1-mini",
+    "gpt-5",
+    "gpt-5-4",
+    // Gemini
     "gemini-2-5-flash-lite",
     // xAI
     "grok-2",
   ],
 
-  // Maintenance Tier (Monthly) - Legacy/stable models
+  // Maintenance Tier (Monthly) - expensive models + legacy + open-source
   maintenance: [
-    // GPT legacy (exact slugs)
+    // Expensive Opus models (output: $75/1M tokens)
+    "claude-opus-4-6",
+    "claude-opus-4-5",
+    "claude-opus-4-1",
+    "claude-opus-4",
+    // Expensive reasoning models
+    "o3",       // output: $40/1M
+    "o3-pro",   // output: $80/1M
+    // Expensive GPT
+    "gpt-5-4-pro",  // output: $30/1M
+    // GPT legacy
     "gpt-4o",
     "gpt-4o-mini",
     "gpt-5-nano",
@@ -157,20 +163,21 @@ async function main() {
   console.log(`\n📊 Summary:`);
   console.log(`   Models updated: ${updated}`);
   console.log(`\n📈 Tier Distribution:`);
-  console.log(`   Active (weekly):      ${tierCounts.active} models`);
-  console.log(`   Standard (bi-weekly): ${tierCounts.standard} models`);
-  console.log(`   Maintenance (monthly): ${tierCounts.maintenance} models`);
-  console.log(`   Paused (manual):      ${tierCounts.paused} models`);
+  console.log(`   Active (weekly Mon):    ${tierCounts.active} models`);
+  console.log(`   Standard (1st & 15th):  ${tierCounts.standard} models`);
+  console.log(`   Maintenance (monthly):  ${tierCounts.maintenance} models`);
+  console.log(`   Paused (manual):        ${tierCounts.paused} models`);
 
-  // Estimate monthly evaluation counts and costs
+  // Estimate monthly evaluation counts
+  // All tiers use sampled test cases (~20 instead of 51) and no LLM judge
   const monthlyEvals =
-    tierCounts.active * 12 + // 4 weeks × 3 runs
-    tierCounts.standard * 6 + // 2 bi-weekly × 3 runs
-    tierCounts.maintenance * 3; // 1 monthly × 3 runs
+    tierCounts.active * 4 +    // 4 weeks × 1 run
+    tierCounts.standard * 2 +  // 2 runs per month
+    tierCounts.maintenance * 1; // 1 run per month
 
-  console.log(`\n💰 Estimated Monthly Load:`);
+  console.log(`\n💰 Estimated Monthly Load (sampled ~20 test cases, no judge):`);
   console.log(`   Total evaluations: ~${monthlyEvals}`);
-  console.log(`   Estimated cost: $${(monthlyEvals * 0.15).toFixed(2)} - $${(monthlyEvals * 0.25).toFixed(2)}`);
+  console.log(`   Estimated cost: $${(monthlyEvals * 0.02).toFixed(2)} - $${(monthlyEvals * 0.10).toFixed(2)}`);
 
   if (isDryRun) {
     console.log("\n📋 Run without --dry-run to apply changes");
