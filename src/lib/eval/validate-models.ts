@@ -40,8 +40,11 @@ const ALL_MODELS: ModelConfig[] = [
   { provider: "openai", modelId: "gpt-4.1-mini", purpose: "Evaluation" },
 
   // Google evaluation models
+  { provider: "google", modelId: "gemini-3.1-pro-preview", purpose: "Evaluation" },
+  { provider: "google", modelId: "gemini-3-flash-preview", purpose: "Evaluation" },
   { provider: "google", modelId: "gemini-2.5-pro", purpose: "Evaluation" },
   { provider: "google", modelId: "gemini-2.5-flash", purpose: "Evaluation" },
+  { provider: "google", modelId: "gemini-2.5-flash-lite", purpose: "Evaluation" },
 ];
 
 // ============================================================================

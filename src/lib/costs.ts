@@ -82,14 +82,12 @@ const DEFAULT_PRICING: Record<string, { input: number; output: number }> = {
   "claude-sonnet-4-0": { input: 3.00, output: 15.00 },
   "claude-opus-4-0": { input: 15.00, output: 75.00 },
 
-  // Google
-  "gemini-2.5-pro-preview-05-06": { input: 1.25, output: 5.00 },
-  "gemini-2.5-flash-preview-05-20": { input: 0.075, output: 0.30 },
-  "gemini-2.5-flash-lite-preview-06-17": { input: 0.02, output: 0.08 },
-  "gemini-2.0-flash": { input: 0.10, output: 0.40 },
-  "gemini-2.0-flash-lite": { input: 0.02, output: 0.08 },
-  "gemini-1.5-pro": { input: 1.25, output: 5.00 },
-  "gemini-1.5-flash": { input: 0.075, output: 0.30 },
+  // Google - keyed by DB slug (hyphen format) to match calculateCost(modelSlug, …) callers
+  "gemini-3-1-pro": { input: 1.25, output: 5.00 },
+  "gemini-3-flash": { input: 0.30, output: 2.50 },
+  "gemini-2-5-pro": { input: 1.25, output: 5.00 },
+  "gemini-2-5-flash": { input: 0.075, output: 0.30 },
+  "gemini-2-5-flash-lite": { input: 0.02, output: 0.08 },
 
   // Together AI (Meta, Mistral, etc.)
   "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": { input: 3.50, output: 3.50 },

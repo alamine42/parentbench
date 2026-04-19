@@ -33,6 +33,7 @@ const TIER_ASSIGNMENTS: Record<string, string[]> = {
     "gpt-5-4-mini",
     "o4-mini",
     // Gemini (very cheap)
+    "gemini-3-1-pro",
     "gemini-2-5-pro",
     "gemini-2-5-flash",
   ],
@@ -48,6 +49,7 @@ const TIER_ASSIGNMENTS: Record<string, string[]> = {
     "gpt-5",
     "gpt-5-4",
     // Gemini
+    "gemini-3-flash",
     "gemini-2-5-flash-lite",
     // xAI
     "grok-2",

@@ -2,6 +2,36 @@
   "lastUpdated": "2026-03-23",
   "models": [
     {
+      "slug": "gemini-3-1-pro",
+      "name": "Gemini 3.1 Pro",
+      "provider": {
+        "name": "Google",
+        "slug": "google",
+        "logo": "/logos/google.svg"
+      },
+      "releaseDate": "2026-04-01",
+      "parameterCount": null,
+      "overallScore": null,
+      "overallGrade": null,
+      "evaluatedDate": null,
+      "dataQuality": "estimated"
+    },
+    {
+      "slug": "gemini-3-flash",
+      "name": "Gemini 3 Flash",
+      "provider": {
+        "name": "Google",
+        "slug": "google",
+        "logo": "/logos/google.svg"
+      },
+      "releaseDate": "2026-04-01",
+      "parameterCount": null,
+      "overallScore": null,
+      "overallGrade": null,
+      "evaluatedDate": null,
+      "dataQuality": "estimated"
+    },
+    {
       "slug": "claude-opus-4-7",
       "name": "Claude Opus 4.7",
       "provider": {

@@ -107,16 +107,13 @@ const adapterRegistry: Record<string, () => ModelAdapter> = {
   "claude-sonnet-4": () => new AnthropicAdapter("claude-sonnet-4-0"),
   "claude-opus-4": () => new AnthropicAdapter("claude-opus-4-0"),
 
-  // Google models - 2.5 series (latest available)
-  "gemini-2-5-pro": () => new GoogleAdapter("gemini-2.5-pro-preview-05-06"),
-  "gemini-2-5-flash": () => new GoogleAdapter("gemini-2.5-flash-preview-05-20"),
-  "gemini-2-5-flash-lite": () => new GoogleAdapter("gemini-2.5-flash-lite-preview-06-17"),
-  // Google models - 2.0 series
-  "gemini-2-0-flash": () => new GoogleAdapter("gemini-2.0-flash"),
-  "gemini-2-0-flash-lite": () => new GoogleAdapter("gemini-2.0-flash-lite"),
-  // Google models - 1.5 series (stable)
-  "gemini-1-5-pro": () => new GoogleAdapter("gemini-1.5-pro"),
-  "gemini-1-5-flash": () => new GoogleAdapter("gemini-1.5-flash"),
+  // Google models - Gemini 3 series (latest, preview)
+  "gemini-3-1-pro": () => new GoogleAdapter("gemini-3.1-pro-preview"),
+  "gemini-3-flash": () => new GoogleAdapter("gemini-3-flash-preview"),
+  // Google models - 2.5 series (stable)
+  "gemini-2-5-pro": () => new GoogleAdapter("gemini-2.5-pro"),
+  "gemini-2-5-flash": () => new GoogleAdapter("gemini-2.5-flash"),
+  "gemini-2-5-flash-lite": () => new GoogleAdapter("gemini-2.5-flash-lite"),
 
   // Meta/Open models (via Together AI)
   "llama-3-1-405b": () => new TogetherAdapter("meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"),

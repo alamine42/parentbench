@@ -129,15 +129,13 @@ async function main() {
 
   // Models to add (current frontier - verified to exist)
   const googleToAdd = [
-    // 2.5 series (preview)
+    // 3 series (preview — latest)
+    { slug: "gemini-3-1-pro", name: "Gemini 3.1 Pro" },
+    { slug: "gemini-3-flash", name: "Gemini 3 Flash" },
+    // 2.5 series (stable)
     { slug: "gemini-2-5-pro", name: "Gemini 2.5 Pro" },
     { slug: "gemini-2-5-flash", name: "Gemini 2.5 Flash" },
-    // 2.0 series
-    { slug: "gemini-2-0-flash", name: "Gemini 2.0 Flash" },
-    { slug: "gemini-2-0-flash-lite", name: "Gemini 2.0 Flash-Lite" },
-    // 1.5 series (stable)
-    { slug: "gemini-1-5-pro", name: "Gemini 1.5 Pro" },
-    { slug: "gemini-1-5-flash", name: "Gemini 1.5 Flash" },
+    { slug: "gemini-2-5-flash-lite", name: "Gemini 2.5 Flash-Lite" },
   ];
 
   console.log("\nRemoving outdated models:");
