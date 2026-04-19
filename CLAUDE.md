@@ -2,6 +2,18 @@
 
 Project-specific instructions for Claude Code.
 
+## Knowledge Base
+
+Solved-problem docs live in `docs/solutions/{category}/`. Before diving
+into a bug, search there first:
+
+```bash
+grep -r "keyword" docs/solutions/
+```
+
+Categories: `database-issues/`, `integration-issues/`, `runtime-errors/`,
+`gotchas/`, etc. Add new entries via `/consolidate` after non-trivial fixes.
+
 ## Task Tracking
 
 **Single source of truth:** `.beads/issues.jsonl`
