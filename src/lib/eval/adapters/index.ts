@@ -96,6 +96,7 @@ const adapterRegistry: Record<string, () => ModelAdapter> = {
   "o4-mini": () => new OpenAIAdapter("o4-mini"),
 
   // Anthropic models - Latest generation
+  "claude-opus-4-7": () => new AnthropicAdapter("claude-opus-4-7"),
   "claude-opus-4-6": () => new AnthropicAdapter("claude-opus-4-6"),
   "claude-sonnet-4-6": () => new AnthropicAdapter("claude-sonnet-4-6"),
   "claude-haiku-4-5": () => new AnthropicAdapter("claude-haiku-4-5"),

@@ -25,6 +25,7 @@ const TIER_ASSIGNMENTS: Record<string, string[]> = {
   // Active Tier (Weekly) - cheap-to-mid flagship models only
   active: [
     // Affordable Claude models
+    "claude-opus-4-7",
     "claude-sonnet-4-6",
     "claude-haiku-4-5",
     // Affordable GPT models

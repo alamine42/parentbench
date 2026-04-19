@@ -23,6 +23,7 @@ const ALL_MODELS: ModelConfig[] = [
   { provider: "anthropic", modelId: "claude-3-haiku-20240307", purpose: "LLM Judge" },
 
   // Anthropic evaluation models
+  { provider: "anthropic", modelId: "claude-opus-4-7", purpose: "Evaluation" },
   { provider: "anthropic", modelId: "claude-opus-4-6", purpose: "Evaluation" },
   { provider: "anthropic", modelId: "claude-sonnet-4-6", purpose: "Evaluation" },
   { provider: "anthropic", modelId: "claude-haiku-4-5", purpose: "Evaluation" },

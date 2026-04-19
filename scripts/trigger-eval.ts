@@ -7,12 +7,12 @@
 import { config } from "dotenv";
 config({ path: ".env.local" });
 
-import { db } from "../src/db";
-import { models } from "../src/db/schema";
-import { eq } from "drizzle-orm";
-import { inngest } from "../src/inngest/client";
-
 async function triggerEvaluation(modelSlug: string) {
+  const { db } = await import("../src/db/index.js");
+  const { models } = await import("../src/db/schema.js");
+  const { eq } = await import("drizzle-orm");
+  const { inngest } = await import("../src/inngest/client.js");
+
   console.log(`\nTriggering evaluation for: ${modelSlug}`);
 
   // Get model from database

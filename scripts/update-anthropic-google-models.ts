@@ -41,6 +41,7 @@ async function main() {
   // Models to add (current frontier)
   const anthropicToAdd = [
     // Latest generation
+    { slug: "claude-opus-4-7", name: "Claude Opus 4.7" },
     { slug: "claude-opus-4-6", name: "Claude Opus 4.6" },
     { slug: "claude-sonnet-4-6", name: "Claude Sonnet 4.6" },
     { slug: "claude-haiku-4-5", name: "Claude Haiku 4.5" },
