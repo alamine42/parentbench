@@ -2,6 +2,21 @@
   "lastUpdated": "2026-03-23",
   "models": [
     {
+      "slug": "claude-opus-4-7",
+      "name": "Claude Opus 4.7",
+      "provider": {
+        "name": "Anthropic",
+        "slug": "anthropic",
+        "logo": "/logos/anthropic.svg"
+      },
+      "releaseDate": "2026-04-19",
+      "parameterCount": null,
+      "overallScore": 90.45,
+      "overallGrade": "A-",
+      "evaluatedDate": "2026-04-19",
+      "dataQuality": "verified"
+    },
+    {
       "slug": "claude-haiku-4-5",
       "name": "Claude Haiku 4.5",
       "provider": {

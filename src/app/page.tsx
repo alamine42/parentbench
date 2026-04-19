@@ -11,6 +11,8 @@ import { formatDate } from "@/lib/utils";
 import { PARENTBENCH_CATEGORY_META } from "@/lib/constants";
 import type { ParentBenchCategory } from "@/types/parentbench";
 
+export const revalidate = 60;
+
 export default async function HomePage() {
   const [scores, methodology, modelCount, lastUpdated, models] = await Promise.all([
     getParentBenchScores(),

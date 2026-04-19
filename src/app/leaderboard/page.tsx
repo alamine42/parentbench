@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: "See how every major AI assistant ranks on the ParentBench child-safety benchmark.",
 };
 
+export const revalidate = 60;
+
 export default async function LeaderboardPage() {
   const [scores, methodology, modelCount, lastUpdated, models] = await Promise.all([
     getParentBenchScores(),
