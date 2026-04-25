@@ -113,6 +113,21 @@ export const confidenceLevelEnum = pgEnum("confidence_level", [
   "legacy",   // single-run scores (pre-batch system)
 ]);
 
+export const insightsReportStatusEnum = pgEnum("insights_report_status", [
+  "draft",              // aggregate snapshotted, narrative not yet attempted
+  "generation_failed",  // writer ran but validator/LLM call failed
+  "published",          // visible on /insights and /insights/[slug]
+  "retracted",          // hidden but kept for audit
+]);
+
+export const insightsTriggerReasonEnum = pgEnum("insights_trigger_reason", [
+  "score_delta",
+  "new_model",
+  "active_tier_promoted",
+  "manual",
+  "scheduled_recheck",
+]);
+
 // ============================================================================
 // PROVIDERS & MODELS
 // ============================================================================
@@ -572,6 +587,37 @@ export const budgetAlertHistoryRelations = relations(budgetAlertHistory, ({ one 
 }));
 
 // ============================================================================
+// INSIGHTS REPORTS (parentbench-ov1)
+// ============================================================================
+
+export const insightsReports = pgTable("insights_reports", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull().unique(),
+  generatedAt: timestamp("generated_at").defaultNow().notNull(),
+  dataThrough: timestamp("data_through").notNull(),
+
+  // aggregates is the numeric source of truth for both charts and the LLM writer
+  aggregates: jsonb("aggregates").$type<Record<string, unknown>>().notNull(),
+  // narrative is intentionally NULLABLE — populated only after the writer succeeds.
+  // Public reads filter status='published' (which guarantees narrative IS NOT NULL).
+  narrative: jsonb("narrative").$type<Record<string, unknown> | null>(),
+  failureReason: text("failure_reason"),
+
+  generatorModel: text("generator_model").notNull(),
+  generatorCostUsd: real("generator_cost_usd"),
+  generatorTokensIn: integer("generator_tokens_in"),
+  generatorTokensOut: integer("generator_tokens_out"),
+
+  triggerReason: insightsTriggerReasonEnum("trigger_reason").notNull(),
+  triggeringEvent: jsonb("triggering_event").$type<Record<string, unknown> | null>(),
+
+  status: insightsReportStatusEnum("status").default("draft").notNull(),
+  publishedAt: timestamp("published_at"),
+  retractedAt: timestamp("retracted_at"),
+  retractedReason: text("retracted_reason"),
+});
+
+// ============================================================================
 // TYPE EXPORTS
 // ============================================================================
 
@@ -625,3 +671,6 @@ export type NewScoreBatch = typeof scoreBatches.$inferInsert;
 
 export type BatchRunScore = typeof batchRunScores.$inferSelect;
 export type NewBatchRunScore = typeof batchRunScores.$inferInsert;
+
+export type InsightsReport = typeof insightsReports.$inferSelect;
+export type NewInsightsReport = typeof insightsReports.$inferInsert;
