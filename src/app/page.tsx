@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { HeroSection } from "@/components/parentbench/hero-section";
+import { HomepageInsightsTeaser } from "@/components/insights/homepage-teaser";
 import { NewsletterSignup, NEWSLETTER_ENABLED } from "@/components/newsletter-signup";
 import { LetterGradeBadge } from "@/components/ui/letter-grade";
 import { ScoreRing } from "@/components/ui/score-ring";
@@ -36,6 +37,8 @@ export default async function HomePage() {
   return (
     <div>
       <HeroSection modelCount={modelCount} testCaseCount={testCaseCount} lastUpdated={lastUpdated} />
+
+      <HomepageInsightsTeaser />
 
       <section className="mx-auto max-w-6xl px-4 py-12">
         <div className="flex flex-col gap-4 text-center sm:text-left">
