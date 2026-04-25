@@ -12,6 +12,7 @@ import {
   scheduledEvalStandard,
   scheduledEvalMaintenance,
 } from "./scheduled-evaluations";
+import { generateInsightsReport } from "./generate-insights-report";
 
 // Export all functions for the serve() handler
 export const functions = [
@@ -22,6 +23,8 @@ export const functions = [
   scheduledEvalActive,
   scheduledEvalStandard,
   scheduledEvalMaintenance,
+  // Insights pipeline (parentbench-ov1)
+  generateInsightsReport,
 ];
 
 // Named exports for direct imports
@@ -33,3 +36,4 @@ export {
   scheduledEvalStandard,
   scheduledEvalMaintenance,
 } from "./scheduled-evaluations";
+export { generateInsightsReport } from "./generate-insights-report";
