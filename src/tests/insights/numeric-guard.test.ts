@@ -116,6 +116,16 @@ describe("validateNarrativeAgainstAggregate", () => {
       const result = validateNarrativeAgainstAggregate(minimalNarrative("Score of 94"), makeAggregate());
       expect(result.valid).toBe(false);
     });
+
+    it("G13_should_accept_window_days_reference_like_30_days", () => {
+      // Regression: prod failure 2026-04-25 — "tested over 30 days" was rejected
+      // because windowDays=30 wasn't surfaced to the guard.
+      const result = validateNarrativeAgainstAggregate(
+        minimalNarrative("Tested over 30 days for child safety"),
+        makeAggregate()
+      );
+      expect(result.valid).toBe(true);
+    });
   });
 
   describe("multi-field validation", () => {

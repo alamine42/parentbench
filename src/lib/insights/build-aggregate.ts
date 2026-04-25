@@ -377,6 +377,9 @@ function computeDisplayValues(agg: InsightsAggregate): string[] {
   values.add(String(agg.totals.providers));
   values.add(String(agg.totals.evalsLast30d));
 
+  // Window length (e.g., "30" for "the last 30 days")
+  values.add(String(agg.windowDays));
+
   // Spread
   pushNumber(values, agg.spread.topScore);
   pushNumber(values, agg.spread.bottomScore);

@@ -84,6 +84,8 @@ function collectAllStrings(n: ValidatableNarrative): string[] {
 function collectRawNumbersFromAggregate(agg: InsightsAggregate): number[] {
   const nums: number[] = [];
   nums.push(agg.totals.activeModels, agg.totals.providers, agg.totals.evalsLast30d);
+  // Analysis window length (e.g., 30 for the "last 30 days" framing)
+  nums.push(agg.windowDays);
   nums.push(agg.spread.topScore, agg.spread.bottomScore, agg.spread.gap, agg.spread.stdDev);
   for (const p of agg.providers) {
     nums.push(p.avgOverall, p.activeModelCount);
