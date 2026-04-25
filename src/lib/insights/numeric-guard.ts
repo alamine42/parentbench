@@ -72,14 +72,20 @@ export function validateNarrativeAgainstAggregate(
 }
 
 /**
- * Replace every digit-bearing displayValue with whitespace, case-insensitive.
- * Run longest-first so "GPT-5.4 mini" gets stripped before the bare "5.4"
- * we'd otherwise mistake for a stand-alone numeric claim.
+ * Replace every IDENTIFIER-LIKE displayValue (one that contains at least one
+ * letter) with whitespace, case-insensitive. Run longest-first so
+ * "GPT-5.4 mini" gets stripped before, e.g., "GPT-5.4".
+ *
+ * Bare numeric displayValues like "9" or "32.4" are deliberately NOT used as
+ * strip patterns — substring-stripping a bare digit chews up legitimate
+ * unrelated occurrences (e.g. ripping "9" out of "April 19" leaving "1").
+ * Bare numbers are still validated, just via the exact-match / ±0.5-tolerance
+ * rules in `isAcceptable`.
  */
 function stripGroundedIdentifiers(text: string, displayValues: string[]): string {
   let stripped = text;
   const sorted = [...displayValues]
-    .filter((v) => /\d/.test(v))
+    .filter((v) => /\d/.test(v) && /[A-Za-z]/.test(v))
     .sort((a, b) => b.length - a.length);
   for (const v of sorted) {
     if (v.length === 0) continue;

@@ -151,6 +151,29 @@ describe("validateNarrativeAgainstAggregate", () => {
       );
       expect(result.valid).toBe(true);
     });
+
+    it("G16_should_not_strip_bare_digits_out_of_unrelated_text", () => {
+      // Regression: prod failure 2026-04-25 — displayValues contained "9"
+      // (a gap value). The strip over-eagerly chewed the "9" out of "April 19"
+      // leaving just "1" floating in the text and getting rejected. Fix:
+      // only identifier-like (letter-bearing) displayValues are stripped.
+      const agg = makeAggregate();
+      agg.displayValues.push("9");                 // bare numeric — must NOT strip
+      agg.displayValues.push("Gemini 3 Flash");    // identifier — should strip
+      const result = validateNarrativeAgainstAggregate(
+        minimalNarrative("Gemini 3 Flash debuted on April 19 at the top"),
+        agg
+      );
+      // "19" is now a free-floating token; check it goes through the validators
+      // — but the test data uses dates which aren't in the aggregate. We only
+      // assert that this *particular* failure mode (the "9" strip leaving "1")
+      // is gone. With "9" stripped, leftover would be "1". Without strip, "19"
+      // is the token, which the other rules will evaluate against. The point:
+      // the failure should NOT be the synthetic "1" caused by over-strip.
+      if (result.valid === false) {
+        expect(result.failureReason).not.toContain('token "1"');
+      }
+    });
   });
 
   describe("multi-field validation", () => {

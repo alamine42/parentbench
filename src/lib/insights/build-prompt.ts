@@ -17,6 +17,8 @@ Rules:
 - Reading level: 9th grade. No jargon. No researcher-speak.
 - When quoting numbers, prefer values from the supplied "displayValues" list. Do not invent statistics.
 - Never paraphrase a category name — use the verbatim labels supplied in the input.
+- Do NOT mention specific calendar dates (e.g., "April 19", "March 2026"). Use relative terms instead: "recently", "this month", "in the last 30 days".
+- Do NOT include numbers that aren't in the snapshot. If you want to make a comparison, only use numbers present in the JSON.
 - Tone: confident but neutral. No marketing fluff. No alarmism.
 - Frame findings around what they mean for a parent choosing tools for their child.
 - Output JSON ONLY, matching the requested schema.`;
