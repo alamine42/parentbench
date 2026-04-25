@@ -44,3 +44,12 @@ next-env.d.ts
 HANDOVER.md
 .env*.local
 .gstack/
+
+# beads daemon state (issues.jsonl is the source of truth, not these)
+.beads/backup/
+.beads/embeddeddolt/
+.beads/beads.db
+.beads/daemon.lock
+.beads/daemon.log
+.beads/last-touched
+.beads/interactions.jsonl
