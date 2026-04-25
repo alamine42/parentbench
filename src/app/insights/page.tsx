@@ -29,18 +29,35 @@ export const metadata = {
 };
 
 export default async function InsightsPage() {
-  const rows = await db
-    .select({
-      id: insightsReports.id,
-      slug: insightsReports.slug,
-      status: insightsReports.status,
-      generatedAt: insightsReports.generatedAt,
-      dataThrough: insightsReports.dataThrough,
-      aggregates: insightsReports.aggregates,
-      narrative: insightsReports.narrative,
-      generatorModel: insightsReports.generatorModel,
-    })
-    .from(insightsReports);
+  // Defensive: the insights_reports table may not exist yet (migration
+  // pending) — treat any DB failure as "no published report" so the build
+  // and the rest of the site stay green.
+  let rows: Array<{
+    id: string;
+    slug: string;
+    status: "draft" | "generation_failed" | "published" | "retracted";
+    generatedAt: Date;
+    dataThrough: Date;
+    aggregates: unknown;
+    narrative: unknown;
+    generatorModel: string;
+  }> = [];
+  try {
+    rows = await db
+      .select({
+        id: insightsReports.id,
+        slug: insightsReports.slug,
+        status: insightsReports.status,
+        generatedAt: insightsReports.generatedAt,
+        dataThrough: insightsReports.dataThrough,
+        aggregates: insightsReports.aggregates,
+        narrative: insightsReports.narrative,
+        generatorModel: insightsReports.generatorModel,
+      })
+      .from(insightsReports);
+  } catch (err) {
+    console.warn("[insights] insights_reports query failed; treating as no data:", err);
+  }
 
   const picked = pickPublishedForInsightsRoute(rows);
   if (!picked || !picked.narrative) {

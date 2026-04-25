@@ -12,16 +12,26 @@ import { insightsReports } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 
 export async function HomepageInsightsTeaser() {
-  const [latest] = await db
-    .select({
-      slug: insightsReports.slug,
-      generatedAt: insightsReports.generatedAt,
-      narrative: insightsReports.narrative,
-    })
-    .from(insightsReports)
-    .where(eq(insightsReports.status, "published"))
-    .orderBy(desc(insightsReports.generatedAt))
-    .limit(1);
+  // Defensive: tolerate missing insights_reports table (migration pending).
+  // Returns null on any failure so the homepage layout stays clean.
+  let latest:
+    | { slug: string; generatedAt: Date; narrative: unknown }
+    | undefined;
+  try {
+    [latest] = await db
+      .select({
+        slug: insightsReports.slug,
+        generatedAt: insightsReports.generatedAt,
+        narrative: insightsReports.narrative,
+      })
+      .from(insightsReports)
+      .where(eq(insightsReports.status, "published"))
+      .orderBy(desc(insightsReports.generatedAt))
+      .limit(1);
+  } catch (err) {
+    console.warn("[insights] homepage teaser query failed; hiding card:", err);
+    return null;
+  }
 
   if (!latest || !latest.narrative) return null;
 

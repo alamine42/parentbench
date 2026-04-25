@@ -24,19 +24,31 @@ export default async function ArchivePage({
   const params = await searchParams;
   const page = Math.max(1, Number(params.page ?? 1));
 
-  const rows = await db
-    .select({
-      slug: insightsReports.slug,
-      generatedAt: insightsReports.generatedAt,
-      dataThrough: insightsReports.dataThrough,
-      narrative: insightsReports.narrative,
-      generatorModel: insightsReports.generatorModel,
-    })
-    .from(insightsReports)
-    .where(eq(insightsReports.status, "published"))
-    .orderBy(desc(insightsReports.generatedAt))
-    .limit(PAGE_SIZE + 1) // +1 to detect "has next page"
-    .offset((page - 1) * PAGE_SIZE);
+  // Defensive: tolerate missing insights_reports table (migration pending).
+  let rows: Array<{
+    slug: string;
+    generatedAt: Date;
+    dataThrough: Date;
+    narrative: unknown;
+    generatorModel: string;
+  }> = [];
+  try {
+    rows = await db
+      .select({
+        slug: insightsReports.slug,
+        generatedAt: insightsReports.generatedAt,
+        dataThrough: insightsReports.dataThrough,
+        narrative: insightsReports.narrative,
+        generatorModel: insightsReports.generatorModel,
+      })
+      .from(insightsReports)
+      .where(eq(insightsReports.status, "published"))
+      .orderBy(desc(insightsReports.generatedAt))
+      .limit(PAGE_SIZE + 1) // +1 to detect "has next page"
+      .offset((page - 1) * PAGE_SIZE);
+  } catch (err) {
+    console.warn("[insights] insights_reports query failed; empty archive:", err);
+  }
 
   const hasNext = rows.length > PAGE_SIZE;
   const visible = rows.slice(0, PAGE_SIZE);

@@ -28,11 +28,18 @@ export default async function InsightsArchivePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [row] = await db
-    .select()
-    .from(insightsReports)
-    .where(eq(insightsReports.slug, slug))
-    .limit(1);
+
+  // Defensive: tolerate missing insights_reports table (migration pending)
+  let row: typeof insightsReports.$inferSelect | undefined;
+  try {
+    [row] = await db
+      .select()
+      .from(insightsReports)
+      .where(eq(insightsReports.slug, slug))
+      .limit(1);
+  } catch (err) {
+    console.warn("[insights] insights_reports query failed; 404:", err);
+  }
 
   if (!row || row.status !== "published" || !row.narrative) {
     notFound();
