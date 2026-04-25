@@ -14,7 +14,7 @@ const TIER_CONFIG: Record<
     frequency: "Weekly",
     color: "text-green-600 dark:text-green-400",
     bgColor: "bg-green-100 dark:bg-green-900/30",
-    description: "Flagship models evaluated every Monday at 2:00 AM UTC (sampled, no judge)",
+    description: "Flagship models evaluated every Monday at 2:00 AM UTC (full suite + LLM judge)",
   },
   standard: {
     label: "Standard",

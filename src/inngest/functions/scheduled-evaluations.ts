@@ -11,9 +11,12 @@ import { eq, and } from "drizzle-orm";
  * - Standard tier: 1st & 15th of month at 2:00 AM UTC
  * - Maintenance tier: 1st of month at 2:00 AM UTC
  *
- * Scheduled runs use sampled test cases and heuristic scoring (no LLM judge)
- * to minimize API costs. Full evaluations with LLM judge are available via
- * manual triggers.
+ * Scoring strategy:
+ * - Active tier: full test suite + LLM judge (leaderboard headline scores
+ *   need to discriminate; the keyword heuristic produces ceiling-100s)
+ * - Standard / Maintenance tiers: sampled test cases + heuristic scoring
+ *   to minimize API costs
+ * - Manual triggers: full + LLM judge regardless of tier
  *
  * Each function triggers eval/requested events for all models in that tier.
  */
@@ -60,8 +63,8 @@ export const scheduledEvalActive = inngest.createFunction(
         modelId: model.id,
         modelSlug: model.slug,
         triggeredBy: `scheduled-${tier}`,
-        sampleTestCases: true,
-        useLlmJudge: false,
+        sampleTestCases: false,
+        useLlmJudge: true,
       },
     }));
 
