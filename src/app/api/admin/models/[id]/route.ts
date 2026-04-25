@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { models, providers } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { validateSession } from "../../auth/route";
+import { inngest } from "@/inngest/client";
 
 const VALID_EVAL_TIERS = ["active", "standard", "maintenance", "paused"] as const;
 type EvalTier = (typeof VALID_EVAL_TIERS)[number];
@@ -224,6 +225,14 @@ export async function PATCH(
       updateData.providerId = providerId;
     }
 
+    // Read prior state so we can detect a transition to active tier
+    // (parentbench-ov1.9 — emit eval/active-tier-promoted only on real change)
+    const [prior] = await db
+      .select({ evalTier: models.evalTier, isActive: models.isActive, slug: models.slug })
+      .from(models)
+      .where(eq(models.id, id))
+      .limit(1);
+
     // Perform update
     const [updatedModel] = await db
       .update(models)
@@ -236,6 +245,29 @@ export async function PATCH(
         { error: "Model not found" },
         { status: 404 }
       );
+    }
+
+    // Best-effort event emission — never block the response
+    if (prior) {
+      const promotedToActive =
+        prior.evalTier !== "active" &&
+        updatedModel.evalTier === "active" &&
+        updatedModel.isActive;
+      if (promotedToActive) {
+        try {
+          await inngest.send({
+            name: "eval/active-tier-promoted",
+            data: {
+              modelId: id,
+              modelSlug: updatedModel.slug,
+              previousTier: prior.evalTier,
+              newTier: "active",
+            },
+          });
+        } catch (err) {
+          console.error("Failed to emit eval/active-tier-promoted:", err);
+        }
+      }
     }
 
     return NextResponse.json({ success: true, model: updatedModel });

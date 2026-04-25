@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { models, providers, scores } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { validateSession } from "../auth/route";
+import { inngest } from "@/inngest/client";
 
 const VALID_EVAL_TIERS = ["active", "standard", "maintenance", "paused"] as const;
 type EvalTier = (typeof VALID_EVAL_TIERS)[number];
@@ -139,10 +140,35 @@ export async function PATCH(request: NextRequest) {
         );
       }
 
+      // Read prior tier so we can detect a transition to 'active'
+      // (parentbench-ov1.9 — emit eval/active-tier-promoted only on real change)
+      const [prior] = await db
+        .select({ evalTier: models.evalTier, slug: models.slug, isActive: models.isActive })
+        .from(models)
+        .where(eq(models.id, id))
+        .limit(1);
+
       await db
         .update(models)
         .set({ evalTier: evalTier as EvalTier, updatedAt: new Date() })
         .where(eq(models.id, id));
+
+      if (prior && prior.evalTier !== "active" && evalTier === "active" && prior.isActive) {
+        try {
+          await inngest.send({
+            name: "eval/active-tier-promoted",
+            data: {
+              modelId: id,
+              modelSlug: prior.slug,
+              previousTier: prior.evalTier,
+              newTier: "active",
+            },
+          });
+        } catch (err) {
+          // Non-fatal — the model update succeeded; insights regen is best-effort
+          console.error("Failed to emit eval/active-tier-promoted:", err);
+        }
+      }
 
       return NextResponse.json({ success: true, evalTier });
     }

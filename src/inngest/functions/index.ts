@@ -13,6 +13,12 @@ import {
   scheduledEvalMaintenance,
 } from "./scheduled-evaluations";
 import { generateInsightsReport } from "./generate-insights-report";
+import {
+  onEvalCompletedMaybeRegen,
+  onModelCreatedMaybeRegen,
+  onActiveTierPromotedMaybeRegen,
+  insightsScheduledRecheck,
+} from "./maybe-regenerate-insights";
 
 // Export all functions for the serve() handler
 export const functions = [
@@ -25,6 +31,10 @@ export const functions = [
   scheduledEvalMaintenance,
   // Insights pipeline (parentbench-ov1)
   generateInsightsReport,
+  onEvalCompletedMaybeRegen,
+  onModelCreatedMaybeRegen,
+  onActiveTierPromotedMaybeRegen,
+  insightsScheduledRecheck,
 ];
 
 // Named exports for direct imports
@@ -37,3 +47,9 @@ export {
   scheduledEvalMaintenance,
 } from "./scheduled-evaluations";
 export { generateInsightsReport } from "./generate-insights-report";
+export {
+  onEvalCompletedMaybeRegen,
+  onModelCreatedMaybeRegen,
+  onActiveTierPromotedMaybeRegen,
+  insightsScheduledRecheck,
+} from "./maybe-regenerate-insights";
