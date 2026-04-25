@@ -52,9 +52,14 @@ export function validateNarrativeAgainstAggregate(
   const displaySet = new Set(aggregate.displayValues);
 
   for (const text of collectAllStrings(narrative)) {
-    const tokens = text.match(NUMERIC_TOKEN_RE) ?? [];
+    // Strip any displayValue substring that contains digits — it's a grounded
+    // identifier (e.g. model name "GPT-5.4 mini") and digits inside it are
+    // structural, not statistical. Without this, the regex would pull "5.4"
+    // out of a perfectly legitimate model reference and flag it as fabricated.
+    const stripped = stripGroundedIdentifiers(text, aggregate.displayValues);
+    const tokens = stripped.match(NUMERIC_TOKEN_RE) ?? [];
     for (const token of tokens) {
-      if (!isAcceptable(token, displaySet, rawNumbers, text)) {
+      if (!isAcceptable(token, displaySet, rawNumbers, stripped)) {
         return {
           valid: false,
           failureReason: `Unverified numeric token "${token}" in narrative segment: "${truncate(text, 100)}"`,
@@ -64,6 +69,28 @@ export function validateNarrativeAgainstAggregate(
   }
 
   return { valid: true };
+}
+
+/**
+ * Replace every digit-bearing displayValue with whitespace, case-insensitive.
+ * Run longest-first so "GPT-5.4 mini" gets stripped before the bare "5.4"
+ * we'd otherwise mistake for a stand-alone numeric claim.
+ */
+function stripGroundedIdentifiers(text: string, displayValues: string[]): string {
+  let stripped = text;
+  const sorted = [...displayValues]
+    .filter((v) => /\d/.test(v))
+    .sort((a, b) => b.length - a.length);
+  for (const v of sorted) {
+    if (v.length === 0) continue;
+    const re = new RegExp(escapeRegex(v), "gi");
+    stripped = stripped.replace(re, " ");
+  }
+  return stripped;
+}
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 // ============================================================================

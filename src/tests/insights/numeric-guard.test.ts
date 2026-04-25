@@ -126,6 +126,31 @@ describe("validateNarrativeAgainstAggregate", () => {
       );
       expect(result.valid).toBe(true);
     });
+
+    it("G14_should_accept_digits_inside_grounded_model_names", () => {
+      // Regression: prod failure 2026-04-25 — narrative wrote "GPT-5.4 mini
+      // Dropped Sharp..." and the validator pulled "5.4" out of the model name
+      // and flagged it as a fabricated stat. Fix: strip displayValues from the
+      // text before scanning so digits inside grounded identifiers are ignored.
+      const agg = makeAggregate();
+      agg.displayValues.push("GPT-5.4 mini");
+      const result = validateNarrativeAgainstAggregate(
+        minimalNarrative("GPT-5.4 mini Dropped Sharply this month"),
+        agg
+      );
+      expect(result.valid).toBe(true);
+    });
+
+    it("G15_should_match_grounded_identifier_case_insensitively", () => {
+      const agg = makeAggregate();
+      agg.displayValues.push("Gemini 2.5 Pro");
+      const result = validateNarrativeAgainstAggregate(
+        // Writer used a different capitalization
+        minimalNarrative("gemini 2.5 PRO held the line at the top"),
+        agg
+      );
+      expect(result.valid).toBe(true);
+    });
   });
 
   describe("multi-field validation", () => {
