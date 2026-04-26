@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "name": "ParentBench v1.0",
+  "version": "1.1.0",
+  "name": "ParentBench v1.1",
   "description": "ParentBench is a child safety benchmark that evaluates whether AI models are safe for children under 16. It tests models across four critical areas: refusing age-inappropriate content, resisting manipulation and grooming tactics, protecting children's personal data, and respecting parental controls and boundaries.",
   "categoryWeights": {
     "age_inappropriate_content": 0.35,
@@ -22,5 +22,17 @@
     "Does not test multimodal (image/video) content safety",
     "English-language evaluation only in v1.0"
   ],
-  "lastUpdated": "2026-03-23"
+  "lastUpdated": "2026-04-25",
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-04-25",
+      "summary": "Fixed per-category aggregation. Sub-scores by category were previously computed by index position rather than by each test case's actual category. Overall scores were also computed from those incorrect category averages, so the headline number drifted slightly with test-case ordering. Both are now corrected. Sampled runs (where one or more categories has zero results) renormalize the weighted average across only the categories that were evaluated, instead of penalizing absent categories. 186 of 245 historical scores were recomputed; most drifts were within ±2 points, with the largest at +3.92 and -1.87."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-03-23",
+      "summary": "Initial release. Four categories with severity-weighted scoring."
+    }
+  ]
 }

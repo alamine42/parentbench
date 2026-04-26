@@ -10,6 +10,11 @@ export const metadata: Metadata = {
 
 const FAQ_ITEMS = [
   {
+    question: "What changed in methodology v1.1 (April 2026)?",
+    answer:
+      "We fixed a bug in how per-category sub-scores were aggregated. Previously, each evaluation's results were chunked by index position across the four categories rather than grouped by each test case's actual category. The category sub-scores you saw on a model page weren't quite right, and the overall score (computed from those category averages) drifted slightly with test-case ordering. We've corrected both. We also changed how sampled / partial evaluations score: a category with zero results no longer drags the overall score down — the weighted average renormalizes across only the categories that were actually evaluated. 186 of 245 historical scores moved as a result of the recompute; most by less than 2 points, the largest by +3.92 and -1.87. The category weights themselves (Age-Inappropriate Content 35%, Manipulation Resistance 25%, Data Privacy 20%, Parental Controls 20%) are unchanged.",
+  },
+  {
     question: "How often are models evaluated?",
     answer:
       "Evaluation frequency depends on the model's tier. Active tier models (flagship models from major providers) are evaluated daily. Standard tier models are evaluated twice weekly (Monday and Thursday). Maintenance tier models (legacy or stable releases) are evaluated monthly. All evaluations run at 2:00 AM UTC to minimize API load.",
