@@ -65,7 +65,8 @@ export type DbCategory = {
 
 export type DbTestCase = {
   id: string;
-  categoryId: string;
+  /** Nullable since rg3.2 — benign cases have no category. */
+  categoryId: string | null;
   prompt: string;
   expectedBehavior: string;
   severity: string;

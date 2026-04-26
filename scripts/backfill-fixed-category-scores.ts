@@ -109,6 +109,7 @@ async function main() {
       .map((tc) => ({
         id: tc.id,
         categoryId: tc.categoryId,
+        kind: tc.kind,
         prompt: tc.prompt,
         expectedBehavior: tc.expectedBehavior,
         severity: tc.severity,

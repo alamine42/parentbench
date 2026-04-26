@@ -146,16 +146,23 @@ export const runEvaluation = inngest.createFunction(
         return activeTestCases;
       }
 
-      // Group by category
+      // Group by category. Benign cases (kind='benign', categoryId=null)
+      // bypass per-category sampling — they're a small set, take them all.
+      // (parentbench-rg3.2)
       const byCategory = new Map<string, typeof activeTestCases>();
+      const benignAll: typeof activeTestCases = [];
       for (const tc of activeTestCases) {
+        if (tc.kind === "benign" || tc.categoryId === null) {
+          benignAll.push(tc);
+          continue;
+        }
         const group = byCategory.get(tc.categoryId) ?? [];
         group.push(tc);
         byCategory.set(tc.categoryId, group);
       }
 
-      // Sample N from each category using Fisher-Yates partial shuffle
-      const sampled: typeof activeTestCases = [];
+      // Sample N from each safety category using Fisher-Yates partial shuffle
+      const sampled: typeof activeTestCases = [...benignAll];
       for (const [, cases] of byCategory) {
         const n = Math.min(SAMPLE_SIZE_PER_CATEGORY, cases.length);
         // Shuffle first n elements
@@ -210,7 +217,12 @@ export const runEvaluation = inngest.createFunction(
               let finalScore = result.score;
               let metadata: Record<string, unknown> = { ...(result.metadata ?? {}) };
 
-              if (useLlmJudge && result.response) {
+              // Skip the LLM judge for benign cases (parentbench-rg3.2):
+              // benign scoring is "did the model refuse?" — the refusal-detection
+              // heuristic is the load-bearing signal; a category-rubric judge
+              // would mis-grade them. Plus benign cases have no categoryId.
+              const isBenign = testCase.kind === "benign";
+              if (useLlmJudge && result.response && !isBenign && testCase.categoryId) {
                 try {
                   const categoryName = categoryMap[testCase.categoryId] || "age_inappropriate_content";
                   const judgeResult = await judgeResponse(testCase, result.response, categoryName);
@@ -289,8 +301,12 @@ export const runEvaluation = inngest.createFunction(
     });
 
     // Step 5: Compute and store score
+    // fullSafetyCount = total active safety test cases. NetHelpfulness
+    // gates on this (Codex W#4 fix: don't publish NH when sampled).
+    const fullSafetyCount = activeTestCases.filter((tc) => tc.kind === "safety").length;
+
     const finalScore = await step.run("compute-score", async () => {
-      const score = await computeScore(results, testCasesToRun, categoryMeta);
+      const score = await computeScore(results, testCasesToRun, categoryMeta, { fullSafetyCount });
 
       // Get previous score for trend
       const [previousScore] = await db
@@ -319,6 +335,13 @@ export const runEvaluation = inngest.createFunction(
           dataQuality: "verified",
           categoryScores: score.categoryScores,
           evaluationId: evaluation.id,
+          isPartial: score.isPartial,
+          // parentbench-rg3.2 over-alignment fields (nullable)
+          falseRefusalRate: score.falseRefusalRate,
+          netHelpfulness: score.netHelpfulness,
+          benignRefusalCount: score.benignRefusalCount,
+          benignTotalCount: score.benignTotalCount,
+          refusedBenignCaseIds: score.refusedBenignCaseIds,
         })
         .returning();
 

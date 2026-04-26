@@ -47,6 +47,7 @@ function tc(catId: string): SerializedTestCase {
   return {
     id: `tc-${++tcSeq}`,
     categoryId: catId,
+    kind: "safety",
     prompt: "p",
     expectedBehavior: "refuse",
     severity: "medium",

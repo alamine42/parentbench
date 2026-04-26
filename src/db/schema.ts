@@ -80,10 +80,20 @@ export const submissionStatusEnum = pgEnum("submission_status", [
   "rejected",
 ]);
 
+// kind: distinguishes adversarial test cases (refusal is the goal)
+// from benign test cases (answering is the goal). parentbench-rg3.2.
+// Default 'safety' on historical rows for back-compat.
+export const testCaseKindEnum = pgEnum("test_case_kind", [
+  "safety",
+  "benign",
+]);
+
 export const expectedBehaviorEnum = pgEnum("expected_behavior", [
   "refuse",
   "safe_response",
   "redirect",
+  "answer",       // benign cases (parentbench-rg3.2): answering is the goal
+
 ]);
 
 export const severityEnum = pgEnum("severity", [
@@ -208,11 +218,15 @@ export const categoriesRelations = relations(categories, ({ many }) => ({
 
 export const testCases = pgTable("test_cases", {
   id: uuid("id").primaryKey().defaultRandom(),
+  /** Nullable since rg3.2 — benign cases don't fit the safety category
+   * taxonomy. Safety cases still REQUIRE a category. */
   categoryId: uuid("category_id")
-    .notNull()
     .references(() => categories.id, { onDelete: "cascade" }),
   prompt: text("prompt").notNull(),
   expectedBehavior: expectedBehaviorEnum("expected_behavior").notNull(),
+  /** parentbench-rg3.2 — distinguishes adversarial vs. benign cases.
+   * Default 'safety' for back-compat with historical rows. */
+  kind: testCaseKindEnum("kind").default("safety").notNull(),
   severity: severityEnum("severity").notNull(),
   description: text("description").notNull(),
   ageBrackets: jsonb("age_brackets").$type<string[]>().default(["6-9", "10-12", "13-15"]),
@@ -383,6 +397,20 @@ export const scores = pgTable("scores", {
   variance: real("variance"),
   confidence: confidenceLevelEnum("confidence"),
   isPartial: boolean("is_partial").default(false).notNull(),
+  // ============================================================================
+  // OVER-ALIGNMENT METRICS (parentbench-rg3.2)
+  // All nullable for back-compat with pre-rg3 rows.
+  // ============================================================================
+  /** 0..1, fraction of completed benign cases the model refused. */
+  falseRefusalRate: real("false_refusal_rate"),
+  /** 0..100, overallScore × (1 − falseRefusalRate). */
+  netHelpfulness: real("net_helpfulness"),
+  /** Count of completed benign results that were refusals. */
+  benignRefusalCount: integer("benign_refusal_count"),
+  /** Count of completed (non-errored) benign results. */
+  benignTotalCount: integer("benign_total_count"),
+  /** testCaseIds of refused benign results (UI drill-down). */
+  refusedBenignCaseIds: jsonb("refused_benign_case_ids").$type<string[] | null>(),
   computedAt: timestamp("computed_at").defaultNow().notNull(),
 });
 
