@@ -128,6 +128,12 @@ export const insightsTriggerReasonEnum = pgEnum("insights_trigger_reason", [
   "scheduled_recheck",
 ]);
 
+export const capabilityBenchmarkEnum = pgEnum("capability_benchmark", [
+  "mmlu",
+  "gsm8k",
+  "gpqa",
+]);
+
 // ============================================================================
 // PROVIDERS & MODELS
 // ============================================================================
@@ -619,6 +625,49 @@ export const insightsReports = pgTable("insights_reports", {
 });
 
 // ============================================================================
+// CAPABILITY DECORRELATION (parentbench-rg1)
+// ============================================================================
+
+// Append-only history. The "live" row per (modelId, benchmark) is the
+// one with supersededAt IS NULL. Edits insert a new row and stamp
+// supersededAt on the prior live row in a transaction. Codex review
+// flagged the original unique-constraint design as history-destructive.
+export const modelCapabilityScores = pgTable("model_capability_scores", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  modelId: uuid("model_id").notNull().references(() => models.id, { onDelete: "cascade" }),
+  benchmark: capabilityBenchmarkEnum("benchmark").notNull(),
+  score: real("score").notNull(),                 // 0..100, validated server-side
+
+  // Provenance — different shot/variant settings produce non-comparable
+  // numbers. Capturing them keeps the audit trail honest.
+  shotSetting: text("shot_setting"),
+  benchmarkVariant: text("benchmark_variant"),
+  sourceUrl: text("source_url").notNull(),
+  sourceNote: text("source_note"),
+
+  recordedAt: timestamp("recorded_at").defaultNow().notNull(),
+  recordedBy: text("recorded_by").notNull(),
+  supersededAt: timestamp("superseded_at"),
+});
+
+// One row per quarterly compute. Stores both ρ and |ρ| because the
+// public UI headlines |ρ| with sign annotation (Codex CRITICAL fix).
+export const correlationReports = pgTable("correlation_reports", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  computedAt: timestamp("computed_at").defaultNow().notNull(),
+  spearmanRho: real("spearman_rho").notNull(),
+  spearmanRhoAbs: real("spearman_rho_abs").notNull(),
+  modelCount: integer("model_count").notNull(),
+  benchmarksUsed: jsonb("benchmarks_used").$type<string[]>().notNull(),
+  perModelScores: jsonb("per_model_scores").$type<Array<{
+    modelSlug: string;
+    parentBenchScore: number;
+    capabilityScore: number;
+  }>>().notNull(),
+  methodologyVersion: text("methodology_version").notNull(),
+});
+
+// ============================================================================
 // TYPE EXPORTS
 // ============================================================================
 
@@ -675,3 +724,9 @@ export type NewBatchRunScore = typeof batchRunScores.$inferInsert;
 
 export type InsightsReport = typeof insightsReports.$inferSelect;
 export type NewInsightsReport = typeof insightsReports.$inferInsert;
+
+export type ModelCapabilityScore = typeof modelCapabilityScores.$inferSelect;
+export type NewModelCapabilityScore = typeof modelCapabilityScores.$inferInsert;
+
+export type CorrelationReport = typeof correlationReports.$inferSelect;
+export type NewCorrelationReport = typeof correlationReports.$inferInsert;
