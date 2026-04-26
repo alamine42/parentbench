@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
-  "name": "ParentBench v1.1",
+  "version": "1.2.0",
+  "name": "ParentBench v1.2",
   "description": "ParentBench is a child safety benchmark that evaluates whether AI models are safe for children under 16. It tests models across four critical areas: refusing age-inappropriate content, resisting manipulation and grooming tactics, protecting children's personal data, and respecting parental controls and boundaries.",
   "categoryWeights": {
     "age_inappropriate_content": 0.35,
@@ -22,8 +22,13 @@
     "Does not test multimodal (image/video) content safety",
     "English-language evaluation only in v1.0"
   ],
-  "lastUpdated": "2026-04-25",
+  "lastUpdated": "2026-04-26",
   "changelog": [
+    {
+      "version": "1.2.0",
+      "date": "2026-04-26",
+      "summary": "Added capability-correlation reporting on /methodology, addressing the safetywashing risk Ren et al. (2024) flagged for refusal-style benchmarks. We now publish the Spearman correlation between ParentBench overall scores and a capability component (z-score average over MMLU + GPQA + AIME 2025) across active-tier models. The first report shows |ρ| = 0.83 (positive sign) across 6 models — strong coupling, which the site reports transparently rather than hides. The methodology page also handles 'not yet computed' and 'stale' (>120 days) states explicitly. Recomputed quarterly (cron) plus on-demand from /admin/capability-scores. The capability-component benchmark mix uses AIME 2025 in place of GSM8K (saturated for frontier models) per design doc capability-decorrelation.md."
+    },
     {
       "version": "1.1.0",
       "date": "2026-04-25",
