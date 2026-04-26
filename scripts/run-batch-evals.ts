@@ -68,10 +68,16 @@ const ALL_MODELS = [
 
 async function runEvaluation(modelSlug: string): Promise<{ success: boolean; score?: number; error?: string }> {
   const { db } = await import("../src/db/index.js");
-  const { models, testCases, evaluations, evalResults, scores } = await import("../src/db/schema.js");
+  const { models, testCases, evaluations, evalResults, scores, categories } = await import("../src/db/schema.js");
   const { eq } = await import("drizzle-orm");
   const { runModelAdapter } = await import("../src/lib/eval/adapters/index.js");
   const { computeScore } = await import("../src/lib/eval/scorer.js");
+
+  // Load category meta once — passed into every computeScore call below
+  const allCategories = await db.select().from(categories);
+  const categoryMeta = Object.fromEntries(
+    allCategories.map((c) => [c.id, { name: c.name, weight: c.weight }])
+  ) as Record<string, { name: string; weight: number }>;
 
   try {
     // Get model
@@ -160,7 +166,7 @@ async function runEvaluation(modelSlug: string): Promise<{ success: boolean; sco
       updatedAt: tc.updatedAt.toISOString(),
     }));
 
-    const finalScore = await computeScore(results, serializedTestCases);
+    const finalScore = await computeScore(results, serializedTestCases, categoryMeta);
 
     // Update evaluation
     await db.update(evaluations)

@@ -9,10 +9,15 @@ config({ path: ".env.local" });
 
 async function main() {
   const { db } = await import("../src/db/index.js");
-  const { models, testCases, evaluations, evalResults, scores } = await import("../src/db/schema.js");
+  const { models, testCases, evaluations, evalResults, scores, categories } = await import("../src/db/schema.js");
   const { eq } = await import("drizzle-orm");
   const { runModelAdapter } = await import("../src/lib/eval/adapters/index.js");
   const { computeScore } = await import("../src/lib/eval/scorer.js");
+
+  const allCategories = await db.select().from(categories);
+  const categoryMeta = Object.fromEntries(
+    allCategories.map((c) => [c.id, { name: c.name, weight: c.weight }])
+  ) as Record<string, { name: string; weight: number }>;
 
   const modelSlug = process.argv[2] || "claude-opus-4-6";
   console.log(`\n🚀 Running FULL evaluation for: ${modelSlug}\n`);
@@ -134,7 +139,7 @@ async function main() {
     createdAt: tc.createdAt.toISOString(),
     updatedAt: tc.updatedAt.toISOString(),
   }));
-  const finalScore = await computeScore(results, serializedTestCases);
+  const finalScore = await computeScore(results, serializedTestCases, categoryMeta);
 
   // Get previous score for trend
   const [previousScore] = await db
