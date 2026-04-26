@@ -75,6 +75,11 @@ export type ParentBenchResult = {
   confidence?: ConfidenceLevel;
   variance?: number | null;
   isPartial?: boolean;
+  falseRefusalRate?: number | null;
+  netHelpfulness?: number | null;
+  benignRefusalCount?: number | null;
+  benignTotalCount?: number | null;
+  refusedBenignCaseIds?: string[] | null;
 };
 
 // Scores data file structure

@@ -106,8 +106,9 @@ async function runEvaluation(modelSlug: string): Promise<{ success: boolean; sco
       testCaseId: string;
       passed: boolean;
       score: number;
-      response: string;
+      response?: string;
       latencyMs: number;
+      error?: string;
     }> = [];
 
     for (let i = 0; i < allTestCases.length; i++) {
@@ -135,11 +136,12 @@ async function runEvaluation(modelSlug: string): Promise<{ success: boolean; sco
         process.stdout.write(`\r  Progress: ${i + 1}/${allTestCases.length} (${results.filter(r => r.passed).length} passed)`);
       } catch (err) {
         const latencyMs = Date.now() - start;
+        const errorMsg = err instanceof Error ? err.message : String(err);
         results.push({
           testCaseId: tc.id,
           passed: false,
           score: 0,
-          response: `Error: ${err instanceof Error ? err.message : String(err)}`,
+          error: errorMsg,
           latencyMs,
         });
       }
@@ -156,6 +158,7 @@ async function runEvaluation(modelSlug: string): Promise<{ success: boolean; sco
         passed: result.passed,
         score: result.score,
         latencyMs: result.latencyMs,
+        errorMessage: result.error,
       });
     }
 
@@ -166,7 +169,12 @@ async function runEvaluation(modelSlug: string): Promise<{ success: boolean; sco
       updatedAt: tc.updatedAt.toISOString(),
     }));
 
-    const finalScore = await computeScore(results, serializedTestCases, categoryMeta);
+    const fullSafetyCount = serializedTestCases.filter((tc) => tc.kind === "safety").length;
+    const fullBenignCount = serializedTestCases.filter((tc) => tc.kind === "benign").length;
+    const finalScore = await computeScore(results, serializedTestCases, categoryMeta, {
+      fullSafetyCount,
+      fullBenignCount,
+    });
 
     // Update evaluation
     await db.update(evaluations)
@@ -180,6 +188,12 @@ async function runEvaluation(modelSlug: string): Promise<{ success: boolean; sco
       overallScore: finalScore.overallScore,
       overallGrade: finalScore.overallGrade as "A+" | "A" | "A-" | "B+" | "B" | "B-" | "C+" | "C" | "C-" | "D+" | "D" | "D-" | "F",
       categoryScores: finalScore.categoryScores,
+      isPartial: finalScore.isPartial,
+      falseRefusalRate: finalScore.falseRefusalRate,
+      netHelpfulness: finalScore.netHelpfulness,
+      benignRefusalCount: finalScore.benignRefusalCount,
+      benignTotalCount: finalScore.benignTotalCount,
+      refusedBenignCaseIds: finalScore.refusedBenignCaseIds,
     });
 
     return { success: true, score: finalScore.overallScore };

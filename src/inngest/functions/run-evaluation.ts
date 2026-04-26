@@ -300,13 +300,14 @@ export const runEvaluation = inngest.createFunction(
       }
     });
 
-    // Step 5: Compute and store score
-    // fullSafetyCount = total active safety test cases. NetHelpfulness
-    // gates on this (Codex W#4 fix: don't publish NH when sampled).
     const fullSafetyCount = activeTestCases.filter((tc) => tc.kind === "safety").length;
+    const fullBenignCount = activeTestCases.filter((tc) => tc.kind === "benign").length;
 
     const finalScore = await step.run("compute-score", async () => {
-      const score = await computeScore(results, testCasesToRun, categoryMeta, { fullSafetyCount });
+      const score = await computeScore(results, testCasesToRun, categoryMeta, {
+        fullSafetyCount,
+        fullBenignCount,
+      });
 
       // Get previous score for trend
       const [previousScore] = await db

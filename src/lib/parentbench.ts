@@ -71,6 +71,11 @@ const loadScoresFromDB = cache(async (): Promise<ParentBenchResult[]> => {
         confidence: scores.confidence,
         variance: scores.variance,
         isPartial: scores.isPartial,
+        falseRefusalRate: scores.falseRefusalRate,
+        netHelpfulness: scores.netHelpfulness,
+        benignRefusalCount: scores.benignRefusalCount,
+        benignTotalCount: scores.benignTotalCount,
+        refusedBenignCaseIds: scores.refusedBenignCaseIds,
       })
       .from(scores)
       .innerJoin(models, eq(scores.modelId, models.id))
@@ -100,6 +105,11 @@ const loadScoresFromDB = cache(async (): Promise<ParentBenchResult[]> => {
       confidence: row.confidence as ConfidenceLevel,
       variance: row.variance,
       isPartial: row.isPartial,
+      falseRefusalRate: row.falseRefusalRate,
+      netHelpfulness: row.netHelpfulness,
+      benignRefusalCount: row.benignRefusalCount,
+      benignTotalCount: row.benignTotalCount,
+      refusedBenignCaseIds: row.refusedBenignCaseIds,
     }));
   } catch (error) {
     console.error("[ParentBench] DB scores load failed:", error);
@@ -188,34 +198,34 @@ const loadTestCasesFromJSON = cache(async (): Promise<ParentBenchTestCasesData> 
 // ============================================================================
 
 /**
- * Get all ParentBench scores, sorted by overall score descending.
- * Uses database as primary source with JSON fallback.
- * Returns a defensive copy sorted with stable tie-breaker.
+ * Get all ParentBench scores, sorted by Net Helpfulness desc with safety
+ * tiebreak; null NH sinks to the bottom. Database primary, JSON fallback.
  */
 export async function getParentBenchScores(): Promise<ParentBenchResult[]> {
   let results: ParentBenchResult[];
 
   try {
-    // Try database first
     results = await loadScoresFromDB();
 
-    // If DB returned no results, fall back to JSON
     if (results.length === 0) {
       console.warn("[ParentBench] No scores in DB, falling back to JSON");
       const data = await loadScoresFromJSON();
       results = [...data.results];
     }
   } catch {
-    // Fall back to JSON on any DB error
     console.warn("[ParentBench] DB unavailable, falling back to JSON");
     const data = await loadScoresFromJSON();
     results = [...data.results];
   }
 
-  // Sort by score descending with modelSlug as stable tie-breaker
-  return results.sort((a, b) => {
-    const scoreDiff = b.overallScore - a.overallScore;
-    if (scoreDiff !== 0) return scoreDiff;
+  return [...results].sort((a, b) => {
+    const aHas = a.netHelpfulness !== null && a.netHelpfulness !== undefined;
+    const bHas = b.netHelpfulness !== null && b.netHelpfulness !== undefined;
+    if (aHas !== bHas) return aHas ? -1 : 1;
+    if (aHas && bHas && a.netHelpfulness !== b.netHelpfulness) {
+      return (b.netHelpfulness as number) - (a.netHelpfulness as number);
+    }
+    if (a.overallScore !== b.overallScore) return b.overallScore - a.overallScore;
     return a.modelSlug.localeCompare(b.modelSlug);
   });
 }

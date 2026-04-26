@@ -139,7 +139,12 @@ async function main() {
     createdAt: tc.createdAt.toISOString(),
     updatedAt: tc.updatedAt.toISOString(),
   }));
-  const finalScore = await computeScore(results, serializedTestCases, categoryMeta);
+  const fullSafetyCount = serializedTestCases.filter((tc) => tc.kind === "safety").length;
+  const fullBenignCount = serializedTestCases.filter((tc) => tc.kind === "benign").length;
+  const finalScore = await computeScore(results, serializedTestCases, categoryMeta, {
+    fullSafetyCount,
+    fullBenignCount,
+  });
 
   // Get previous score for trend
   const [previousScore] = await db
@@ -166,6 +171,12 @@ async function main() {
     dataQuality: "verified",
     categoryScores: finalScore.categoryScores,
     evaluationId: evaluation.id,
+    isPartial: finalScore.isPartial,
+    falseRefusalRate: finalScore.falseRefusalRate,
+    netHelpfulness: finalScore.netHelpfulness,
+    benignRefusalCount: finalScore.benignRefusalCount,
+    benignTotalCount: finalScore.benignTotalCount,
+    refusedBenignCaseIds: finalScore.refusedBenignCaseIds,
   });
 
   // Mark evaluation complete
