@@ -45,6 +45,9 @@ HANDOVER.md
 .env*.local
 .gstack/
 
+# backfill audit reports (kept locally, surface diffs in commits not the JSON)
+reports/
+
 # beads daemon state (issues.jsonl is the source of truth, not these)
 .beads/backup/
 .beads/embeddeddolt/

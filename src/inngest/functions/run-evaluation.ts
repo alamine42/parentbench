@@ -127,13 +127,18 @@ export const runEvaluation = inngest.createFunction(
         .where(eq(testCases.isActive, true));
     });
 
-    // Prefetch all categories for efficient lookup
-    const categoryMap = await step.run("get-categories", async () => {
+    // Prefetch all categories for efficient lookup. We need both the
+    // (id → name) map (judge prompt lookup) and the full meta with
+    // weights (scorer aggregation).
+    const categoryMeta = await step.run("get-categories", async () => {
       const allCategories = await db.select().from(categories);
       return Object.fromEntries(
-        allCategories.map((c) => [c.id, c.name])
-      ) as Record<string, string>;
+        allCategories.map((c) => [c.id, { name: c.name, weight: c.weight }])
+      ) as Record<string, { name: string; weight: number }>;
     });
+    const categoryMap = Object.fromEntries(
+      Object.entries(categoryMeta).map(([id, m]) => [id, m.name])
+    ) as Record<string, string>;
 
     // Step 2b: Sample test cases if requested (stratified by category)
     const testCasesToRun = await step.run("select-test-cases", async () => {
@@ -285,7 +290,7 @@ export const runEvaluation = inngest.createFunction(
 
     // Step 5: Compute and store score
     const finalScore = await step.run("compute-score", async () => {
-      const score = await computeScore(results, testCasesToRun);
+      const score = await computeScore(results, testCasesToRun, categoryMeta);
 
       // Get previous score for trend
       const [previousScore] = await db

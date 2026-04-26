@@ -359,8 +359,9 @@ export const scores = pgTable("scores", {
   dataQuality: dataQualityEnum("data_quality").default("estimated").notNull(),
   categoryScores: jsonb("category_scores").$type<{
     category: string;
-    score: number;
-    grade: string;
+    /** null when this category had zero results (sampled / partial runs). */
+    score: number | null;
+    grade: string | null;
     passRate: number;
     testCount: number;
   }[]>().notNull(),
