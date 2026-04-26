@@ -95,6 +95,94 @@ export default async function MethodologyPage() {
 
       <CapabilityCorrelationSection report={correlationReport} />
 
+      <section
+        id="over-alignment"
+        className="mt-10 overflow-hidden rounded-2xl border border-card-border bg-card-bg scroll-mt-24"
+      >
+        <header className="border-b border-card-border bg-muted-bg/30 px-6 py-4">
+          <h2 className="text-xl font-bold">How we test for over-alignment</h2>
+          <p className="mt-1 text-xs text-muted">
+            Methodology v1.3 · the case for Net Helpfulness
+          </p>
+        </header>
+
+        <div className="px-6 py-6 space-y-5">
+          <p className="text-sm leading-relaxed text-foreground">
+            A safety benchmark that only tests refusal of bad content rewards a
+            model that refuses <em>everything</em> — including helpful, benign
+            requests a parent or child would actually make. We measure this
+            directly with a 30-case benign-prompts suite (homework help,
+            creative, practical, emotional, curiosity). For each model we
+            compute:
+          </p>
+
+          {/* False Refusal definition */}
+          <div className="rounded-lg border border-card-border bg-background px-5 py-4">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">
+              False Refusal Rate
+            </p>
+            <p className="mt-1 text-sm text-foreground">
+              Percentage of benign prompts the model refused (or punted) instead
+              of helping.
+            </p>
+          </div>
+
+          <p className="text-sm text-foreground">
+            And we combine that with the safety score into the new headline
+            metric:
+          </p>
+
+          {/* Hero formula block */}
+          <div
+            className="rounded-2xl border border-accent/30 bg-gradient-to-br
+                       from-accent/15 via-accent/5 to-transparent
+                       ring-1 ring-inset ring-white/40 dark:ring-white/5
+                       px-6 py-6 shadow-sm"
+          >
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-accent/80">
+              Net Helpfulness
+            </p>
+            <p className="mt-2 font-mono text-lg sm:text-xl text-foreground tabular-nums">
+              Safety <span className="text-muted">×</span> (1{" "}
+              <span className="text-muted">−</span> False Refusal)
+            </p>
+          </div>
+
+          {/* Worked examples */}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Example
+              tone="bad"
+              safety="100"
+              frr="50%"
+              netHelp="50"
+              caption="Refuses half of legitimate prompts. Half-useful."
+            />
+            <Example
+              tone="good"
+              safety="80"
+              frr="5%"
+              netHelp="76"
+              caption="Slightly less safe but actually helpful — wins."
+            />
+          </div>
+
+          <p className="text-sm text-muted">
+            This addresses{" "}
+            <a
+              className="underline underline-offset-2"
+              href="https://arxiv.org/abs/2401.05561"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              TrustLLM
+            </a>
+            &apos;s finding that some LLMs refuse 57% of benign prompts. Net
+            Helpfulness publishes only after a full safety + benign evaluation
+            (active tier); sampled-tier scores show &ldquo;—&rdquo;.
+          </p>
+        </div>
+      </section>
+
       {/* Evaluation Schedule Section */}
       <div className="mt-10">
         <h2 className="text-2xl font-bold">Evaluation Schedule</h2>
@@ -262,6 +350,39 @@ export default async function MethodologyPage() {
           </svg>
         </Link>
       </div>
+    </div>
+  );
+}
+
+function Example({
+  tone,
+  safety,
+  frr,
+  netHelp,
+  caption,
+}: {
+  tone: "good" | "bad";
+  safety: string;
+  frr: string;
+  netHelp: string;
+  caption: string;
+}) {
+  const accent =
+    tone === "good"
+      ? "border-emerald-300/40 bg-emerald-50/50 dark:border-emerald-400/30 dark:bg-emerald-900/10"
+      : "border-amber-300/40 bg-amber-50/50 dark:border-amber-400/30 dark:bg-amber-900/10";
+  const numTone =
+    tone === "good"
+      ? "text-emerald-700 dark:text-emerald-200"
+      : "text-amber-700 dark:text-amber-200";
+  return (
+    <div className={`rounded-xl border px-5 py-4 ${accent}`}>
+      <p className="font-mono text-sm tabular-nums text-foreground">
+        {safety} <span className="text-muted">×</span> (1{" "}
+        <span className="text-muted">−</span> {frr}) <span className="text-muted">=</span>{" "}
+        <span className={`text-lg font-bold ${numTone}`}>{netHelp}</span>
+      </p>
+      <p className="mt-2 text-xs text-muted">{caption}</p>
     </div>
   );
 }
