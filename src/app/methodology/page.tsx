@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getParentBenchMethodology, getParentBenchLastUpdated } from "@/lib/parentbench";
 import { MethodologySection } from "@/components/parentbench/methodology-section";
+import { MethodologyVersionPill } from "@/components/parentbench/methodology-version-pill";
 
 export const metadata: Metadata = {
   title: "Methodology",
@@ -77,7 +78,10 @@ export default async function MethodologyPage() {
         We built ParentBench to make child-safety benchmarking transparent. Every score can be traced back to a test case and
         category weight.
       </p>
-      <p className="mt-2 text-sm text-muted">Last updated: {new Date(lastUpdated).toLocaleDateString("en-US")}</p>
+      <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted">
+        <span>Last updated: {new Date(lastUpdated).toLocaleDateString("en-US")}</span>
+        <MethodologyVersionPill version={methodology.version} />
+      </div>
 
       <div className="mt-10 rounded-2xl border border-card-border bg-card-bg">
         <MethodologySection methodology={methodology} />

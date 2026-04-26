@@ -7,6 +7,7 @@ import { getModelBySlug, getAllModelSlugs } from "@/lib/data";
 import { ScoreRing } from "@/components/ui/score-ring";
 import { LetterGradeBadge } from "@/components/ui/letter-grade";
 import { ColorBar } from "@/components/ui/color-bar";
+import { MethodologyVersionPill } from "@/components/parentbench/methodology-version-pill";
 import { PARENTBENCH_CATEGORY_META, PARENTBENCH_CATEGORY_ORDER } from "@/lib/constants";
 
 type Props = {
@@ -102,8 +103,9 @@ export default async function ModelPage({ params }: Props) {
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-4">
           <p className="text-sm text-muted">
-            Evaluated on {new Date(parentBenchResult.evaluatedDate).toLocaleDateString("en-US")} · Methodology v{parentBenchResult.methodologyVersion}
+            Evaluated on {new Date(parentBenchResult.evaluatedDate).toLocaleDateString("en-US")}
           </p>
+          <MethodologyVersionPill version={parentBenchResult.methodologyVersion} />
           <Link
             href={`/model/${slug}/history`}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"

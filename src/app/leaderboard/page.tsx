@@ -4,6 +4,7 @@ import { getParentBenchScores, getParentBenchMethodology, getParentBenchModelCou
 import { getAllModels } from "@/lib/data";
 import { HeroSection } from "@/components/parentbench/hero-section";
 import { LeaderboardTable } from "@/components/parentbench/leaderboard-table";
+import { MethodologyVersionPill } from "@/components/parentbench/methodology-version-pill";
 
 export const metadata: Metadata = {
   title: "Leaderboard",
@@ -61,6 +62,7 @@ export default async function LeaderboardPage() {
           >
             Read about the methodology
           </Link>
+          <MethodologyVersionPill version={methodology.version} />
         </div>
       </div>
     </div>

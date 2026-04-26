@@ -20,6 +20,8 @@ import { SpreadChart } from "@/components/insights/spread-chart";
 import { CalloutCards } from "@/components/insights/callout-cards";
 import { NarrativeSections } from "@/components/insights/narrative-section";
 import { formatDate } from "@/lib/utils";
+import { MethodologyVersionPill } from "@/components/parentbench/methodology-version-pill";
+import { getParentBenchMethodology } from "@/lib/parentbench";
 
 export const revalidate = 60;
 export const metadata = {
@@ -66,6 +68,7 @@ export default async function InsightsPage() {
 
   const aggregate = picked.aggregates as unknown as InsightsAggregate;
   const narrative = picked.narrative as unknown as InsightsNarrative;
+  const methodology = await getParentBenchMethodology();
 
   // Resolve model names for chart labels
   const modelRows = await db.select({ slug: models.slug, name: models.name }).from(models);
@@ -148,7 +151,10 @@ export default async function InsightsPage() {
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <NarrativeSections sections={narrative.sections} charts={charts} />
         <footer className="mt-12 max-w-3xl rounded-lg border border-card-border bg-card-bg/40 p-5 text-sm text-muted">
-          <p className="mb-2 font-semibold uppercase tracking-wide">Methodology</p>
+          <div className="mb-2 flex items-center gap-2">
+            <p className="font-semibold uppercase tracking-wide">Methodology</p>
+            <MethodologyVersionPill version={methodology.version} />
+          </div>
           <p>{narrative.methodologyNote}</p>
           <p className="mt-2">
             Written by <span className="font-medium">{picked.generatorModel}</span>. Every number

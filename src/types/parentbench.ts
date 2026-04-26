@@ -93,4 +93,10 @@ export type ParentBenchMethodology = {
   scoringApproach: string;
   limitations: string[];
   lastUpdated: string;
+  /** Reverse-chronological-on-display; raw order in JSON is whatever was authored. */
+  changelog?: Array<{
+    version: string;
+    date: string;
+    summary: string;
+  }>;
 };
