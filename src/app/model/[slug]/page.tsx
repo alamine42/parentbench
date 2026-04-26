@@ -8,7 +8,11 @@ import { ScoreRing } from "@/components/ui/score-ring";
 import { LetterGradeBadge } from "@/components/ui/letter-grade";
 import { ColorBar } from "@/components/ui/color-bar";
 import { MethodologyVersionPill } from "@/components/parentbench/methodology-version-pill";
+import { OverAlignmentSection } from "@/components/parentbench/over-alignment-section";
 import { PARENTBENCH_CATEGORY_META, PARENTBENCH_CATEGORY_ORDER } from "@/lib/constants";
+import { db } from "@/db";
+import { testCases } from "@/db/schema";
+import { inArray } from "drizzle-orm";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -58,6 +62,15 @@ export default async function ModelPage({ params }: Props) {
   if (!parentBenchResult) {
     notFound();
   }
+
+  const refusedIds = parentBenchResult.refusedBenignCaseIds ?? [];
+  const refusedCases =
+    refusedIds.length > 0
+      ? await db
+          .select({ id: testCases.id, prompt: testCases.prompt })
+          .from(testCases)
+          .where(inArray(testCases.id, refusedIds))
+      : [];
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
@@ -127,6 +140,15 @@ export default async function ModelPage({ params }: Props) {
           </Link>
         </div>
       </header>
+
+      <OverAlignmentSection
+        safetyScore={parentBenchResult.overallScore}
+        falseRefusalRate={parentBenchResult.falseRefusalRate}
+        netHelpfulness={parentBenchResult.netHelpfulness}
+        benignRefusalCount={parentBenchResult.benignRefusalCount}
+        benignTotalCount={parentBenchResult.benignTotalCount}
+        refusedCases={refusedCases}
+      />
 
       <section className="mt-8 rounded-2xl border border-card-border bg-card-bg p-6">
         <h2 className="text-xl font-semibold">Category breakdown</h2>

@@ -11,6 +11,8 @@ import { ColorBar } from "@/components/ui/color-bar";
 import { ConfidenceDot, ConfidenceBadgeMobile } from "@/components/ui/confidence-indicator";
 import { PARENTBENCH_CATEGORY_META } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
+import { sortByNetHelpfulness } from "@/lib/leaderboard/sort";
+import { frrTone } from "@/lib/over-alignment";
 
 type EnrichedScore = ParentBenchResult & {
   modelName: string;
@@ -19,7 +21,7 @@ type EnrichedScore = ParentBenchResult & {
   variance?: number | null;
 };
 
-type SortField = "overall" | ParentBenchCategory;
+type SortField = "net_helpfulness" | "overall" | ParentBenchCategory;
 
 type LeaderboardTableProps = {
   scores: EnrichedScore[];
@@ -41,26 +43,27 @@ const CATEGORY_SHORT_LABELS: Record<ParentBenchCategory, string> = {
 };
 
 export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
-  const [sortBy, setSortBy] = useState<SortField>("overall");
+  const [sortBy, setSortBy] = useState<SortField>("net_helpfulness");
   const [filterProvider, setFilterProvider] = useState("all");
 
   const sortedAndFiltered = useMemo(() => {
     let result = [...scores];
 
-    // Filter by provider
     if (filterProvider !== "all") {
       result = result.filter((s) => s.provider.name === filterProvider);
     }
 
-    // Sort
-    result.sort((a, b) => {
-      if (sortBy === "overall") {
-        return b.overallScore - a.overallScore;
-      }
-      const aScore = a.categoryScores.find((c) => c.category === sortBy)?.score ?? 0;
-      const bScore = b.categoryScores.find((c) => c.category === sortBy)?.score ?? 0;
-      return bScore - aScore;
-    });
+    if (sortBy === "net_helpfulness") {
+      result = sortByNetHelpfulness(result);
+    } else if (sortBy === "overall") {
+      result.sort((a, b) => b.overallScore - a.overallScore);
+    } else {
+      result.sort((a, b) => {
+        const aScore = a.categoryScores.find((c) => c.category === sortBy)?.score ?? 0;
+        const bScore = b.categoryScores.find((c) => c.category === sortBy)?.score ?? 0;
+        return bScore - aScore;
+      });
+    }
 
     return result;
   }, [scores, sortBy, filterProvider]);
@@ -85,7 +88,8 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
                        shadow-sm hover:border-accent/50 transition-colors duration-150
                        focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent"
           >
-            <option value="overall">Overall Score</option>
+            <option value="net_helpfulness">Net Helpfulness</option>
+            <option value="overall">Safety Score</option>
             {CATEGORY_ORDER.map((cat) => (
               <option key={cat} value={cat}>
                 {PARENTBENCH_CATEGORY_META[cat].label}
@@ -136,13 +140,21 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
               </th>
               <th className="py-4 px-4 text-center text-xs font-semibold text-muted uppercase tracking-wider w-32">
                 <span className="flex items-center justify-center gap-1.5">
-                  Score
+                  Net&nbsp;Helpfulness
                   <span
                     className="inline-flex items-center justify-center h-4 w-4 rounded-full bg-muted-bg text-[10px] font-normal cursor-help"
-                    title="Confidence indicator shows score reliability across multiple evaluation runs"
+                    title="Safety × (1 − False Refusal Rate). A model that refuses everything scores 0 here even with perfect safety. parentbench v1.3"
                   >
                     ?
                   </span>
+                </span>
+              </th>
+              <th className="py-4 px-4 text-center text-xs font-semibold text-muted uppercase tracking-wider w-28">
+                Safety
+              </th>
+              <th className="py-4 px-4 text-center text-xs font-semibold text-muted uppercase tracking-wider w-24">
+                <span title="False Refusal Rate — percentage of legitimate kid/parent prompts the model refused">
+                  False&nbsp;Refusal
                 </span>
               </th>
               {CATEGORY_ORDER.map((cat) => (
@@ -202,14 +214,33 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
                   </Link>
                 </td>
 
-                {/* Score with confidence */}
                 <td className="py-4 px-4">
-                  <div className="flex items-center justify-center gap-2.5">
+                  <div className="flex items-center justify-center">
+                    {score.netHelpfulness !== null && score.netHelpfulness !== undefined ? (
+                      <NetHelpfulnessBadge value={score.netHelpfulness} />
+                    ) : (
+                      <PendingBadge title="Not yet evaluated under v1.3" />
+                    )}
+                  </div>
+                </td>
+
+                <td className="py-4 px-4">
+                  <div className="flex items-center justify-center gap-2">
                     <ScoreRing score={score.overallScore} size="sm" />
                     <LetterGradeBadge grade={score.overallGrade} size="sm" />
                     {score.confidence && (
                       <ConfidenceDot confidence={score.confidence} variance={score.variance} isPartial={score.isPartial} />
                     )}
+                  </div>
+                </td>
+
+                <td className="py-4 px-4">
+                  <div className="flex items-center justify-center">
+                    <FalseRefusalBadge
+                      rate={score.falseRefusalRate}
+                      refusalCount={score.benignRefusalCount}
+                      totalCount={score.benignTotalCount}
+                    />
                   </div>
                 </td>
 
@@ -275,10 +306,6 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
   );
 }
 
-// ============================================================================
-// MOBILE CARD COMPONENT - Touch-optimized with gestures
-// ============================================================================
-
 type MobileCardProps = {
   score: EnrichedScore;
   rank: number;
@@ -321,12 +348,17 @@ function MobileCard({ score, rank, getCategoryScore }: MobileCardProps) {
           <div className="text-sm text-muted truncate">{score.provider.name}</div>
         </div>
 
-        {/* Score cluster */}
         <div className="flex items-center gap-2 shrink-0">
-          <div className="flex flex-col items-end">
-            <span className="text-lg font-bold tabular-nums">{score.overallScore}</span>
-            <LetterGradeBadge grade={score.overallGrade} size="sm" />
+          {score.netHelpfulness !== null && score.netHelpfulness !== undefined ? (
+            <NetHelpfulnessBadge value={score.netHelpfulness} />
+          ) : (
+            <PendingBadge title="Not yet evaluated under v1.3" />
+          )}
+          <div className="flex flex-col items-end leading-tight">
+            <span className="text-[9px] uppercase tracking-wider text-muted">Safety</span>
+            <span className="text-base font-semibold tabular-nums">{score.overallScore}</span>
           </div>
+          <LetterGradeBadge grade={score.overallGrade} size="sm" />
         </div>
 
         {/* Expand chevron */}
@@ -342,8 +374,26 @@ function MobileCard({ score, rank, getCategoryScore }: MobileCardProps) {
         </svg>
       </summary>
 
-      {/* Expanded content */}
       <div className="border-t border-card-border bg-muted-bg/20 p-4 space-y-4">
+        {score.falseRefusalRate !== null && score.falseRefusalRate !== undefined ? (
+          <div className="flex items-center justify-between pb-3 border-b border-card-border/50">
+            <span className="text-sm font-medium text-muted">False Refusal Rate</span>
+            <div className="flex items-center gap-2">
+              <FalseRefusalBadge
+                rate={score.falseRefusalRate}
+                refusalCount={score.benignRefusalCount}
+                totalCount={score.benignTotalCount}
+              />
+              {score.benignRefusalCount !== null && score.benignRefusalCount !== undefined &&
+               score.benignTotalCount !== null && score.benignTotalCount !== undefined ? (
+                <span className="text-xs text-muted tabular-nums">
+                  {score.benignRefusalCount} of {score.benignTotalCount}
+                </span>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+
         {/* Confidence badge (mobile-optimized tap target) */}
         {score.confidence && (
           <div className="flex items-center justify-between pb-3 border-b border-card-border/50">
@@ -394,5 +444,73 @@ function MobileCard({ score, rank, getCategoryScore }: MobileCardProps) {
         </Link>
       </div>
     </details>
+  );
+}
+
+function NetHelpfulnessBadge({ value }: { value: number }) {
+  const rounded = Math.round(value);
+  return (
+    <div
+      className="inline-flex flex-col items-center justify-center rounded-xl border border-accent/20
+                 bg-gradient-to-br from-accent/15 via-accent/5 to-transparent px-3 py-1.5
+                 shadow-sm ring-1 ring-inset ring-white/40 dark:ring-white/5"
+      title={`Net Helpfulness: ${rounded} / 100. Safety × (1 − False Refusal Rate).`}
+    >
+      <span className="text-xl font-bold tabular-nums leading-none text-accent">{rounded}</span>
+      <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-wider text-accent/70">
+        / 100
+      </span>
+    </div>
+  );
+}
+
+function PendingBadge({ title }: { title: string }) {
+  return (
+    <span
+      className="inline-flex h-9 w-9 cursor-help items-center justify-center rounded-full
+                 border border-dashed border-card-border text-base text-muted
+                 transition-colors hover:border-muted hover:text-foreground"
+      title={title}
+      aria-label={title}
+    >
+      —
+    </span>
+  );
+}
+
+const FRR_TONE_CLASSES = {
+  good: "border-emerald-300/40 bg-emerald-50 text-emerald-800 dark:border-emerald-400/30 dark:bg-emerald-900/20 dark:text-emerald-200",
+  warn: "border-amber-300/40 bg-amber-50 text-amber-800 dark:border-amber-400/30 dark:bg-amber-900/20 dark:text-amber-200",
+  bad: "border-red-300/40 bg-red-50 text-red-800 dark:border-red-400/30 dark:bg-red-900/20 dark:text-red-200",
+} as const;
+
+function FalseRefusalBadge({
+  rate,
+  refusalCount,
+  totalCount,
+}: {
+  rate: number | null | undefined;
+  refusalCount: number | null | undefined;
+  totalCount: number | null | undefined;
+}) {
+  if (rate === null || rate === undefined) {
+    return <PendingBadge title="No benign data yet" />;
+  }
+  const pct = Math.round(rate * 100);
+  const tone = FRR_TONE_CLASSES[frrTone(rate * 100)];
+
+  const tooltip =
+    refusalCount !== null && refusalCount !== undefined &&
+    totalCount !== null && totalCount !== undefined
+      ? `${refusalCount} of ${totalCount} benign prompts refused`
+      : `${pct}% false refusal rate`;
+
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold tabular-nums ${tone}`}
+      title={tooltip}
+    >
+      {pct}%
+    </span>
   );
 }
