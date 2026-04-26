@@ -84,8 +84,8 @@ describe("validateCapabilityScoreInput", () => {
       expect(r.valid).toBe(true);
     });
 
-    it("should_accept_gsm8k", () => {
-      const r = validateCapabilityScoreInput({ ...baseInput, benchmark: "gsm8k" });
+    it("should_accept_aime_2025", () => {
+      const r = validateCapabilityScoreInput({ ...baseInput, benchmark: "aime_2025" });
       expect(r.valid).toBe(true);
     });
 

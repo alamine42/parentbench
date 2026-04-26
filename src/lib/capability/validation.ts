@@ -8,8 +8,22 @@
  * weakened.
  */
 
-export const CAPABILITY_BENCHMARKS = ["mmlu", "gsm8k", "gpqa"] as const;
-export type CapabilityBenchmark = (typeof CAPABILITY_BENCHMARKS)[number];
+// All benchmark values currently in the DB enum, including the
+// deprecated 'gsm8k'. Matches Drizzle's inferred type so app-level
+// types align with DB reads.
+export type CapabilityBenchmark = "mmlu" | "gsm8k" | "gpqa" | "aime_2025";
+
+// Benchmarks ACCEPTED for new entries by the validator and used as
+// the canonical "of three" set for coverage calculations. AIME 2025
+// replaces GSM8K because GSM8K is near-saturated for frontier models;
+// providers no longer publish it on new flagship releases. We keep
+// 'gsm8k' in the DB enum (Postgres enum drops are destructive) but
+// stop accepting it here.
+export const CAPABILITY_BENCHMARKS: ReadonlyArray<CapabilityBenchmark> = [
+  "mmlu",
+  "gpqa",
+  "aime_2025",
+] as const;
 
 export type CapabilityScoreInput = {
   modelId: string;

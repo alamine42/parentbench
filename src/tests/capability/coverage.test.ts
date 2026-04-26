@@ -38,7 +38,7 @@ describe("selectLiveScores", () => {
   it("should_keep_one_live_row_per_model_benchmark_pair", () => {
     const rows = [
       row({ id: "a", modelId: "m-1", benchmark: "mmlu", supersededAt: null }),
-      row({ id: "b", modelId: "m-1", benchmark: "gsm8k", supersededAt: null }),
+      row({ id: "b", modelId: "m-1", benchmark: "aime_2025", supersededAt: null }),
       row({ id: "c", modelId: "m-2", benchmark: "mmlu", supersededAt: null }),
     ];
     const live = selectLiveScores(rows);
@@ -58,13 +58,13 @@ describe("computeCoverage", () => {
   it("should_report_zero_of_three_when_model_has_no_live_scores", () => {
     const rows: CapabilityScoreRow[] = [];
     const cov = computeCoverage(["m-1"], rows);
-    expect(cov.get("m-1")).toEqual({ present: [], missing: ["mmlu", "gsm8k", "gpqa"], count: 0, total: 3 });
+    expect(cov.get("m-1")).toEqual({ present: [], missing: ["mmlu", "gpqa", "aime_2025"], count: 0, total: 3 });
   });
 
   it("should_report_three_of_three_when_all_benchmarks_present", () => {
     const rows = [
       row({ modelId: "m-1", benchmark: "mmlu" }),
-      row({ modelId: "m-1", benchmark: "gsm8k" }),
+      row({ modelId: "m-1", benchmark: "aime_2025" }),
       row({ modelId: "m-1", benchmark: "gpqa" }),
     ];
     const cov = computeCoverage(["m-1"], rows);
@@ -74,11 +74,11 @@ describe("computeCoverage", () => {
   it("should_only_count_unsuperseded_rows", () => {
     const rows = [
       row({ modelId: "m-1", benchmark: "mmlu", supersededAt: new Date() }),
-      row({ modelId: "m-1", benchmark: "gsm8k" }),
+      row({ modelId: "m-1", benchmark: "aime_2025" }),
     ];
     const cov = computeCoverage(["m-1"], rows);
     expect(cov.get("m-1")?.count).toBe(1);
-    expect(cov.get("m-1")?.present).toEqual(["gsm8k"]);
+    expect(cov.get("m-1")?.present).toEqual(["aime_2025"]);
   });
 
   it("should_include_models_with_no_scores_in_the_output", () => {
@@ -90,7 +90,7 @@ describe("computeCoverage", () => {
   it("should_mark_model_eligible_when_count_is_two_or_more", () => {
     const rows = [
       row({ modelId: "m-1", benchmark: "mmlu" }),
-      row({ modelId: "m-1", benchmark: "gsm8k" }),
+      row({ modelId: "m-1", benchmark: "aime_2025" }),
     ];
     const cov = computeCoverage(["m-1"], rows);
     expect(cov.get("m-1")?.count).toBe(2);

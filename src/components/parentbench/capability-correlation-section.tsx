@@ -21,7 +21,7 @@ export function CapabilityCorrelationSection({
         <h2 className="text-xl font-bold">Is ParentBench just measuring how smart the model is?</h2>
         <p className="mt-3 text-sm text-muted">
           We&apos;re populating capability benchmark data for our active
-          models (MMLU, GSM8K, GPQA Diamond). The first correlation
+          models (MMLU, GPQA Diamond, AIME 2025). The first correlation
           report will publish once at least 5 active models have ≥2
           benchmark scores each.
         </p>

@@ -82,7 +82,7 @@ strong positive one. **|ρ| near zero is the goal**, not low ρ
 │  • Sign −      →  more-capable models tend to score lower       │
 │                                                                  │
 │  Today's |ρ| is **0.XX** with sign **±**, computed across XX    │
-│  active-tier models against MMLU + GSM8K + GPQA Diamond as a    │
+│  active-tier models against MMLU + GPQA + AIME 2025 as a        │
 │  capability component (z-score average).                        │
 │                                                                  │
 │  Sample size disclaimer: with n≈10, treat this as a directional │
@@ -157,10 +157,13 @@ correlation_reports  (new table; one row per quarterly compute)
 
 ```ts
 export const capabilityBenchmarkEnum = pgEnum("capability_benchmark", [
-  "mmlu",     // general knowledge / reasoning
-  "gsm8k",    // grade-school math
-  "gpqa",     // grad-level QA (preferred over ARC: more recent, more
-              // discriminating among frontier models)
+  "mmlu",       // general knowledge / reasoning
+  "gsm8k",      // DEPRECATED — saturated for frontier models, retained
+                // in enum because Postgres enum drops are destructive
+  "gpqa",       // grad-level QA — strong discrimination among frontier
+                // models, all three providers publish it
+  "aime_2025",  // 2025 American Invitational Math Exam — replaces
+                // GSM8K as the math discriminator (added 2026-04-26)
 ]);
 
 // History-preserving design (Codex WARNING #3): no unique constraint

@@ -13,7 +13,7 @@ import {
 } from "@/lib/capability/compute-correlation";
 import type { LiveCapabilityScore } from "@/lib/capability/build-capability-score";
 
-const cap = (modelId: string, benchmark: "mmlu" | "gsm8k" | "gpqa", score: number): LiveCapabilityScore => ({
+const cap = (modelId: string, benchmark: "mmlu" | "aime_2025" | "gpqa", score: number): LiveCapabilityScore => ({
   modelId,
   benchmark,
   score,
@@ -24,8 +24,8 @@ const pb = (modelId: string, slug: string, score: number) => ({ modelId, modelSl
 describe("computeCorrelationReport", () => {
   it("O1_should_return_insufficient_data_when_fewer_than_five_eligible_models", () => {
     const capabilityRows = [
-      cap("m1", "mmlu", 70), cap("m1", "gsm8k", 80),
-      cap("m2", "mmlu", 60), cap("m2", "gsm8k", 70),
+      cap("m1", "mmlu", 70), cap("m1", "aime_2025", 80),
+      cap("m2", "mmlu", 60), cap("m2", "aime_2025", 70),
     ];
     const parentBenchScores = [pb("m1", "model-a", 90), pb("m2", "model-b", 80)];
     const result = computeCorrelationReport({
@@ -43,7 +43,7 @@ describe("computeCorrelationReport", () => {
     slugs.forEach((slug, i) => {
       const id = `m-${slug}`;
       capabilityRows.push(cap(id, "mmlu", 50 + i * 10));
-      capabilityRows.push(cap(id, "gsm8k", 40 + i * 12));
+      capabilityRows.push(cap(id, "aime_2025", 40 + i * 12));
       parentBenchScores.push(pb(id, slug, 70 + i * 4));
     });
     const result = computeCorrelationReport({
@@ -67,7 +67,7 @@ describe("computeCorrelationReport", () => {
     slugs.forEach((slug, i) => {
       const id = `m-${slug}`;
       capabilityRows.push(cap(id, "mmlu", 50 + i * 7));
-      capabilityRows.push(cap(id, "gsm8k", 40 + i * 9));
+      capabilityRows.push(cap(id, "aime_2025", 40 + i * 9));
       parentBenchScores.push(pb(id, slug, 60 + i * 3));
     });
     const r1 = computeCorrelationReport({
@@ -86,7 +86,7 @@ describe("computeCorrelationReport", () => {
     for (let i = 0; i < 5; i++) {
       const id = `m-${i}`;
       capabilityRows.push(cap(id, "mmlu", 50 + i * 10));
-      capabilityRows.push(cap(id, "gsm8k", 40 + i * 12));
+      capabilityRows.push(cap(id, "aime_2025", 40 + i * 12));
       if (i < 4) parentBenchScores.push(pb(id, `slug-${i}`, 70 + i * 4));
     }
     const result = computeCorrelationReport({

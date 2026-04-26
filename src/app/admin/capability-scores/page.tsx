@@ -84,7 +84,7 @@ export default async function CapabilityScoresPage() {
       <header>
         <h1 className="text-2xl font-bold">Capability benchmark scores</h1>
         <p className="text-sm text-muted">
-          Per-model MMLU / GSM8K / GPQA scores from public sources. The
+          Per-model MMLU / GPQA / AIME 2025 scores from public sources. The
           quarterly correlation report (rg1.2) requires <strong>≥2 of 3
           benchmarks</strong> per model. Edits append a new row;
           history is preserved.

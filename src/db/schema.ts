@@ -128,10 +128,16 @@ export const insightsTriggerReasonEnum = pgEnum("insights_trigger_reason", [
   "scheduled_recheck",
 ]);
 
+// Note: 'gsm8k' is retained in the enum (Postgres enum values can't
+// be dropped without a destructive migration) but is no longer in
+// CAPABILITY_BENCHMARKS — validation rejects new entries. Kept for
+// any historical rows. AIME 2025 replaced it because GSM8K is
+// near-saturated for frontier models and no longer discriminates.
 export const capabilityBenchmarkEnum = pgEnum("capability_benchmark", [
   "mmlu",
-  "gsm8k",
+  "gsm8k",      // deprecated — see note above
   "gpqa",
+  "aime_2025",
 ]);
 
 // ============================================================================
