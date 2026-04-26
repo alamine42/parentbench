@@ -19,6 +19,7 @@ import {
   onActiveTierPromotedMaybeRegen,
   insightsScheduledRecheck,
 } from "./maybe-regenerate-insights";
+import { generateCorrelationReport } from "./generate-correlation-report";
 
 // Export all functions for the serve() handler
 export const functions = [
@@ -35,6 +36,8 @@ export const functions = [
   onModelCreatedMaybeRegen,
   onActiveTierPromotedMaybeRegen,
   insightsScheduledRecheck,
+  // Capability decorrelation (parentbench-rg1)
+  generateCorrelationReport,
 ];
 
 // Named exports for direct imports
@@ -53,3 +56,4 @@ export {
   onActiveTierPromotedMaybeRegen,
   insightsScheduledRecheck,
 } from "./maybe-regenerate-insights";
+export { generateCorrelationReport } from "./generate-correlation-report";

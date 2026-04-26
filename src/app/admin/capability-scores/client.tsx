@@ -23,6 +23,9 @@ export function CapabilityScoresClient({ models }: { models: ModelRow[] }) {
 
   return (
     <>
+      <div className="mb-3 flex items-center justify-end gap-3">
+        <RecomputeButton />
+      </div>
       <div className="overflow-x-auto rounded-lg border border-card-border bg-card-bg">
         <table className="w-full text-sm">
           <thead className="border-b border-card-border bg-muted-bg/50 text-xs uppercase tracking-wide text-muted">
@@ -232,5 +235,41 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted">{label}</span>
       {children}
     </label>
+  );
+}
+
+function RecomputeButton() {
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+
+  async function recompute() {
+    setBusy(true);
+    setStatus(null);
+    try {
+      const res = await fetch("/api/admin/correlation/recompute", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        setStatus(`Error: ${data.error ?? res.status}`);
+      } else {
+        setStatus(`Queued. The report will publish on /methodology in ~30s if ≥5 models are eligible.`);
+      }
+    } catch (e) {
+      setStatus(`Error: ${e instanceof Error ? e.message : "unknown"}`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      {status ? <span className="text-xs text-muted">{status}</span> : null}
+      <button
+        onClick={recompute}
+        disabled={busy}
+        className="rounded-lg border border-card-border bg-accent px-3 py-1.5 text-xs font-medium text-white shadow-sm transition hover:opacity-90 disabled:opacity-50"
+      >
+        {busy ? "Queueing…" : "Recompute correlation"}
+      </button>
+    </div>
   );
 }

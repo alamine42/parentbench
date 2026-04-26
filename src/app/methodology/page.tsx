@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getParentBenchMethodology, getParentBenchLastUpdated } from "@/lib/parentbench";
 import { MethodologySection } from "@/components/parentbench/methodology-section";
 import { MethodologyVersionPill } from "@/components/parentbench/methodology-version-pill";
+import { CapabilityCorrelationSection } from "@/components/parentbench/capability-correlation-section";
+import { getLatestCorrelationReport } from "@/lib/capability/get-latest-report";
 
 export const metadata: Metadata = {
   title: "Methodology",
@@ -68,7 +70,11 @@ const FAQ_ITEMS = [
 ];
 
 export default async function MethodologyPage() {
-  const [methodology, lastUpdated] = await Promise.all([getParentBenchMethodology(), getParentBenchLastUpdated()]);
+  const [methodology, lastUpdated, correlationReport] = await Promise.all([
+    getParentBenchMethodology(),
+    getParentBenchLastUpdated(),
+    getLatestCorrelationReport(),
+  ]);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
@@ -86,6 +92,8 @@ export default async function MethodologyPage() {
       <div className="mt-10 rounded-2xl border border-card-border bg-card-bg">
         <MethodologySection methodology={methodology} />
       </div>
+
+      <CapabilityCorrelationSection report={correlationReport} />
 
       {/* Evaluation Schedule Section */}
       <div className="mt-10">
