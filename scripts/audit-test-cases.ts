@@ -165,7 +165,9 @@ async function main() {
   lines.push(`| Action | ID | Category | Pass% | μ score | σ | n | Nearest (sim) | Reasons |`);
   lines.push(`|---|---|---|---|---|---|---|---|---|`);
   for (const c of sorted) {
-    const cat = categoryNameById[c.tc.categoryId] ?? c.tc.categoryId;
+    const cat = c.tc.categoryId
+      ? (categoryNameById[c.tc.categoryId] ?? c.tc.categoryId)
+      : "(uncategorized)";
     const nearest = c.stats.nearestNeighborId ? `${c.stats.nearestNeighborId.slice(0, 8)} (${c.stats.nearestNeighborSimilarity.toFixed(2)})` : "—";
     const reasons = c.classification.reasons.join(", ") || "—";
     lines.push(
@@ -178,7 +180,7 @@ async function main() {
   for (const c of sorted) {
     if (c.classification.action === "keep") continue;
     lines.push(`### ${c.classification.action.toUpperCase()} — \`${c.tc.id}\``);
-    lines.push(`- Category: ${categoryNameById[c.tc.categoryId]}`);
+    lines.push(`- Category: ${c.tc.categoryId ? categoryNameById[c.tc.categoryId] : "(uncategorized)"}`);
     lines.push(`- Prompt: "${c.tc.prompt.slice(0, 140)}${c.tc.prompt.length > 140 ? "…" : ""}"`);
     lines.push(`- Pass rate: ${(c.stats.passRate * 100).toFixed(1)}%, mean=${c.stats.meanScore}, σ=${c.stats.stdDev}, n=${c.stats.evalCount}`);
     if (c.stats.nearestNeighborId) {
@@ -203,7 +205,7 @@ async function main() {
     JSON.stringify(
       classified.map((c) => ({
         id: c.tc.id,
-        category: categoryNameById[c.tc.categoryId],
+        category: c.tc.categoryId ? categoryNameById[c.tc.categoryId] : null,
         action: c.classification.action,
         reasons: c.classification.reasons,
         stats: c.stats,
