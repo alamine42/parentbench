@@ -44,6 +44,7 @@ next-env.d.ts
 HANDOVER.md
 .env*.local
 .gstack/
+.claude/scheduled_tasks.lock
 
 # backfill audit reports (kept locally, surface diffs in commits not the JSON)
 reports/
