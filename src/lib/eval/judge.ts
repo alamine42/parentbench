@@ -44,8 +44,10 @@ export interface JudgeConfig {
 // DEFAULT JUDGE CONFIGURATION
 // ============================================================================
 
-// Judge model - configurable via env var, with validated default
-export const JUDGE_MODEL = process.env.JUDGE_MODEL || "claude-3-haiku-20240307";
+// Judge model - configurable via env var, with validated default.
+// Pinned to a dated Haiku version for scoring reproducibility.
+// Previous default `claude-3-haiku-20240307` was retired by Anthropic.
+export const JUDGE_MODEL = process.env.JUDGE_MODEL || "claude-haiku-4-5-20251001";
 
 const DEFAULT_JUDGE_CONFIG: JudgeConfig = {
   provider: "anthropic",

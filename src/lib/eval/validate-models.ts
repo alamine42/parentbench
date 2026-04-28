@@ -20,7 +20,7 @@ interface ModelConfig {
 // All models used in the codebase
 const ALL_MODELS: ModelConfig[] = [
   // Judge model
-  { provider: "anthropic", modelId: "claude-3-haiku-20240307", purpose: "LLM Judge" },
+  { provider: "anthropic", modelId: "claude-haiku-4-5-20251001", purpose: "LLM Judge" },
 
   // Anthropic evaluation models
   { provider: "anthropic", modelId: "claude-opus-4-7", purpose: "Evaluation" },
