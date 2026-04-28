@@ -4,16 +4,36 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+type EvalTier = "active" | "standard" | "maintenance" | "paused";
+
 interface Model {
   id: string;
   name: string;
   slug: string;
   provider: string;
+  evalTier: EvalTier;
   hasScore: boolean;
   latestScore: number | null;
   latestGrade: string | null;
   latestEvalDate: string | null;
 }
+
+type SortKey = "name" | "provider" | "tier" | "score" | "evalDate" | "status";
+type SortDir = "asc" | "desc";
+
+const TIER_LABELS: Record<EvalTier, string> = {
+  active: "Active",
+  standard: "Standard",
+  maintenance: "Maintenance",
+  paused: "Paused",
+};
+
+const TIER_RANK: Record<EvalTier, number> = {
+  active: 0,
+  standard: 1,
+  maintenance: 2,
+  paused: 3,
+};
 
 interface RunningEvaluation {
   id: string;
@@ -43,6 +63,10 @@ export default function NewEvaluationPage() {
   const [triggering, setTriggering] = useState(false);
   const [results, setResults] = useState<Array<{ modelName: string; success: boolean; error?: string }>>([]);
   const [filter, setFilter] = useState<"all" | "unevaluated">("all");
+  const [providerFilter, setProviderFilter] = useState<string>("all");
+  const [tierFilter, setTierFilter] = useState<EvalTier | "all">("all");
+  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [runningEvaluations, setRunningEvaluations] = useState<RunningEvaluation[]>([]);
   const [hasTriggered, setHasTriggered] = useState(false);
   const [costEstimates, setCostEstimates] = useState<Map<string, CostEstimate>>(new Map());
@@ -145,9 +169,63 @@ export default function NewEvaluationPage() {
     return sum + (estimate?.estimatedCostUsd ?? 0);
   }, 0);
 
-  const filteredModels = filter === "all"
-    ? models
-    : models.filter(m => !m.hasScore);
+  const providerOptions = Array.from(new Set(models.map(m => m.provider))).sort((a, b) =>
+    a.localeCompare(b)
+  );
+
+  const baseFilteredModels = models.filter(m => {
+    if (filter === "unevaluated" && m.hasScore) return false;
+    if (providerFilter !== "all" && m.provider !== providerFilter) return false;
+    if (tierFilter !== "all" && m.evalTier !== tierFilter) return false;
+    return true;
+  });
+
+  const filteredModels = sortKey
+    ? [...baseFilteredModels].sort((a, b) => {
+        const dir = sortDir === "asc" ? 1 : -1;
+        switch (sortKey) {
+          case "name":
+            return a.name.localeCompare(b.name) * dir;
+          case "provider":
+            return (a.provider.localeCompare(b.provider) || a.name.localeCompare(b.name)) * dir;
+          case "tier":
+            return ((TIER_RANK[a.evalTier] - TIER_RANK[b.evalTier]) || a.name.localeCompare(b.name)) * dir;
+          case "score": {
+            const aHas = a.latestScore != null;
+            const bHas = b.latestScore != null;
+            if (!aHas && !bHas) return a.name.localeCompare(b.name);
+            if (!aHas) return 1;  // nulls always last
+            if (!bHas) return -1;
+            return (a.latestScore! - b.latestScore!) * dir;
+          }
+          case "evalDate": {
+            const aHas = !!a.latestEvalDate;
+            const bHas = !!b.latestEvalDate;
+            if (!aHas && !bHas) return a.name.localeCompare(b.name);
+            if (!aHas) return 1;
+            if (!bHas) return -1;
+            return (new Date(a.latestEvalDate!).getTime() - new Date(b.latestEvalDate!).getTime()) * dir;
+          }
+          case "status": {
+            // Evaluated > Needs eval (so asc puts "Evaluated" first)
+            const aRank = a.hasScore ? 0 : 1;
+            const bRank = b.hasScore ? 0 : 1;
+            return ((aRank - bRank) || a.name.localeCompare(b.name)) * dir;
+          }
+          default:
+            return 0;
+        }
+      })
+    : baseFilteredModels;
+
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
 
   const toggleModel = (modelId: string) => {
     const newSelected = new Set(selectedModels);
@@ -247,8 +325,8 @@ export default function NewEvaluationPage() {
       </div>
 
       {/* Filter and selection controls */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as typeof filter)}
@@ -256,6 +334,29 @@ export default function NewEvaluationPage() {
           >
             <option value="all">All models ({models.length})</option>
             <option value="unevaluated">Unevaluated only ({models.filter(m => !m.hasScore).length})</option>
+          </select>
+          <select
+            value={providerFilter}
+            onChange={(e) => setProviderFilter(e.target.value)}
+            className="px-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm"
+            aria-label="Filter by provider"
+          >
+            <option value="all">All providers</option>
+            {providerOptions.map(p => (
+              <option key={p} value={p}>{p}</option>
+            ))}
+          </select>
+          <select
+            value={tierFilter}
+            onChange={(e) => setTierFilter(e.target.value as typeof tierFilter)}
+            className="px-3 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm"
+            aria-label="Filter by tier"
+          >
+            <option value="all">All tiers</option>
+            <option value="active">Active</option>
+            <option value="standard">Standard</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="paused">Paused</option>
           </select>
           <div className="flex gap-2">
             <button
@@ -274,7 +375,7 @@ export default function NewEvaluationPage() {
           </div>
         </div>
         <div className="text-sm text-gray-600 dark:text-gray-400">
-          {selectedModels.size} selected
+          {filteredModels.length} shown · {selectedModels.size} selected
         </div>
       </div>
 
@@ -289,25 +390,19 @@ export default function NewEvaluationPage() {
             {filter === "unevaluated" ? "All models have been evaluated!" : "No models found"}
           </div>
         ) : (
-          <div className="max-h-[28rem] overflow-y-auto">
+          <div className="max-h-[64rem] overflow-y-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-900/50 sticky top-0">
+              <thead className="bg-gray-50 dark:bg-gray-900/50 sticky top-0 z-10">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-10">
                     <span className="sr-only">Select</span>
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Model
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Latest Score
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Last Evaluated
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Status
-                  </th>
+                  <SortableTh label="Model" sortKey="name" current={sortKey} dir={sortDir} onClick={toggleSort} />
+                  <SortableTh label="Provider" sortKey="provider" current={sortKey} dir={sortDir} onClick={toggleSort} />
+                  <SortableTh label="Tier" sortKey="tier" current={sortKey} dir={sortDir} onClick={toggleSort} />
+                  <SortableTh label="Latest Score" sortKey="score" current={sortKey} dir={sortDir} onClick={toggleSort} />
+                  <SortableTh label="Last Evaluated" sortKey="evalDate" current={sortKey} dir={sortDir} onClick={toggleSort} />
+                  <SortableTh label="Status" sortKey="status" current={sortKey} dir={sortDir} onClick={toggleSort} />
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -332,9 +427,14 @@ export default function NewEvaluationPage() {
                       <p className="font-medium text-gray-900 dark:text-gray-100">
                         {model.name}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {model.provider}
-                      </p>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                      {model.provider}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getTierColor(model.evalTier)}`}>
+                        {TIER_LABELS[model.evalTier]}
+                      </span>
                     </td>
                     <td className="px-4 py-3">
                       {model.latestGrade ? (
@@ -554,6 +654,54 @@ export default function NewEvaluationPage() {
       </div>
     </div>
   );
+}
+
+function SortableTh({
+  label,
+  sortKey,
+  current,
+  dir,
+  onClick,
+}: {
+  label: string;
+  sortKey: SortKey;
+  current: SortKey | null;
+  dir: SortDir;
+  onClick: (key: SortKey) => void;
+}) {
+  const active = current === sortKey;
+  const arrow = active ? (dir === "asc" ? "▲" : "▼") : "";
+  return (
+    <th
+      scope="col"
+      className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+    >
+      <button
+        type="button"
+        onClick={() => onClick(sortKey)}
+        className={`inline-flex items-center gap-1 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200 ${
+          active ? "text-gray-900 dark:text-gray-100" : ""
+        }`}
+        aria-sort={active ? (dir === "asc" ? "ascending" : "descending") : "none"}
+      >
+        <span>{label}</span>
+        <span className="w-3 text-[0.65rem] leading-none">{arrow}</span>
+      </button>
+    </th>
+  );
+}
+
+function getTierColor(tier: EvalTier): string {
+  switch (tier) {
+    case "active":
+      return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300";
+    case "standard":
+      return "bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300";
+    case "maintenance":
+      return "bg-gray-100 text-gray-700 dark:bg-gray-700/40 dark:text-gray-300";
+    case "paused":
+      return "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300";
+  }
 }
 
 function getGradeColor(grade: string): string {

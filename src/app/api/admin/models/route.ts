@@ -42,6 +42,7 @@ export async function GET() {
         slug: models.slug,
         isActive: models.isActive,
         provider: providers.name,
+        evalTier: models.evalTier,
       })
       .from(models)
       .innerJoin(providers, eq(models.providerId, providers.id))
