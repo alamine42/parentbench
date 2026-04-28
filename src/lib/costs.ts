@@ -67,6 +67,7 @@ const DEFAULT_PRICING: Record<string, { input: number; output: number }> = {
   "gpt-5.4-pro": { input: 10.00, output: 30.00 },
   "gpt-5.4-mini": { input: 1.00, output: 4.00 },
   "gpt-5.4-nano": { input: 0.25, output: 1.00 },
+  "gpt-5.5": { input: 5.00, output: 30.00 },
   "o3": { input: 10.00, output: 40.00 },
   "o3-pro": { input: 20.00, output: 80.00 },
   "o4-mini": { input: 1.10, output: 4.40 },

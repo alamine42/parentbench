@@ -98,6 +98,10 @@ const adapterRegistry: Record<string, () => ModelAdapter> = {
   "gpt-5-4-pro": () => new OpenAIAdapter("gpt-5.4-pro"),
   "gpt-5-4-mini": () => new OpenAIAdapter("gpt-5.4-mini"),
   "gpt-5-4-nano": () => new OpenAIAdapter("gpt-5.4-nano"),
+  // OpenAI models - GPT-5.5 series (released 2026-04-23)
+  // Only the base model is registered: gpt-5.5-pro is Responses-API-only and
+  // not callable via chat/completions. See parentbench-pro-adapter ticket.
+  "gpt-5-5": () => new OpenAIAdapter("gpt-5.5"),
   // OpenAI reasoning models
   "o3": () => new OpenAIAdapter("o3"),
   "o3-pro": () => new OpenAIAdapter("o3-pro"),
@@ -263,6 +267,9 @@ const OPENAI_NO_TEMPERATURE_MODELS = [
   "gpt-5",
   "gpt-5-mini",
   "gpt-5-nano",
+  // GPT-5.5 also enforces temperature=1 (verified 2026-04-28). Note: 5.4 family
+  // is intentionally absent — it accepts arbitrary temperature.
+  "gpt-5.5",
 ];
 
 class OpenAIAdapter extends BaseAdapter {

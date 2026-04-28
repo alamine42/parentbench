@@ -42,6 +42,7 @@ async function main() {
     { slug: "gpt-5-4-pro", name: "GPT-5.4 Pro" },
     { slug: "gpt-5-4-mini", name: "GPT-5.4 mini" },
     { slug: "gpt-5-4-nano", name: "GPT-5.4 nano" },
+    { slug: "gpt-5-5", name: "GPT-5.5" },
     { slug: "o3", name: "o3" },
     { slug: "o3-pro", name: "o3 Pro" },
     { slug: "o4-mini", name: "o4-mini" },
