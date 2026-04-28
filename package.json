@@ -12,6 +12,7 @@
     "test:watch": "vitest",
     "validate-data": "tsx scripts/validate-data.ts",
     "validate-models": "tsx src/lib/eval/validate-models.ts",
+    "sync-inngest": "bash scripts/sync-inngest.sh",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
