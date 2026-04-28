@@ -20,6 +20,7 @@ import {
   insightsScheduledRecheck,
 } from "./maybe-regenerate-insights";
 import { generateCorrelationReport } from "./generate-correlation-report";
+import { cleanupStuckEvals } from "./cleanup-stuck-evals";
 
 // Export all functions for the serve() handler
 export const functions = [
@@ -38,6 +39,8 @@ export const functions = [
   insightsScheduledRecheck,
   // Capability decorrelation (parentbench-rg1)
   generateCorrelationReport,
+  // Self-healing: clears stuck running evals every 15 min
+  cleanupStuckEvals,
 ];
 
 // Named exports for direct imports
@@ -57,3 +60,4 @@ export {
   insightsScheduledRecheck,
 } from "./maybe-regenerate-insights";
 export { generateCorrelationReport } from "./generate-correlation-report";
+export { cleanupStuckEvals } from "./cleanup-stuck-evals";

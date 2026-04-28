@@ -32,19 +32,37 @@ export const runEvaluation = inngest.createFunction(
       limit: 5, // Max 5 concurrent evaluations
     },
     onFailure: async ({ event, error }) => {
-      // Mark evaluation as failed when all retries are exhausted
+      // Mark evaluation as failed when all retries are exhausted.
+      // Match by inngestRunId (stored on the row at create time) — far more
+      // reliable than "most recent running for this model", which mis-targets
+      // when concurrent runs exist.
+      const failedRunId = event.data.run_id;
       const { modelId } = event.data.event.data;
 
       try {
-        // Find the most recent running evaluation for this model
-        const [runningEval] = await db
-          .select()
-          .from(evaluations)
-          .where(eq(evaluations.modelId, modelId))
-          .orderBy(desc(evaluations.createdAt))
-          .limit(1);
+        let target: { id: string; status: string } | undefined;
 
-        if (runningEval && runningEval.status === "running") {
+        if (failedRunId) {
+          const [byRunId] = await db
+            .select({ id: evaluations.id, status: evaluations.status })
+            .from(evaluations)
+            .where(eq(evaluations.inngestRunId, failedRunId))
+            .limit(1);
+          target = byRunId;
+        }
+
+        // Fallback: most recent running for this model (legacy path)
+        if (!target && modelId) {
+          const [byModel] = await db
+            .select({ id: evaluations.id, status: evaluations.status })
+            .from(evaluations)
+            .where(eq(evaluations.modelId, modelId))
+            .orderBy(desc(evaluations.createdAt))
+            .limit(1);
+          target = byModel;
+        }
+
+        if (target && target.status === "running") {
           await db
             .update(evaluations)
             .set({
@@ -52,9 +70,9 @@ export const runEvaluation = inngest.createFunction(
               errorMessage: error.message || "Evaluation failed after all retries",
               completedAt: new Date(),
             })
-            .where(eq(evaluations.id, runningEval.id));
+            .where(eq(evaluations.id, target.id));
 
-          console.error(`Marked evaluation ${runningEval.id} as failed: ${error.message}`);
+          console.error(`Marked evaluation ${target.id} as failed: ${error.message}`);
         }
       } catch (dbError) {
         console.error("Failed to mark evaluation as failed:", dbError);
