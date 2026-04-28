@@ -69,6 +69,8 @@ export default function NewEvaluationPage() {
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [runningEvaluations, setRunningEvaluations] = useState<RunningEvaluation[]>([]);
   const [hasTriggered, setHasTriggered] = useState(false);
+  const [hasSeenRunning, setHasSeenRunning] = useState(false);
+  const [triggeredAt, setTriggeredAt] = useState<number | null>(null);
   const [costEstimates, setCostEstimates] = useState<Map<string, CostEstimate>>(new Map());
   const [loadingEstimates, setLoadingEstimates] = useState(false);
 
@@ -82,6 +84,9 @@ export default function NewEvaluationPage() {
           (e: RunningEvaluation) => e.status === "running" || e.status === "pending"
         );
         setRunningEvaluations(running);
+        if (running.length > 0) {
+          setHasSeenRunning(true);
+        }
 
         // If all evaluations are complete, refresh models list to update "Evaluated" badges
         if (running.length === 0 && hasTriggered) {
@@ -283,10 +288,17 @@ export default function NewEvaluationPage() {
 
     setTriggering(false);
     setHasTriggered(true);
+    setHasSeenRunning(false);
+    setTriggeredAt(Date.now());
   };
 
   const successCount = results.filter(r => r.success).length;
   const allComplete = results.length === selectedModels.size && results.length > 0;
+  const elapsedSinceTrigger = triggeredAt ? Date.now() - triggeredAt : 0;
+  const allFinished = hasTriggered && hasSeenRunning && runningEvaluations.length === 0;
+  const waitingForStart =
+    hasTriggered && successCount > 0 && !hasSeenRunning && runningEvaluations.length === 0;
+  const isStalled = waitingForStart && elapsedSinceTrigger > 15000;
 
   return (
     <div className="space-y-6">
@@ -562,8 +574,49 @@ export default function NewEvaluationPage() {
         </div>
       )}
 
+      {/* Waiting-to-start banner */}
+      {waitingForStart && !isStalled && (
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+          <div className="flex gap-3">
+            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            <div className="text-sm text-blue-800 dark:text-blue-200">
+              <p className="font-medium">Waiting for evaluations to start…</p>
+              <p className="mt-1 text-blue-700 dark:text-blue-300">
+                Triggered {successCount} evaluation{successCount !== 1 ? "s" : ""}. Inngest is picking them up — progress will appear here in a few seconds.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Stall diagnostic — Inngest didn't pick up the events */}
+      {isStalled && (
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+          <div className="flex gap-3">
+            <svg className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div className="text-sm text-amber-800 dark:text-amber-200">
+              <p className="font-medium">No evaluations have started after {Math.round(elapsedSinceTrigger / 1000)}s.</p>
+              <p className="mt-1 text-amber-700 dark:text-amber-300">
+                The trigger requests succeeded, but no Inngest function has produced an evaluation row.
+                This usually means the Inngest function is failing on a preflight step (e.g., missing API key, retired judge model).
+                Check Vercel runtime logs for <code className="font-mono">/api/inngest</code> errors, or open the{" "}
+                <Link href="/admin/evaluations" className="underline hover:no-underline">
+                  evaluations page
+                </Link>{" "}
+                to see if anything landed in failed state.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Completed message */}
-      {hasTriggered && runningEvaluations.length === 0 && results.length > 0 && (
+      {allFinished && (
         <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
           <div className="flex gap-3">
             <svg className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
