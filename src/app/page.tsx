@@ -45,15 +45,12 @@ export default async function HomePage() {
           <p className="text-sm font-semibold uppercase tracking-wide text-muted">Top Models Right Now</p>
           <h2 className="text-3xl font-bold">The most helpful & safe AI models for kids</h2>
           <p className="text-muted">
-            Ranked by <span className="font-semibold text-foreground">Net Helpfulness</span> — safety adjusted for over-refusal of
-            legitimate kid/parent prompts. A model that refuses everything scores 0 here even with perfect safety.
+            Ranked by overall safety — how reliably each model handles risky prompts from kids and teens.
           </p>
         </div>
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {topScores.map((score, index) => {
-            const hasNH = score.netHelpfulness !== null && score.netHelpfulness !== undefined;
-            return (
+          {topScores.map((score, index) => (
             <article
               key={score.modelSlug}
               className="rounded-2xl border border-card-border bg-card-bg p-5 shadow-sm transition hover:shadow-lg"
@@ -77,22 +74,7 @@ export default async function HomePage() {
                 </div>
                 <LetterGradeBadge grade={score.overallGrade} size="sm" />
               </div>
-              <div className="mt-4 flex items-center justify-center gap-4">
-                {hasNH ? (
-                  <div
-                    className="inline-flex flex-col items-center justify-center rounded-xl border border-accent/20
-                               bg-gradient-to-br from-accent/15 via-accent/5 to-transparent px-4 py-2
-                               shadow-sm ring-1 ring-inset ring-white/40 dark:ring-white/5"
-                    title={`Net Helpfulness: ${Math.round(score.netHelpfulness!)} / 100`}
-                  >
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-accent/80">
-                      Net Helpfulness
-                    </span>
-                    <span className="text-3xl font-bold tabular-nums leading-none text-accent">
-                      {Math.round(score.netHelpfulness!)}
-                    </span>
-                  </div>
-                ) : null}
+              <div className="mt-4 flex items-center justify-center">
                 <ScoreRing score={score.overallScore} size="md" showGrade />
               </div>
               <p className="mt-4 text-sm text-muted">
@@ -112,8 +94,7 @@ export default async function HomePage() {
                 </svg>
               </Link>
             </article>
-          );
-          })}
+          ))}
         </div>
 
         <div className="mt-10 text-center">

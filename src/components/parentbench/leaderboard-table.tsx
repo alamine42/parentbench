@@ -11,7 +11,6 @@ import { ColorBar } from "@/components/ui/color-bar";
 import { ConfidenceDot, ConfidenceBadgeMobile } from "@/components/ui/confidence-indicator";
 import { PARENTBENCH_CATEGORY_META } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
-import { sortByNetHelpfulness } from "@/lib/leaderboard/sort";
 import { frrTone } from "@/lib/over-alignment";
 
 type EnrichedScore = ParentBenchResult & {
@@ -21,7 +20,8 @@ type EnrichedScore = ParentBenchResult & {
   variance?: number | null;
 };
 
-type SortField = "net_helpfulness" | "overall" | ParentBenchCategory;
+type SortField = "model" | "overall" | "false_refusal" | "updated" | ParentBenchCategory;
+type SortDir = "asc" | "desc";
 
 type LeaderboardTableProps = {
   scores: EnrichedScore[];
@@ -42,9 +42,38 @@ const CATEGORY_SHORT_LABELS: Record<ParentBenchCategory, string> = {
   parental_controls_respect: "Parental Ctrl",
 };
 
+// Default sort direction for each field. Most metrics are "higher is better"
+// (descending); model name is alphabetical (ascending); FRR is "lower is
+// better" (ascending). Updated date defaults to most-recent-first.
+const DEFAULT_SORT_DIR: Record<SortField, SortDir> = {
+  model: "asc",
+  overall: "desc",
+  false_refusal: "asc",
+  updated: "desc",
+  age_inappropriate_content: "desc",
+  manipulation_resistance: "desc",
+  data_privacy_minors: "desc",
+  parental_controls_respect: "desc",
+};
+
 export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
-  const [sortBy, setSortBy] = useState<SortField>("net_helpfulness");
+  const [sortBy, setSortBy] = useState<SortField>("overall");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [filterProvider, setFilterProvider] = useState("all");
+
+  const handleSort = (field: SortField) => {
+    if (field === sortBy) {
+      setSortDir((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(field);
+      setSortDir(DEFAULT_SORT_DIR[field]);
+    }
+  };
+
+  const handleSelectSort = (field: SortField) => {
+    setSortBy(field);
+    setSortDir(DEFAULT_SORT_DIR[field]);
+  };
 
   const sortedAndFiltered = useMemo(() => {
     let result = [...scores];
@@ -53,20 +82,49 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
       result = result.filter((s) => s.provider.name === filterProvider);
     }
 
-    if (sortBy === "net_helpfulness") {
-      result = sortByNetHelpfulness(result);
-    } else if (sortBy === "overall") {
-      result.sort((a, b) => b.overallScore - a.overallScore);
-    } else {
-      result.sort((a, b) => {
-        const aScore = a.categoryScores.find((c) => c.category === sortBy)?.score ?? 0;
-        const bScore = b.categoryScores.find((c) => c.category === sortBy)?.score ?? 0;
-        return bScore - aScore;
-      });
-    }
+    // Comparator returns the asc-direction delta (a vs b). We flip the sign
+    // for desc at the end so each branch only encodes "how to compare".
+    const cmp = (a: EnrichedScore, b: EnrichedScore): number => {
+      switch (sortBy) {
+        case "model":
+          return a.modelName.localeCompare(b.modelName);
+        case "overall":
+          return a.overallScore - b.overallScore;
+        case "false_refusal": {
+          // null/undefined sorts last regardless of direction.
+          const aFRR = a.falseRefusalRate;
+          const bFRR = b.falseRefusalRate;
+          const aMissing = aFRR === null || aFRR === undefined;
+          const bMissing = bFRR === null || bFRR === undefined;
+          if (aMissing && bMissing) return 0;
+          if (aMissing) return 1;
+          if (bMissing) return -1;
+          return aFRR - bFRR;
+        }
+        case "updated": {
+          const aTime = new Date(a.evaluatedDate).getTime();
+          const bTime = new Date(b.evaluatedDate).getTime();
+          return aTime - bTime;
+        }
+        default: {
+          const aScore = a.categoryScores.find((c) => c.category === sortBy)?.score ?? 0;
+          const bScore = b.categoryScores.find((c) => c.category === sortBy)?.score ?? 0;
+          return aScore - bScore;
+        }
+      }
+    };
+
+    result.sort((a, b) => {
+      const delta = cmp(a, b);
+      // For non-model fields, fall back to model name as a stable tiebreaker.
+      if (delta === 0 && sortBy !== "model") {
+        return a.modelName.localeCompare(b.modelName);
+      }
+      return sortDir === "desc" ? -delta : delta;
+    });
 
     return result;
-  }, [scores, sortBy, filterProvider]);
+  }, [scores, sortBy, sortDir, filterProvider]);
 
   const getCategoryScore = (score: EnrichedScore, category: ParentBenchCategory) => {
     return score.categoryScores.find((c) => c.category === category)?.score ?? 0;
@@ -83,18 +141,20 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
           <select
             id="sort"
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortField)}
+            onChange={(e) => handleSelectSort(e.target.value as SortField)}
             className="rounded-lg border border-card-border bg-card-bg px-3 py-2 text-sm text-foreground
                        shadow-sm hover:border-accent/50 transition-colors duration-150
                        focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent"
           >
-            <option value="net_helpfulness">Net Helpfulness</option>
+            <option value="model">Model</option>
             <option value="overall">Safety Score</option>
+            <option value="false_refusal">False Refusal</option>
             {CATEGORY_ORDER.map((cat) => (
               <option key={cat} value={cat}>
                 {PARENTBENCH_CATEGORY_META[cat].label}
               </option>
             ))}
+            <option value="updated">Last Updated</option>
           </select>
         </div>
 
@@ -135,38 +195,56 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
               <th className="py-4 px-4 text-left text-xs font-semibold text-muted uppercase tracking-wider w-16">
                 Rank
               </th>
-              <th className="py-4 px-4 text-left text-xs font-semibold text-muted uppercase tracking-wider">
-                Model
-              </th>
-              <th className="py-4 px-4 text-center text-xs font-semibold text-muted uppercase tracking-wider w-32">
-                <span className="flex items-center justify-center gap-1.5">
-                  Net&nbsp;Helpfulness
-                  <span
-                    className="inline-flex items-center justify-center h-4 w-4 rounded-full bg-muted-bg text-[10px] font-normal cursor-help"
-                    title="Safety × (1 − False Refusal Rate). A model that refuses everything scores 0 here even with perfect safety. parentbench v1.3"
-                  >
-                    ?
-                  </span>
-                </span>
-              </th>
-              <th className="py-4 px-4 text-center text-xs font-semibold text-muted uppercase tracking-wider w-28">
-                Safety
-              </th>
-              <th className="py-4 px-4 text-center text-xs font-semibold text-muted uppercase tracking-wider w-24">
-                <span title="False Refusal Rate — percentage of legitimate kid/parent prompts the model refused">
-                  False&nbsp;Refusal
-                </span>
-              </th>
+              <SortableHeader
+                field="model"
+                label="Model"
+                sortBy={sortBy}
+                sortDir={sortDir}
+                onSort={handleSort}
+                align="left"
+              />
+              <SortableHeader
+                field="overall"
+                label="Safety"
+                sortBy={sortBy}
+                sortDir={sortDir}
+                onSort={handleSort}
+                align="center"
+                widthClass="w-28"
+              />
+              <SortableHeader
+                field="false_refusal"
+                label={<span title="False Refusal Rate — percentage of legitimate kid/parent prompts the model refused">False&nbsp;Refusal</span>}
+                sortBy={sortBy}
+                sortDir={sortDir}
+                onSort={handleSort}
+                align="center"
+                widthClass="w-24"
+              />
               {CATEGORY_ORDER.map((cat) => (
-                <th
+                <SortableHeader
                   key={cat}
-                  className="py-4 px-3 text-center text-xs font-semibold text-muted uppercase tracking-wider w-28"
-                >
-                  {CATEGORY_SHORT_LABELS[cat]}
-                </th>
+                  field={cat}
+                  label={CATEGORY_SHORT_LABELS[cat]}
+                  sortBy={sortBy}
+                  sortDir={sortDir}
+                  onSort={handleSort}
+                  align="center"
+                  widthClass="w-28"
+                  paddingClass="px-3"
+                />
               ))}
+              <SortableHeader
+                field="updated"
+                label="Updated"
+                sortBy={sortBy}
+                sortDir={sortDir}
+                onSort={handleSort}
+                align="center"
+                widthClass="w-28"
+              />
               <th className="py-4 px-4 text-center text-xs font-semibold text-muted uppercase tracking-wider w-28">
-                Updated
+                Report
               </th>
             </tr>
           </thead>
@@ -205,23 +283,10 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
                         className="rounded-lg ring-1 ring-card-border group-hover/link:ring-accent/30 transition-all duration-200"
                       />
                     </div>
-                    <div>
-                      <div className="font-semibold text-foreground group-hover/link:text-accent transition-colors duration-150">
-                        {score.modelName}
-                      </div>
-                      <div className="text-sm text-muted">{score.provider.name}</div>
+                    <div className="font-semibold text-foreground group-hover/link:text-accent transition-colors duration-150">
+                      {score.modelName}
                     </div>
                   </Link>
-                </td>
-
-                <td className="py-4 px-4">
-                  <div className="flex items-center justify-center">
-                    {score.netHelpfulness !== null && score.netHelpfulness !== undefined ? (
-                      <NetHelpfulnessBadge value={score.netHelpfulness} />
-                    ) : (
-                      <PendingBadge title="Not yet evaluated under v1.3" />
-                    )}
-                  </div>
                 </td>
 
                 <td className="py-4 px-4">
@@ -267,6 +332,19 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
                     {formatDate(score.evaluatedDate)}
                   </span>
                 </td>
+
+                {/* Full report link */}
+                <td className="py-4 px-4 text-center">
+                  <Link
+                    href={`/model/${score.modelSlug}`}
+                    className="inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+                  >
+                    View
+                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -303,6 +381,79 @@ export function LeaderboardTable({ scores, providers }: LeaderboardTableProps) {
         </div>
       )}
     </div>
+  );
+}
+
+type SortableHeaderProps = {
+  field: SortField;
+  label: React.ReactNode;
+  sortBy: SortField;
+  sortDir: SortDir;
+  onSort: (field: SortField) => void;
+  align: "left" | "center";
+  widthClass?: string;
+  paddingClass?: string;
+};
+
+function SortableHeader({
+  field,
+  label,
+  sortBy,
+  sortDir,
+  onSort,
+  align,
+  widthClass = "",
+  paddingClass = "px-4",
+}: SortableHeaderProps) {
+  const isActive = sortBy === field;
+  const alignClass = align === "left" ? "text-left" : "text-center";
+  const justifyClass = align === "left" ? "justify-start" : "justify-center";
+  const ariaSort: "ascending" | "descending" | "none" = isActive
+    ? sortDir === "asc"
+      ? "ascending"
+      : "descending"
+    : "none";
+
+  return (
+    <th
+      aria-sort={ariaSort}
+      className={`py-4 ${paddingClass} ${alignClass} text-xs font-semibold uppercase tracking-wider ${widthClass}`}
+    >
+      <button
+        type="button"
+        onClick={() => onSort(field)}
+        className={`inline-flex items-center gap-1 ${justifyClass} w-full select-none transition-colors duration-150
+                    ${isActive ? "text-accent" : "text-muted hover:text-foreground"}
+                    focus:outline-none focus:ring-2 focus:ring-accent/30 rounded`}
+      >
+        <span>{label}</span>
+        <SortIndicator active={isActive} dir={sortDir} />
+      </button>
+    </th>
+  );
+}
+
+function SortIndicator({ active, dir }: { active: boolean; dir: SortDir }) {
+  if (!active) {
+    return (
+      <svg
+        className="h-3 w-3 opacity-40"
+        viewBox="0 0 12 12"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M6 2.5l3 3.5H3l3-3.5zM6 9.5l-3-3.5h6l-3 3.5z" />
+      </svg>
+    );
+  }
+  return dir === "asc" ? (
+    <svg className="h-3 w-3" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+      <path d="M6 2.5l4 5H2l4-5z" />
+    </svg>
+  ) : (
+    <svg className="h-3 w-3" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+      <path d="M6 9.5l-4-5h8l-4 5z" />
+    </svg>
   );
 }
 
@@ -345,15 +496,9 @@ function MobileCard({ score, rank, getCategoryScore }: MobileCardProps) {
           >
             {score.modelName}
           </Link>
-          <div className="text-sm text-muted truncate">{score.provider.name}</div>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          {score.netHelpfulness !== null && score.netHelpfulness !== undefined ? (
-            <NetHelpfulnessBadge value={score.netHelpfulness} />
-          ) : (
-            <PendingBadge title="Not yet evaluated under v1.3" />
-          )}
           <div className="flex flex-col items-end leading-tight">
             <span className="text-[9px] uppercase tracking-wider text-muted">Safety</span>
             <span className="text-base font-semibold tabular-nums">{score.overallScore}</span>
@@ -447,37 +592,6 @@ function MobileCard({ score, rank, getCategoryScore }: MobileCardProps) {
   );
 }
 
-function NetHelpfulnessBadge({ value }: { value: number }) {
-  const rounded = Math.round(value);
-  return (
-    <div
-      className="inline-flex flex-col items-center justify-center rounded-xl border border-accent/20
-                 bg-gradient-to-br from-accent/15 via-accent/5 to-transparent px-3 py-1.5
-                 shadow-sm ring-1 ring-inset ring-white/40 dark:ring-white/5"
-      title={`Net Helpfulness: ${rounded} / 100. Safety × (1 − False Refusal Rate).`}
-    >
-      <span className="text-xl font-bold tabular-nums leading-none text-accent">{rounded}</span>
-      <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-wider text-accent/70">
-        / 100
-      </span>
-    </div>
-  );
-}
-
-function PendingBadge({ title }: { title: string }) {
-  return (
-    <span
-      className="inline-flex h-9 w-9 cursor-help items-center justify-center rounded-full
-                 border border-dashed border-card-border text-base text-muted
-                 transition-colors hover:border-muted hover:text-foreground"
-      title={title}
-      aria-label={title}
-    >
-      —
-    </span>
-  );
-}
-
 const FRR_TONE_CLASSES = {
   good: "border-emerald-300/40 bg-emerald-50 text-emerald-800 dark:border-emerald-400/30 dark:bg-emerald-900/20 dark:text-emerald-200",
   warn: "border-amber-300/40 bg-amber-50 text-amber-800 dark:border-amber-400/30 dark:bg-amber-900/20 dark:text-amber-200",
@@ -494,7 +608,16 @@ function FalseRefusalBadge({
   totalCount: number | null | undefined;
 }) {
   if (rate === null || rate === undefined) {
-    return <PendingBadge title="No benign data yet" />;
+    return (
+      <span
+        className="inline-flex h-7 w-9 items-center justify-center rounded-full
+                   border border-dashed border-card-border text-sm text-muted"
+        title="No benign data yet"
+        aria-label="No benign data yet"
+      >
+        —
+      </span>
+    );
   }
   const pct = Math.round(rate * 100);
   const tone = FRR_TONE_CLASSES[frrTone(rate * 100)];
