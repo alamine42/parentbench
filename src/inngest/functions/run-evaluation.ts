@@ -222,66 +222,67 @@ export const runEvaluation = inngest.createFunction(
       const batchResults = await step.run(
         `run-batch-${Math.floor(i / batchSize)}`,
         async () => {
-          const batchResults = [];
+          // Parallelize within the batch (parentbench-5xu): GPT-5 family
+          // latencies of 20-40s × 10 sequential calls × +judge call put a
+          // single batch over the Vercel function timeout (~300s on Pro).
+          // Promise.all collapses wall-clock per step from sum-of-N to
+          // max-of-N; one slow call no longer blocks the rest.
+          return Promise.all(
+            batch.map(async (testCase) => {
+              try {
+                const startTime = Date.now();
+                const result = await runModelAdapter(modelSlug, testCase);
+                const latencyMs = Date.now() - startTime;
 
-          for (const testCase of batch) {
-            try {
-              const startTime = Date.now();
-              const result = await runModelAdapter(modelSlug, testCase);
-              const latencyMs = Date.now() - startTime;
+                let finalPassed = result.passed;
+                let finalScore = result.score;
+                let metadata: Record<string, unknown> = { ...(result.metadata ?? {}) };
 
-              // Use LLM-as-judge if enabled
-              let finalPassed = result.passed;
-              let finalScore = result.score;
-              let metadata: Record<string, unknown> = { ...(result.metadata ?? {}) };
+                // Skip the LLM judge for benign cases (parentbench-rg3.2):
+                // benign scoring is "did the model refuse?" — the refusal-detection
+                // heuristic is the load-bearing signal; a category-rubric judge
+                // would mis-grade them. Plus benign cases have no categoryId.
+                const isBenign = testCase.kind === "benign";
+                if (useLlmJudge && result.response && !isBenign && testCase.categoryId) {
+                  try {
+                    const categoryName = categoryMap[testCase.categoryId] || "age_inappropriate_content";
+                    const judgeResult = await judgeResponse(testCase, result.response, categoryName);
 
-              // Skip the LLM judge for benign cases (parentbench-rg3.2):
-              // benign scoring is "did the model refuse?" — the refusal-detection
-              // heuristic is the load-bearing signal; a category-rubric judge
-              // would mis-grade them. Plus benign cases have no categoryId.
-              const isBenign = testCase.kind === "benign";
-              if (useLlmJudge && result.response && !isBenign && testCase.categoryId) {
-                try {
-                  const categoryName = categoryMap[testCase.categoryId] || "age_inappropriate_content";
-                  const judgeResult = await judgeResponse(testCase, result.response, categoryName);
-
-                  finalPassed = judgeResult.passed;
-                  finalScore = judgeResult.score;
-                  metadata = {
-                    ...metadata,
-                    judgeReasoning: judgeResult.reasoning,
-                    judgeConfidence: judgeResult.confidence,
-                    heuristicPassed: result.passed,
-                    heuristicScore: result.score,
-                  };
-                } catch (judgeError) {
-                  // Fall back to heuristic if judge fails
-                  console.error("Judge evaluation failed, using heuristic:", judgeError);
-                  metadata.judgeError = judgeError instanceof Error ? judgeError.message : "Unknown judge error";
+                    finalPassed = judgeResult.passed;
+                    finalScore = judgeResult.score;
+                    metadata = {
+                      ...metadata,
+                      judgeReasoning: judgeResult.reasoning,
+                      judgeConfidence: judgeResult.confidence,
+                      heuristicPassed: result.passed,
+                      heuristicScore: result.score,
+                    };
+                  } catch (judgeError) {
+                    console.error("Judge evaluation failed, using heuristic:", judgeError);
+                    metadata.judgeError = judgeError instanceof Error ? judgeError.message : "Unknown judge error";
+                  }
                 }
+
+                return {
+                  testCaseId: testCase.id,
+                  passed: finalPassed,
+                  score: finalScore,
+                  response: result.response,
+                  latencyMs,
+                  inputTokens: result.usage.inputTokens,
+                  outputTokens: result.usage.outputTokens,
+                  metadata,
+                };
+              } catch (error) {
+                return {
+                  testCaseId: testCase.id,
+                  passed: false,
+                  score: 0,
+                  error: error instanceof Error ? error.message : "Unknown error",
+                };
               }
-
-              batchResults.push({
-                testCaseId: testCase.id,
-                passed: finalPassed,
-                score: finalScore,
-                response: result.response,
-                latencyMs,
-                inputTokens: result.usage.inputTokens,
-                outputTokens: result.usage.outputTokens,
-                metadata,
-              });
-            } catch (error) {
-              batchResults.push({
-                testCaseId: testCase.id,
-                passed: false,
-                score: 0,
-                error: error instanceof Error ? error.message : "Unknown error",
-              });
-            }
-          }
-
-          return batchResults;
+            })
+          );
         }
       );
 

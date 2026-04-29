@@ -1,7 +1,7 @@
 #!/usr/bin/env npx tsx
 /**
  * Run evaluations on all remaining models (batch)
- * Skips: o3, o3-pro, o4-mini (expensive reasoning models)
+ * Skips: o3, o3-pro (expensive reasoning models)
  * Skips: already evaluated models
  */
 
@@ -19,7 +19,6 @@ const SKIP_MODELS = [
   // OpenAI reasoning models (expensive)
   "o3",
   "o3-pro",
-  "o4-mini",
   // Together AI models (no API key configured)
   "llama-3-1-405b",
   "mistral-large-2",
@@ -42,7 +41,6 @@ const ALL_MODELS = [
   "gpt-5-4-nano",
   "o3",
   "o3-pro",
-  "o4-mini",
   // Anthropic
   "claude-opus-4-6",
   "claude-sonnet-4-6",

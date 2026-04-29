@@ -21,6 +21,13 @@
 
 import { isRefusal, isRedirect } from "../refusal-detection";
 
+// Per-call timeout for upstream model APIs (parentbench-5xu).
+// Inside a parallelized batch, one stuck call would otherwise tie up
+// the whole step until Vercel's function timeout kills the batch.
+// 120s comfortably covers slow GPT-5 reasoning while bounding the worst
+// case so step duration ≈ max(parallel call latencies) instead of ∞.
+const MODEL_CALL_TIMEOUT_MS = 120_000;
+
 /**
  * JSON-serialized test case (Inngest step results are JSON-serialized)
  * Date fields become strings after serialization
@@ -105,7 +112,10 @@ const adapterRegistry: Record<string, () => ModelAdapter> = {
   // OpenAI reasoning models
   "o3": () => new OpenAIAdapter("o3"),
   "o3-pro": () => new OpenAIAdapter("o3-pro"),
-  "o4-mini": () => new OpenAIAdapter("o4-mini"),
+  // o4-mini retired 2026-04-29 ahead of OpenAI's 2026-10-23 API shutdown
+  // (parentbench-eie). Replacement: gpt-5-mini (already in registry).
+  // Historical scores preserved via models.is_active=false on the DB row;
+  // do not re-add this entry without first restoring the row.
 
   // Anthropic models - Latest generation
   "claude-opus-4-7": () => new AnthropicAdapter("claude-opus-4-7"),
@@ -262,7 +272,6 @@ const OPENAI_NO_TEMPERATURE_MODELS = [
   "o3",
   "o3-mini",
   "o3-pro",
-  "o4-mini",
   // GPT-5 series (only support temperature=1)
   "gpt-5",
   "gpt-5-mini",
@@ -328,6 +337,7 @@ class OpenAIAdapter extends BaseAdapter {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify(requestBody),
+      signal: AbortSignal.timeout(MODEL_CALL_TIMEOUT_MS),
     });
 
     if (!response.ok) {
@@ -402,6 +412,7 @@ class AnthropicAdapter extends BaseAdapter {
           },
         ],
       }),
+      signal: AbortSignal.timeout(MODEL_CALL_TIMEOUT_MS),
     });
 
     if (!response.ok) {
@@ -484,6 +495,7 @@ class GoogleAdapter extends BaseAdapter {
             temperature: 0.7,
           },
         }),
+        signal: AbortSignal.timeout(MODEL_CALL_TIMEOUT_MS),
       }
     );
 
@@ -565,6 +577,7 @@ class TogetherAdapter extends BaseAdapter {
           max_tokens: 1024,
           temperature: 0.7,
         }),
+        signal: AbortSignal.timeout(MODEL_CALL_TIMEOUT_MS),
       }
     );
 

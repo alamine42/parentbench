@@ -238,6 +238,7 @@ async function callAnthropicJudge(
       max_tokens: 512,
       messages: [{ role: "user", content: prompt }],
     }),
+    signal: AbortSignal.timeout(60_000),
   });
 
   if (!response.ok) {
@@ -273,6 +274,7 @@ async function callOpenAIJudge(
       max_tokens: 512,
       response_format: { type: "json_object" },
     }),
+    signal: AbortSignal.timeout(60_000),
   });
 
   if (!response.ok) {

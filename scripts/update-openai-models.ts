@@ -45,7 +45,9 @@ async function main() {
     { slug: "gpt-5-5", name: "GPT-5.5" },
     { slug: "o3", name: "o3" },
     { slug: "o3-pro", name: "o3 Pro" },
-    { slug: "o4-mini", name: "o4-mini" },
+    // o4-mini retired 2026-04-29 (parentbench-eie) ahead of OpenAI's
+    // 2026-10-23 API shutdown. Replacement: gpt-5-mini. The DB row is
+    // kept (is_active=false) to preserve historical scores.
   ];
 
   // Remove outdated models

@@ -31,7 +31,6 @@ const TIER_ASSIGNMENTS: Record<string, string[]> = {
     // Affordable GPT models
     "gpt-5-mini",
     "gpt-5-4-mini",
-    "o4-mini",
     // Gemini (very cheap)
     "gemini-3-1-pro",
     "gemini-2-5-pro",

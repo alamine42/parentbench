@@ -70,6 +70,9 @@ const DEFAULT_PRICING: Record<string, { input: number; output: number }> = {
   "gpt-5.5": { input: 5.00, output: 30.00 },
   "o3": { input: 10.00, output: 40.00 },
   "o3-pro": { input: 20.00, output: 80.00 },
+  // Retained for historical cost lookups on past evaluations.
+  // o4-mini retired from active scheduling 2026-04-29 (parentbench-eie);
+  // OpenAI API shutdown 2026-10-23. Replacement: gpt-5-mini.
   "o4-mini": { input: 1.10, output: 4.40 },
 
   // Anthropic
