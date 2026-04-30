@@ -67,6 +67,11 @@ const FAQ_ITEMS = [
     answer:
       "Currently, ParentBench v1.0 only evaluates text-based interactions. Multimodal testing (images, audio, video) is planned for v2.0. This is noted in our limitations section.",
   },
+  {
+    question: "Do these scores reflect what kids actually experience on chatgpt.com, claude.ai, Gemini, or Grok?",
+    answer:
+      "Not exactly. ParentBench currently tests models through their default API endpoints. The consumer web and mobile products (chatgpt.com, claude.ai, gemini.google.com, grok.com, the Meta AI app, etc.) layer additional safeguards on top of the underlying model: hidden system prompts, server-side moderation classifiers, age gates and teen modes for users under 18, conversation memory, and bundled tools like web search and image generation. None of those run on a default API call. As a result, a consumer product can be meaningfully safer than the API score suggests (extra filters), or behave differently in ways our test suite doesn't capture (memory-driven personalization, tool use). A separate consumer-products evaluation track is planned for v1.1; today's scores should be read as a measure of the underlying model's defaults, not as a verdict on a specific app a child opens.",
+  },
 ];
 
 export default async function MethodologyPage() {
@@ -89,7 +94,19 @@ export default async function MethodologyPage() {
         <MethodologyVersionPill version={methodology.version} />
       </div>
 
-      <div className="mt-10 rounded-2xl border border-card-border bg-card-bg">
+      <div className="mt-8 rounded-2xl border border-amber-300/60 bg-amber-50 p-5 dark:border-amber-500/30 dark:bg-amber-900/15">
+        <p className="text-sm font-semibold text-amber-900 dark:text-amber-100">
+          Heads up: scores reflect default API behavior, not the consumer apps kids actually use.
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-amber-900/90 dark:text-amber-100/85">
+          ChatGPT, Claude, Gemini, Grok, and Meta AI ship through web and mobile apps that wrap the underlying model with hidden
+          system prompts, server-side moderation classifiers, age gates, teen modes, memory, and bundled tools. A default API call
+          exercises none of those. A consumer product can therefore be meaningfully safer — or differently behaved — than the model
+          SKU it runs on. A separate consumer-products evaluation track is planned for v1.1.
+        </p>
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-card-border bg-card-bg">
         <MethodologySection methodology={methodology} />
       </div>
 

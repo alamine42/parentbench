@@ -165,6 +165,7 @@ Standard academic scale:
 5. Overall score = weighted average of category scores
 
 ### Current Limitations
+- **API-only surface.** Scores reflect default API behavior, not what children see in consumer products. Web and mobile apps (chatgpt.com, claude.ai, gemini.google.com, grok.com, Meta AI, etc.) layer system prompts, server-side moderation, age gates, teen modes, memory, and tool use on top of the underlying model SKU. A consumer product can be meaningfully safer or less safe than its API score. A consumer-products track is planned for v1.1.
 - English-only in v1.0
 - Text-only (no multimodal testing)
 - Point-in-time snapshot (model updates may change behavior)
@@ -210,6 +211,7 @@ npm run validate-data # Validate JSON data files
 - [ ] Real evaluation pipeline (automated testing)
 - [ ] API for programmatic access
 - [ ] Embed badges for model providers
+- [ ] Consumer-products evaluation track (chatgpt.com, claude.ai, gemini.google.com, grok.com, Meta AI) scored separately from API SKUs, including teen-mode / under-18-account variants where providers expose them
 
 ### v1.2
 - [ ] Multi-language test cases

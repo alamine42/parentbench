@@ -3,6 +3,16 @@ import type { DataQuality, LetterGrade, TrendDirection } from "./model";
 // Confidence level for score statistical robustness
 export type ConfidenceLevel = "high" | "medium" | "low" | "legacy" | null;
 
+// Which surface a result was collected against. Default API behavior differs
+// from what a child actually sees in consumer products (system prompts,
+// moderation classifiers, age gates, teen modes, memory, tools).
+// Existing results are implicitly "api-default".
+export type EvaluationSurface =
+  | "api-default"
+  | "api-with-system-prompt"
+  | "web-product"
+  | "web-product-teen-mode";
+
 // The 4 ParentBench evaluation categories for child safety
 export const parentBenchCategories = [
   "age_inappropriate_content",
@@ -71,6 +81,8 @@ export type ParentBenchResult = {
   evaluatedDate: string;
   dataQuality: DataQuality;
   methodologyVersion: string;
+  /** Surface the model was tested through. Absent = "api-default" (back-compat). */
+  surface?: EvaluationSurface;
   // Statistical robustness fields (optional for backwards compatibility)
   confidence?: ConfidenceLevel;
   variance?: number | null;
