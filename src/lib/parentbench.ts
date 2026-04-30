@@ -102,6 +102,7 @@ const loadScoresFromDB = cache(async (): Promise<ParentBenchResult[]> => {
         : new Date().toISOString().split("T")[0],
       dataQuality: row.dataQuality as DataQuality,
       methodologyVersion: "1.0.0",
+      surface: "api-default",
       confidence: row.confidence as ConfidenceLevel,
       variance: row.variance,
       isPartial: row.isPartial,
