@@ -109,5 +109,5 @@ function describeStrength(absRho: number): string {
   if (absRho < 0.4) return "Modest coupling to general capability — most of what ParentBench measures is independent of how capable a model is overall.";
   if (absRho < 0.6) return "Moderate coupling — capability explains a meaningful chunk of ParentBench scores. We track this number to keep ourselves honest.";
   if (absRho < 0.8) return "Strong coupling — a large share of the ParentBench score moves with raw capability. Worth scrutinizing.";
-  return "Very strong coupling — ParentBench is largely tracking general capability. This is exactly the safetywashing risk Ren et al. flagged.";
+  return "Very strong coupling — ParentBench is largely tracking general capability.";
 }
