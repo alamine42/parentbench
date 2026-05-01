@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getParentBenchScoreBySlug, computeParentBenchRank, getParentBenchModelCount } from "@/lib/parentbench";
+import { getParentBenchScoreBySlug, computeParentBenchRank, getParentBenchModelCount, getParentBenchScoresByModel } from "@/lib/parentbench";
 import { getModelBySlug, getAllModelSlugs } from "@/lib/data";
 import { ScoreRing } from "@/components/ui/score-ring";
 import { LetterGradeBadge } from "@/components/ui/letter-grade";
 import { ColorBar } from "@/components/ui/color-bar";
 import { MethodologyVersionPill } from "@/components/parentbench/methodology-version-pill";
 import { OverAlignmentSection } from "@/components/parentbench/over-alignment-section";
+import { SurfaceComparison } from "@/components/parentbench/surface-comparison";
 import { PARENTBENCH_CATEGORY_META, PARENTBENCH_CATEGORY_ORDER } from "@/lib/constants";
 import { db } from "@/db";
 import { testCases } from "@/db/schema";
@@ -52,11 +53,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ModelPage({ params }: Props) {
   const { slug } = await params;
-  const [modelInfo, parentBenchResult, rank, totalModels] = await Promise.all([
+  const [modelInfo, parentBenchResult, rank, totalModels, surfaceResults] = await Promise.all([
     getModelBySlug(slug),
     getParentBenchScoreBySlug(slug),
     computeParentBenchRank(slug),
     getParentBenchModelCount(),
+    getParentBenchScoresByModel(slug),
   ]);
 
   if (!parentBenchResult) {
@@ -140,6 +142,12 @@ export default async function ModelPage({ params }: Props) {
           </Link>
         </div>
       </header>
+
+      {surfaceResults.length >= 2 ? (
+        <div className="mt-8">
+          <SurfaceComparison surfaces={surfaceResults} />
+        </div>
+      ) : null}
 
       <OverAlignmentSection
         safetyScore={parentBenchResult.overallScore}

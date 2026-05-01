@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { getParentBenchMethodology, getParentBenchLastUpdated } from "@/lib/parentbench";
 import { MethodologySection } from "@/components/parentbench/methodology-section";
@@ -102,9 +103,140 @@ export default async function MethodologyPage() {
           ChatGPT, Claude, Gemini, Grok, and Meta AI ship through web and mobile apps that wrap the underlying model with hidden
           system prompts, server-side moderation classifiers, age gates, teen modes, memory, and bundled tools. A default API call
           exercises none of those. A consumer product can therefore be meaningfully safer — or differently behaved — than the model
-          SKU it runs on. A separate consumer-products evaluation track is planned for v1.1.
+          SKU it runs on.{" "}
+          <Link
+            href="#consumer-products-track"
+            className="font-semibold underline decoration-amber-700/40 underline-offset-2 hover:decoration-amber-700"
+          >
+            Read about the consumer-products track →
+          </Link>
         </p>
       </div>
+
+      <section
+        id="consumer-products-track"
+        className="relative mt-10 scroll-mt-24 overflow-hidden rounded-3xl border border-card-border bg-card-bg shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_30px_-12px_rgba(15,23,42,0.10)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),0_12px_40px_-12px_rgba(0,0,0,0.55)]"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_-10%,rgba(37,99,235,0.06),transparent_45%)] dark:bg-[radial-gradient(circle_at_85%_-10%,rgba(96,165,250,0.10),transparent_45%)]"
+        />
+
+        <header className="relative border-b border-card-border/70 px-6 py-7 sm:px-10 sm:py-9">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+            v1 · adult account
+          </p>
+          <h2 className="mt-2 font-serif text-3xl font-semibold leading-[1.1] tracking-tight text-foreground sm:text-4xl">
+            The consumer-products track
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
+            Alongside the API-default leaderboard, we run the same 51 prompts
+            through the actual consumer apps your kids use — capturing the
+            system prompts, moderation, age gates, memory, and tools that sit
+            between the child and the underlying model.
+          </p>
+
+          {/* Provider pill rail — credibility cue */}
+          <ul className="mt-6 flex flex-wrap gap-2">
+            {[
+              { name: "ChatGPT", host: "chatgpt.com", logo: "/logos/openai.svg" },
+              { name: "Claude", host: "claude.ai", logo: "/logos/anthropic.svg" },
+              { name: "Gemini", host: "gemini.google.com", logo: "/logos/google.svg" },
+              { name: "Grok", host: "grok.com", logo: "/logos/xai.svg" },
+            ].map((p) => (
+              <li
+                key={p.name}
+                className="group inline-flex items-center gap-2 rounded-full border border-card-border bg-card-bg px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted-bg/60"
+              >
+                <Image
+                  src={p.logo}
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="rounded"
+                  aria-hidden="true"
+                />
+                <span>{p.name}</span>
+                <span className="text-muted">·</span>
+                <span className="font-mono text-[11px] font-normal text-muted">
+                  {p.host}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </header>
+
+        <div className="relative grid gap-px bg-card-border/60 sm:grid-cols-3">
+          <PillarCard
+            label="What v1 covers"
+            icon={
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5">
+                <path
+                  d="M3 6.5l2.5 2.5L11 3.5M3 12.5l2.5 2.5L11 9.5M14.5 6h3M14.5 12h3"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            }
+            items={[
+              "Four providers, one adult account each — the surfaces with the biggest install base.",
+              "Same 51 prompts, same scorer, same LLM-as-judge as the API track. Comparability is the point.",
+              "Manual cadence for v1. Once stable, scheduled. Teen-DOB accounts ship in v1.1 with their own surface label.",
+            ]}
+          />
+          <PillarCard
+            label="How we keep it comparable"
+            icon={
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5">
+                <path
+                  d="M5 5.5h7l3 3-3 3H5l-3-3 3-3z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M9 13.5v3M11 16.5H7"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                />
+              </svg>
+            }
+            items={[
+              "Each new consumer-track run automatically queues a paired API run for the same model.",
+              "Comparison deltas hide entirely when the two runs are more than 30 days apart — drift would dominate the surface signal.",
+              "Recency band shows on every model: synced (≤14d), drift caveat (14–30d), or refreshing pair (>30d).",
+            ]}
+          />
+          <PillarCard
+            label="Known limitations"
+            tone="warn"
+            icon={
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5">
+                <path
+                  d="M10 2.5l8 14H2l8-14zM10 8v4M10 14.25v0.75"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            }
+            items={[
+              "Selectors rot when web UIs change. We refresh DOM fixtures and smoke-test before every run.",
+              "Backend model swaps without UI rename are detected via metadata diffs; we flag them on the comparison panel.",
+              "Classifier intercepts can look like model refusals; the judge differentiates where the provider exposes distinct UI.",
+              "Real human-created accounts, rate-limited (≤1 prompt every 5–15 seconds). Honest user-agent.",
+            ]}
+          />
+        </div>
+      </section>
 
       <div className="mt-6 rounded-2xl border border-card-border bg-card-bg">
         <MethodologySection methodology={methodology} />
@@ -401,5 +533,45 @@ function Example({
       </p>
       <p className="mt-2 text-xs text-muted">{caption}</p>
     </div>
+  );
+}
+
+function PillarCard({
+  label,
+  icon,
+  items,
+  tone = "default",
+}: {
+  label: string;
+  icon: React.ReactNode;
+  items: string[];
+  tone?: "default" | "warn";
+}) {
+  const iconClass =
+    tone === "warn"
+      ? "bg-amber-100 text-amber-700 dark:bg-amber-900/25 dark:text-amber-200"
+      : "bg-accent/10 text-accent dark:bg-accent/15";
+  return (
+    <article className="bg-card-bg p-6 sm:p-7">
+      <div className="flex items-center gap-3">
+        <span
+          className={`inline-flex h-9 w-9 items-center justify-center rounded-xl ${iconClass}`}
+        >
+          {icon}
+        </span>
+        <h3 className="text-sm font-semibold text-foreground">{label}</h3>
+      </div>
+      <ul className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
+        {items.map((item, i) => (
+          <li key={i} className="flex gap-2.5">
+            <span
+              aria-hidden="true"
+              className="mt-2 inline-block h-1 w-1 shrink-0 rounded-full bg-foreground/40"
+            />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </article>
   );
 }
