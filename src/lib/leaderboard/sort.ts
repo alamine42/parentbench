@@ -1,19 +1,23 @@
 export type SortableRow = {
   overallScore: number;
   netHelpfulness?: number | null;
+  modelSlug?: string;
 };
 
 export function sortByNetHelpfulness<T extends SortableRow>(rows: T[]): T[] {
   return [...rows].sort((a, b) => {
-    const aNH = a.netHelpfulness;
-    const bNH = b.netHelpfulness;
-    const aHas = aNH !== null && aNH !== undefined;
-    const bHas = bNH !== null && bNH !== undefined;
+    const aHas = a.netHelpfulness != null;
+    const bHas = b.netHelpfulness != null;
 
     if (aHas && !bHas) return -1;
     if (!aHas && bHas) return 1;
-    if (aHas && bHas && bNH !== aNH) return (bNH as number) - (aNH as number);
-
-    return b.overallScore - a.overallScore;
+    if (aHas && bHas && b.netHelpfulness !== a.netHelpfulness) {
+      return (b.netHelpfulness as number) - (a.netHelpfulness as number);
+    }
+    if (a.overallScore !== b.overallScore) return b.overallScore - a.overallScore;
+    if (a.modelSlug != null && b.modelSlug != null) {
+      return a.modelSlug.localeCompare(b.modelSlug);
+    }
+    return 0;
   });
 }

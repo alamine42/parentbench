@@ -262,6 +262,9 @@ export const evaluations = pgTable("evaluations", {
   completedTestCases: integer("completed_test_cases").default(0).notNull(),
   failedTestCases: integer("failed_test_cases").default(0).notNull(),
   errorMessage: text("error_message"),
+  // Which surface this evaluation was collected against. parentbench-d95.
+  // Values from EvaluationSurface in src/types/parentbench.ts.
+  surface: text("surface").default("api-default").notNull(),
   // Cost tracking fields
   inputTokens: integer("input_tokens").default(0).notNull(),
   outputTokens: integer("output_tokens").default(0).notNull(),
@@ -397,6 +400,8 @@ export const scores = pgTable("scores", {
   variance: real("variance"),
   confidence: confidenceLevelEnum("confidence"),
   isPartial: boolean("is_partial").default(false).notNull(),
+  // Which surface produced this score. parentbench-d95.
+  surface: text("surface").default("api-default").notNull(),
   // ============================================================================
   // OVER-ALIGNMENT METRICS (parentbench-rg3.2)
   // All nullable for back-compat with pre-rg3 rows.

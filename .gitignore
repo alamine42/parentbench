@@ -49,6 +49,9 @@ HANDOVER.md
 # backfill audit reports (kept locally, surface diffs in commits not the JSON)
 reports/
 
+# browser-eval cookies/profiles (parentbench-d95) — never commit session tokens
+.browser-eval/
+
 # beads daemon state (issues.jsonl is the source of truth, not these)
 .beads/backup/
 .beads/embeddeddolt/

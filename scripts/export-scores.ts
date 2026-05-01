@@ -29,8 +29,12 @@ async function main() {
 
   console.log(`Found ${liveScores.length} live scores`);
 
+  // Multi-surface export: emit `surface` per row so
+  // downstream consumers can group by (model, surface). Pre-migration
+  // rows fall back to 'api-default'.
   const results = liveScores.map(({ score, modelSlug }) => ({
     modelSlug,
+    surface: (score as { surface?: string }).surface ?? "api-default",
     overallScore: score.overallScore,
     overallGrade: score.overallGrade,
     trend: score.trend,

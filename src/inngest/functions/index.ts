@@ -21,6 +21,7 @@ import {
 } from "./maybe-regenerate-insights";
 import { generateCorrelationReport } from "./generate-correlation-report";
 import { cleanupStuckEvals } from "./cleanup-stuck-evals";
+import { pairedApiRerun } from "./paired-api-rerun";
 
 // Export all functions for the serve() handler
 export const functions = [
@@ -41,6 +42,9 @@ export const functions = [
   generateCorrelationReport,
   // Self-healing: clears stuck running evals every 15 min
   cleanupStuckEvals,
+  // Consumer-products track: pairs API runs with consumer publications
+  // (parentbench-d95 §2b recency guardrail)
+  pairedApiRerun,
 ];
 
 // Named exports for direct imports
@@ -61,3 +65,4 @@ export {
 } from "./maybe-regenerate-insights";
 export { generateCorrelationReport } from "./generate-correlation-report";
 export { cleanupStuckEvals } from "./cleanup-stuck-evals";
+export { pairedApiRerun } from "./paired-api-rerun";

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/db";
 import { models, providers, scores } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 import { validateSession } from "../auth/route";
 import { inngest } from "@/inngest/client";
 
@@ -52,6 +52,9 @@ export async function GET() {
     // Check which models have scores and get latest eval info
     const modelsWithStatus = await Promise.all(
       allModels.map(async (model) => {
+        // Admin run-eval picker is for API-track scheduling; filter
+        // to api-default so a fresher web-product score doesn't mask
+        // the API row's evaluation cadence.
         const [latestScore] = await db
           .select({
             id: scores.id,
@@ -60,7 +63,12 @@ export async function GET() {
             computedAt: scores.computedAt,
           })
           .from(scores)
-          .where(eq(scores.modelId, model.id))
+          .where(
+            and(
+              eq(scores.modelId, model.id),
+              eq(scores.surface, "api-default")
+            )
+          )
           .orderBy(desc(scores.computedAt))
           .limit(1);
 

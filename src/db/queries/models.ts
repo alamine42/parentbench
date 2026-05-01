@@ -98,10 +98,15 @@ export async function getModelWithScore(slug: string): Promise<ModelWithScore | 
   const model = await getModelBySlug(slug);
   if (!model) return null;
 
+  // API track only — consumer-track scores (surface='web-product') surface
+  // through dedicated readers in src/lib/parentbench.ts so this generic
+  // helper doesn't return whichever surface ran most recently.
   const latestScoreResult = await db
     .select()
     .from(scores)
-    .where(eq(scores.modelId, model.id))
+    .where(
+      and(eq(scores.modelId, model.id), eq(scores.surface, "api-default"))
+    )
     .orderBy(desc(scores.computedAt))
     .limit(1);
 
@@ -136,11 +141,11 @@ export async function getAllModelsWithScores(): Promise<ModelWithScore[]> {
   // Get all model IDs
   const modelIds = allModels.map(m => m.id);
 
-  // Fetch all latest scores in a single query using a subquery approach
-  // Group by modelId and get the most recent score for each
+  // API track only — see note in getModelWithScore.
   const allScoresResult = await db
     .select()
     .from(scores)
+    .where(eq(scores.surface, "api-default"))
     .orderBy(desc(scores.computedAt));
 
   // Build a map of modelId -> latest score (first occurrence since sorted desc)
@@ -189,6 +194,7 @@ export async function getModelScoreHistory(
   trend: string;
   computedAt: Date;
 }>> {
+  // API track only — see note in getModelWithScore.
   const result = await db
     .select({
       overallScore: scores.overallScore,
@@ -197,7 +203,9 @@ export async function getModelScoreHistory(
       computedAt: scores.computedAt,
     })
     .from(scores)
-    .where(eq(scores.modelId, modelId))
+    .where(
+      and(eq(scores.modelId, modelId), eq(scores.surface, "api-default"))
+    )
     .orderBy(desc(scores.computedAt))
     .limit(limit);
 
@@ -257,10 +265,16 @@ export async function getModelScoreHistoryWithCategories(
       fromDate = null;
   }
 
-  // Build query conditions
+  // API track only — score-history timelines diverge per surface;
+  // a future consumer-track timeline gets its own reader.
+  const surfaceCondition = eq(scores.surface, "api-default");
   const conditions = fromDate
-    ? and(eq(scores.modelId, modelId), gte(scores.computedAt, fromDate))
-    : eq(scores.modelId, modelId);
+    ? and(
+        eq(scores.modelId, modelId),
+        gte(scores.computedAt, fromDate),
+        surfaceCondition
+      )
+    : and(eq(scores.modelId, modelId), surfaceCondition);
 
   const result = await db
     .select({

@@ -1,7 +1,7 @@
 import { inngest } from "../client";
 import { db } from "@/db";
 import { evaluations, testCases, evalResults, scores, models, categories } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 import { runModelAdapter } from "@/lib/eval/adapters";
 import { computeScore } from "@/lib/eval/scorer";
 import { judgeResponse, JUDGE_MODEL } from "@/lib/eval/judge";
@@ -131,6 +131,8 @@ export const runEvaluation = inngest.createFunction(
           triggeredBy,
           inngestRunId: runId,
           startedAt: new Date(),
+          // API track always writes api-default explicitly.
+          surface: "api-default",
         })
         .returning();
 
@@ -166,7 +168,6 @@ export const runEvaluation = inngest.createFunction(
 
       // Group by category. Benign cases (kind='benign', categoryId=null)
       // bypass per-category sampling — they're a small set, take them all.
-      // (parentbench-rg3.2)
       const byCategory = new Map<string, typeof activeTestCases>();
       const benignAll: typeof activeTestCases = [];
       for (const tc of activeTestCases) {
@@ -222,7 +223,7 @@ export const runEvaluation = inngest.createFunction(
       const batchResults = await step.run(
         `run-batch-${Math.floor(i / batchSize)}`,
         async () => {
-          // Parallelize within the batch (parentbench-5xu): GPT-5 family
+          // Parallelize within the batch: GPT-5 family
           // latencies of 20-40s × 10 sequential calls × +judge call put a
           // single batch over the Vercel function timeout (~300s on Pro).
           // Promise.all collapses wall-clock per step from sum-of-N to
@@ -238,7 +239,7 @@ export const runEvaluation = inngest.createFunction(
                 let finalScore = result.score;
                 let metadata: Record<string, unknown> = { ...(result.metadata ?? {}) };
 
-                // Skip the LLM judge for benign cases (parentbench-rg3.2):
+                // Skip the LLM judge for benign cases:
                 // benign scoring is "did the model refuse?" — the refusal-detection
                 // heuristic is the load-bearing signal; a category-rubric judge
                 // would mis-grade them. Plus benign cases have no categoryId.
@@ -328,11 +329,18 @@ export const runEvaluation = inngest.createFunction(
         fullBenignCount,
       });
 
-      // Get previous score for trend
+      // Get previous score for trend. This is the API track — filter
+      // to api-default so a fresh consumer-track row doesn't masquerade
+      // as the prior API score.
       const [previousScore] = await db
         .select()
         .from(scores)
-        .where(eq(scores.modelId, modelId))
+        .where(
+          and(
+            eq(scores.modelId, modelId),
+            eq(scores.surface, "api-default")
+          )
+        )
         .orderBy(scores.computedAt)
         .limit(1);
 
@@ -356,6 +364,9 @@ export const runEvaluation = inngest.createFunction(
           categoryScores: score.categoryScores,
           evaluationId: evaluation.id,
           isPartial: score.isPartial,
+          // API track always writes api-default explicitly. The column's
+          // DEFAULT covers historical rows; new writes are intentional.
+          surface: "api-default",
           // parentbench-rg3.2 over-alignment fields (nullable)
           falseRefusalRate: score.falseRefusalRate,
           netHelpfulness: score.netHelpfulness,

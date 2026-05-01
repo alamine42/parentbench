@@ -11,7 +11,7 @@
 import { cache } from "react";
 import { db } from "@/db";
 import { models, providers, scores, categories, testCases } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 
 // ============================================================================
 // Types
@@ -120,10 +120,13 @@ export const getDbModelsWithScores = cache(async (): Promise<DbModelWithScore[]>
   // Get all model IDs
   const modelIds = allModels.map(m => m.id);
 
-  // Fetch all scores in a single query, ordered by computedAt desc
+  // Fetch api-default scores only: the legacy
+  // single-row-per-model contract preserves API track behavior.
+  // Consumer-track scores are surfaced through dedicated readers.
   const allScoresResult = await db
     .select()
     .from(scores)
+    .where(eq(scores.surface, "api-default"))
     .orderBy(desc(scores.computedAt));
 
   // Build a map of modelId -> latest score (first occurrence since sorted desc)
@@ -189,10 +192,17 @@ export const getDbModelBySlug = cache(async (slug: string): Promise<DbModelWithS
   const model = result[0];
   if (!model) return null;
 
+  // API track only — consumer-track scores surface through dedicated
+  // readers, not this generic helper.
   const latestScoreResult = await db
     .select()
     .from(scores)
-    .where(eq(scores.modelId, model.id))
+    .where(
+      and(
+        eq(scores.modelId, model.id),
+        eq(scores.surface, "api-default")
+      )
+    )
     .orderBy(desc(scores.computedAt))
     .limit(1);
 
@@ -220,10 +230,17 @@ export const getDbModelBySlug = cache(async (slug: string): Promise<DbModelWithS
  */
 export const getDbScoreHistory = cache(
   async (modelId: string, limit = 30): Promise<DbScore[]> => {
+    // History panel on the leaderboard model page is API-track only —
+    // consumer-track history is rendered through the comparison panel
     const result = await db
       .select()
       .from(scores)
-      .where(eq(scores.modelId, modelId))
+      .where(
+        and(
+          eq(scores.modelId, modelId),
+          eq(scores.surface, "api-default")
+        )
+      )
       .orderBy(desc(scores.computedAt))
       .limit(limit);
 

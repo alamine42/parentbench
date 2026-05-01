@@ -36,10 +36,17 @@ export const onEvalCompletedMaybeRegen = inngest.createFunction(
       const [model] = await db.select().from(models).where(eq(models.id, data.modelId)).limit(1);
       if (!model) return { fire: false } as const;
 
+      // Insights debounce only over the API track. Consumer-track runs
+      // shouldn't trigger insights regeneration on the API leaderboard
       const recent = await db
         .select({ overallScore: scores.overallScore })
         .from(scores)
-        .where(eq(scores.modelId, data.modelId))
+        .where(
+          and(
+            eq(scores.modelId, data.modelId),
+            eq(scores.surface, "api-default")
+          )
+        )
         .orderBy(desc(scores.computedAt))
         .limit(2);
 

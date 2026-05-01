@@ -1,9 +1,10 @@
 import fs from "fs/promises";
 import path from "path";
 import { cache } from "react";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { models, scores, testCases, categories } from "@/db/schema";
+import { sortByNetHelpfulness } from "@/lib/leaderboard/sort";
 import type {
   ParentBenchScoresData,
   ParentBenchResult,
@@ -13,8 +14,11 @@ import type {
   ParentBenchCategoryScore,
   ParentBenchCategory,
   ConfidenceLevel,
+  EvaluationSurface,
 } from "@/types/parentbench";
 import type { LetterGrade, TrendDirection, DataQuality } from "@/types/model";
+
+const DEFAULT_SURFACE: EvaluationSurface = "api-default";
 
 // ============================================================================
 // ERROR HANDLING
@@ -52,71 +56,125 @@ async function safeReadJson<T>(filePath: string, fileName: string): Promise<T> {
 // DATABASE LOADERS (PRIMARY)
 // ============================================================================
 
-/**
- * Load scores from database with model joins.
- * Returns results sorted by overall score descending.
- */
-const loadScoresFromDB = cache(async (): Promise<ParentBenchResult[]> => {
-  try {
-    // Get the most recent score for each active model
-    const dbScores = await db
-      .select({
-        modelSlug: models.slug,
-        overallScore: scores.overallScore,
-        overallGrade: scores.overallGrade,
-        trend: scores.trend,
-        dataQuality: scores.dataQuality,
-        categoryScores: scores.categoryScores,
-        evaluatedDate: scores.computedAt,
-        confidence: scores.confidence,
-        variance: scores.variance,
-        isPartial: scores.isPartial,
-        falseRefusalRate: scores.falseRefusalRate,
-        netHelpfulness: scores.netHelpfulness,
-        benignRefusalCount: scores.benignRefusalCount,
-        benignTotalCount: scores.benignTotalCount,
-        refusedBenignCaseIds: scores.refusedBenignCaseIds,
-      })
-      .from(scores)
-      .innerJoin(models, eq(scores.modelId, models.id))
-      .where(eq(models.isActive, true))
-      .orderBy(desc(scores.computedAt));
+// Shared projection. Drizzle infers the row type — no manual type alias,
+// no `as` cast at the call site.
+const SCORE_PROJECTION = {
+  modelSlug: models.slug,
+  surface: scores.surface,
+  overallScore: scores.overallScore,
+  overallGrade: scores.overallGrade,
+  trend: scores.trend,
+  dataQuality: scores.dataQuality,
+  categoryScores: scores.categoryScores,
+  evaluatedDate: scores.computedAt,
+  confidence: scores.confidence,
+  variance: scores.variance,
+  isPartial: scores.isPartial,
+  falseRefusalRate: scores.falseRefusalRate,
+  netHelpfulness: scores.netHelpfulness,
+  benignRefusalCount: scores.benignRefusalCount,
+  benignTotalCount: scores.benignTotalCount,
+  refusedBenignCaseIds: scores.refusedBenignCaseIds,
+} as const;
 
-    // Group by model, keeping only the most recent score
-    const latestByModel = new Map<string, typeof dbScores[0]>();
-    for (const score of dbScores) {
-      if (!latestByModel.has(score.modelSlug)) {
-        latestByModel.set(score.modelSlug, score);
-      }
-    }
+type ScoreRow = {
+  modelSlug: string;
+  surface: string;
+  overallScore: number;
+  overallGrade: string;
+  trend: string;
+  dataQuality: string;
+  categoryScores: unknown;
+  evaluatedDate: Date | null;
+  confidence: ConfidenceLevel;
+  variance: number | null;
+  isPartial: boolean;
+  falseRefusalRate: number | null;
+  netHelpfulness: number | null;
+  benignRefusalCount: number | null;
+  benignTotalCount: number | null;
+  refusedBenignCaseIds: string[] | null;
+};
 
-    // Transform to ParentBenchResult format
-    return Array.from(latestByModel.values()).map((row) => ({
-      modelSlug: row.modelSlug,
-      overallScore: row.overallScore,
-      overallGrade: row.overallGrade as LetterGrade,
-      trend: row.trend as TrendDirection,
-      categoryScores: (row.categoryScores as ParentBenchCategoryScore[]) ?? [],
-      evaluatedDate: row.evaluatedDate
-        ? row.evaluatedDate.toISOString().split("T")[0]
-        : new Date().toISOString().split("T")[0],
-      dataQuality: row.dataQuality as DataQuality,
-      methodologyVersion: "1.0.0",
-      surface: "api-default",
-      confidence: row.confidence as ConfidenceLevel,
-      variance: row.variance,
-      isPartial: row.isPartial,
-      falseRefusalRate: row.falseRefusalRate,
-      netHelpfulness: row.netHelpfulness,
-      benignRefusalCount: row.benignRefusalCount,
-      benignTotalCount: row.benignTotalCount,
-      refusedBenignCaseIds: row.refusedBenignCaseIds,
-    }));
-  } catch (error) {
-    console.error("[ParentBench] DB scores load failed:", error);
-    throw error;
+function rowToResult(row: ScoreRow): ParentBenchResult {
+  return {
+    modelSlug: row.modelSlug,
+    overallScore: row.overallScore,
+    overallGrade: row.overallGrade as LetterGrade,
+    trend: row.trend as TrendDirection,
+    categoryScores:
+      (row.categoryScores as ParentBenchCategoryScore[]) ?? [],
+    evaluatedDate: row.evaluatedDate
+      ? row.evaluatedDate.toISOString().split("T")[0]
+      : new Date().toISOString().split("T")[0],
+    dataQuality: row.dataQuality as DataQuality,
+    methodologyVersion: "1.0.0",
+    surface: row.surface as EvaluationSurface,
+    confidence: row.confidence,
+    variance: row.variance,
+    isPartial: row.isPartial,
+    falseRefusalRate: row.falseRefusalRate,
+    netHelpfulness: row.netHelpfulness,
+    benignRefusalCount: row.benignRefusalCount,
+    benignTotalCount: row.benignTotalCount,
+    refusedBenignCaseIds: row.refusedBenignCaseIds,
+  };
+}
+
+/** Latest-per-key dedup — input must already be sorted by recency desc. */
+function dedupLatest<K>(rows: ScoreRow[], keyOf: (r: ScoreRow) => K): ScoreRow[] {
+  const seen = new Map<K, ScoreRow>();
+  for (const row of rows) {
+    const key = keyOf(row);
+    if (!seen.has(key)) seen.set(key, row);
   }
-});
+  return Array.from(seen.values());
+}
+
+/**
+ * One row per model within the requested surface (most-recent wins).
+ * Default surface is `api-default` for back-compat. Wrapped in
+ * `react.cache` so a single render only hits the DB once per surface.
+ */
+const loadScoresFromDB = cache(
+  async (
+    surface: EvaluationSurface = DEFAULT_SURFACE
+  ): Promise<ParentBenchResult[]> => {
+    try {
+      const rows = await db
+        .select(SCORE_PROJECTION)
+        .from(scores)
+        .innerJoin(models, eq(scores.modelId, models.id))
+        .where(and(eq(models.isActive, true), eq(scores.surface, surface)))
+        .orderBy(desc(scores.computedAt));
+      return dedupLatest(rows, (r) => r.modelSlug).map(rowToResult);
+    } catch (error) {
+      console.error("[ParentBench] DB scores load failed:", error);
+      throw error;
+    }
+  }
+);
+
+/**
+ * One row per surface for a single model — drives the per-model
+ * comparison panel.
+ */
+const loadScoresByModelFromDB = cache(
+  async (modelSlug: string): Promise<ParentBenchResult[]> => {
+    try {
+      const rows = await db
+        .select(SCORE_PROJECTION)
+        .from(scores)
+        .innerJoin(models, eq(scores.modelId, models.id))
+        .where(eq(models.slug, modelSlug))
+        .orderBy(desc(scores.computedAt));
+      return dedupLatest(rows, (r) => r.surface).map(rowToResult);
+    } catch (error) {
+      console.error("[ParentBench] DB scores-by-model load failed:", error);
+      throw error;
+    }
+  }
+);
 
 /**
  * Load test cases from database with category joins.
@@ -199,36 +257,59 @@ const loadTestCasesFromJSON = cache(async (): Promise<ParentBenchTestCasesData> 
 // ============================================================================
 
 /**
- * Get all ParentBench scores, sorted by Net Helpfulness desc with safety
- * tiebreak; null NH sinks to the bottom. Database primary, JSON fallback.
+ * Get ParentBench scores for one surface (default `api-default` for
+ * back-compat). Returns one row per model — the most recent score in
+ * that surface. Sorted by NH desc with safety tiebreak; null NH sinks.
+ *
+ * The Web tab on the leaderboard calls this with `'web-product'`. The
+ * comparison panel uses {@link getParentBenchScoresByModel} instead.
  */
-export async function getParentBenchScores(): Promise<ParentBenchResult[]> {
+export async function getParentBenchScores(
+  surface: EvaluationSurface = DEFAULT_SURFACE
+): Promise<ParentBenchResult[]> {
   let results: ParentBenchResult[];
 
   try {
-    results = await loadScoresFromDB();
-
+    results = await loadScoresFromDB(surface);
     if (results.length === 0) {
-      console.warn("[ParentBench] No scores in DB, falling back to JSON");
-      const data = await loadScoresFromJSON();
-      results = [...data.results];
+      console.warn(
+        `[ParentBench] No scores in DB for surface=${surface}, falling back to JSON`
+      );
+      results = await loadScoresFromJsonForSurface(surface);
     }
   } catch {
     console.warn("[ParentBench] DB unavailable, falling back to JSON");
-    const data = await loadScoresFromJSON();
-    results = [...data.results];
+    results = await loadScoresFromJsonForSurface(surface);
   }
 
-  return [...results].sort((a, b) => {
-    const aHas = a.netHelpfulness !== null && a.netHelpfulness !== undefined;
-    const bHas = b.netHelpfulness !== null && b.netHelpfulness !== undefined;
-    if (aHas !== bHas) return aHas ? -1 : 1;
-    if (aHas && bHas && a.netHelpfulness !== b.netHelpfulness) {
-      return (b.netHelpfulness as number) - (a.netHelpfulness as number);
-    }
-    if (a.overallScore !== b.overallScore) return b.overallScore - a.overallScore;
-    return a.modelSlug.localeCompare(b.modelSlug);
-  });
+  return sortByNetHelpfulness(results);
+}
+
+async function loadScoresFromJsonForSurface(
+  surface: EvaluationSurface
+): Promise<ParentBenchResult[]> {
+  const data = await loadScoresFromJSON();
+  return data.results.filter(
+    (r) => (r.surface ?? DEFAULT_SURFACE) === surface
+  );
+}
+
+/**
+ * Get every surface's most-recent score for a single model. Used by
+ * the per-model comparison panel. Returns at most one row per surface.
+ */
+export async function getParentBenchScoresByModel(
+  slug: string
+): Promise<ParentBenchResult[]> {
+  try {
+    return await loadScoresByModelFromDB(slug);
+  } catch {
+    console.warn(
+      "[ParentBench] DB unavailable for scores-by-model, falling back to JSON"
+    );
+    const data = await loadScoresFromJSON();
+    return data.results.filter((r) => r.modelSlug === slug);
+  }
 }
 
 /**
@@ -288,23 +369,25 @@ export async function computeParentBenchRank(slug: string): Promise<number | nul
 /**
  * Get total number of models evaluated in ParentBench
  */
-export async function getParentBenchModelCount(): Promise<number> {
-  const scores = await getParentBenchScores();
+export async function getParentBenchModelCount(
+  surface: EvaluationSurface = DEFAULT_SURFACE
+): Promise<number> {
+  const scores = await getParentBenchScores(surface);
   return scores.length;
 }
 
 /**
- * Get ParentBench last updated date.
- * Returns the most recent evaluation date from scores.
+ * Get ParentBench last updated date — most recent evaluation date for
+ * the requested surface (defaults to api-default for back-compat).
  */
-export async function getParentBenchLastUpdated(): Promise<string> {
-  const scores = await getParentBenchScores();
+export async function getParentBenchLastUpdated(
+  surface: EvaluationSurface = DEFAULT_SURFACE
+): Promise<string> {
+  const scores = await getParentBenchScores(surface);
   if (scores.length === 0) {
-    // Fall back to methodology date if no scores
     const methodologyData = await loadMethodologyData();
     return methodologyData.lastUpdated;
   }
-  // Find the most recent evaluatedDate
   const mostRecent = scores.reduce((latest, score) => {
     return score.evaluatedDate > latest ? score.evaluatedDate : latest;
   }, scores[0].evaluatedDate);

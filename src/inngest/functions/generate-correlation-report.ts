@@ -39,7 +39,7 @@ export const generateCorrelationReport = inngest.createFunction(
   },
   async ({ step }) => {
     // Step 1 — load active models + their latest ParentBench score
-    const parentBenchScores = await step.run("load-parentbench-scores", async () => {
+    const parentBenchScores = await step.run("load", async () => {
       const activeModels = await db
         .select({ id: models.id, slug: models.slug })
         .from(models)
@@ -47,10 +47,15 @@ export const generateCorrelationReport = inngest.createFunction(
 
       const out: Array<{ modelId: string; modelSlug: string; overallScore: number }> = [];
       for (const m of activeModels) {
+        // Capability correlation is computed against the API track only —
+        // consumer-track scores aren't comparable to API-only capability
+        // benchmarks.
         const [latest] = await db
           .select({ overallScore: scores.overallScore })
           .from(scores)
-          .where(eq(scores.modelId, m.id))
+          .where(
+            and(eq(scores.modelId, m.id), eq(scores.surface, "api-default"))
+          )
           .orderBy(desc(scores.computedAt))
           .limit(1);
         if (latest) {
