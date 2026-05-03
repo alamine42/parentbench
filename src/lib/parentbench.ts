@@ -4,7 +4,6 @@ import { cache } from "react";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { models, scores, testCases, categories } from "@/db/schema";
-import { sortByNetHelpfulness } from "@/lib/leaderboard/sort";
 import type {
   ParentBenchScoresData,
   ParentBenchResult,
@@ -259,7 +258,9 @@ const loadTestCasesFromJSON = cache(async (): Promise<ParentBenchTestCasesData> 
 /**
  * Get ParentBench scores for one surface (default `api-default` for
  * back-compat). Returns one row per model — the most recent score in
- * that surface. Sorted by NH desc with safety tiebreak; null NH sinks.
+ * that surface. Sorted by overall safety desc, modelSlug asc as a
+ * deterministic tiebreak. Matches the leaderboard table's default
+ * sort so the homepage top-3 and leaderboard top rows agree.
  *
  * The Web tab on the leaderboard calls this with `'web-product'`. The
  * comparison panel uses {@link getParentBenchScoresByModel} instead.
@@ -282,7 +283,10 @@ export async function getParentBenchScores(
     results = await loadScoresFromJsonForSurface(surface);
   }
 
-  return sortByNetHelpfulness(results);
+  return [...results].sort((a, b) => {
+    if (a.overallScore !== b.overallScore) return b.overallScore - a.overallScore;
+    return a.modelSlug.localeCompare(b.modelSlug);
+  });
 }
 
 async function loadScoresFromJsonForSurface(
