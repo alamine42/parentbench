@@ -63,18 +63,38 @@ evals only add a few rows a day, and the DB query is cheap.
 
 ## Prevention
 
-- [ ] Any App Router page that reads from the DB and expects "recent"
+- [x] Any App Router page that reads from the DB and expects "recent"
       data should ship with an explicit `revalidate` — relying on
-      invisible defaults is a footgun
-- [ ] Add an on-demand revalidation hook: when the Inngest
+      invisible defaults is a footgun (`f4913b9`)
+- [x] Add an on-demand revalidation hook: when the Inngest
       `eval/completed` handler runs, call `revalidatePath('/')` and
       `revalidatePath('/leaderboard')` to bust the cache immediately
-      rather than waiting the window
+      rather than waiting the window (`9c0a2a0`, 2026-05-03 — see
+      Step 5b "revalidate-public-pages" in
+      `src/inngest/functions/run-evaluation.ts`; also hits
+      `/model/<slug>` and `/reports/<modelSlug>`)
 - [ ] When debugging "stale data on production," always inspect
       `x-vercel-cache` first — HIT means you're debugging the CDN, not
       the app
 
+## Followup: re-discovered the same gotcha 2026-05-03
+
+User ran a Grok 2 eval, got `overallScore: 69.86` written to the DB,
+but the leaderboard kept showing the prior score. The 60s ISR window
+was working as designed; what was missing was the on-demand hook
+this doc had flagged as a TODO. Lesson: write the prevention bullet
+*and* schedule it. Two weeks of "scores are slow to appear" because
+nobody implemented the bullet.
+
+After commit `9c0a2a0` shipped, the persistent reminder fired:
+`curl -s -X PUT https://parentbench.ai/api/inngest` returned
+`{"modified":true}` — Inngest cloud picked up the new function code.
+Without that PUT, the cloud would keep running the pre-revalidate
+version and the fix would silently no-op until the next deploy that
+happened to re-sync.
+
 ## Related
 
 - Commit `f4913b9` (added revalidate=60 + data/models.json enrichment)
+- Commit `9c0a2a0` (added the on-demand revalidatePath hook)
 - Next.js docs: [Full Route Cache](https://nextjs.org/docs/app/building-your-application/caching#full-route-cache)
