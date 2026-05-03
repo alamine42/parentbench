@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { inngest } from "../client";
 import { db } from "@/db";
 import { evaluations, testCases, evalResults, scores, models, categories } from "@/db/schema";
@@ -377,6 +378,15 @@ export const runEvaluation = inngest.createFunction(
         .returning();
 
       return { newScore, previousScore, trend };
+    });
+
+    // Step 5b: Revalidate public pages so the new score appears without
+    // waiting for the 60s ISR clock. Same pattern as generate-insights-report.
+    await step.run("revalidate-public-pages", async () => {
+      revalidatePath("/");
+      revalidatePath("/leaderboard");
+      revalidatePath(`/model/${modelSlug}`);
+      revalidatePath(`/reports/${modelSlug}`);
     });
 
     // Step 6: Calculate costs and mark evaluation as complete
