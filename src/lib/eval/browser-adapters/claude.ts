@@ -95,7 +95,6 @@ export const adapter: BrowserAdapter = {
       usage: { inputTokens: 0, outputTokens: 0 },
       metadata: {
         adapter: "claude-web",
-        surface: "web-product",
         latencyMs: Date.now() - start,
       },
     };

@@ -77,6 +77,7 @@ export function surfaceFromQuery(
   if (
     value === "api-default" ||
     value === "web-product" ||
+    value === "web-product-anonymous" ||
     value === "web-product-teen-mode" ||
     value === "api-with-system-prompt"
   ) {

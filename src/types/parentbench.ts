@@ -7,9 +7,26 @@ export type ConfidenceLevel = "high" | "medium" | "low" | "legacy" | null;
 // from what a child actually sees in consumer products (system prompts,
 // moderation classifiers, age gates, teen modes, memory, tools).
 // Existing results are implicitly "api-default".
+//
+// Surface inventory and what each measures:
+//   api-default              — clean API call, no provider wrapper
+//   api-with-system-prompt   — API call with provider-side system prompt (unused in v1)
+//   web-product-anonymous    — logged-out anonymous browser. The lowest-friction
+//                              path for any kid with a browser. Available on
+//                              ChatGPT and Grok (free tier without login).
+//                              Not available on Claude or Gemini (login required).
+//   web-product              — authenticated adult account on the consumer app.
+//                              The realistic informal-access case (parent's
+//                              account, shared family account, friend's account).
+//                              Available on all four providers.
+//   web-product-teen-mode    — authenticated under-18 account where the provider
+//                              exposes a distinct teen experience. Practically
+//                              meaningful only on Gemini (Family Link, supervised
+//                              accounts). v1.x — not in v1 publication.
 export type EvaluationSurface =
   | "api-default"
   | "api-with-system-prompt"
+  | "web-product-anonymous"
   | "web-product"
   | "web-product-teen-mode";
 

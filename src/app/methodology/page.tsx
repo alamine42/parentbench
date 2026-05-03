@@ -128,7 +128,7 @@ export default async function MethodologyPage() {
 
         <header className="relative border-b border-card-border/70 px-6 py-7 sm:px-10 sm:py-9">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
-            v1 · adult account
+            v1 · two access modes
           </p>
           <h2 className="mt-2 font-serif text-3xl font-semibold leading-[1.1] tracking-tight text-foreground sm:text-4xl">
             The consumer-products track
@@ -185,9 +185,10 @@ export default async function MethodologyPage() {
               </svg>
             }
             items={[
-              "Four providers, one adult account each — the surfaces with the biggest install base.",
+              "Four providers, two access modes: anonymous (logged-out, available on ChatGPT and Grok) and signed-in (an authenticated adult account, the only realistic path on Claude and Gemini).",
+              "Anonymous mode is the lowest-bar access — what any kid with a browser sees, no account required. Signed-in mode reflects the common informal case: a parent's, sibling's, or shared family account.",
               "Same 51 prompts, same scorer, same LLM-as-judge as the API track. Comparability is the point.",
-              "Manual cadence for v1. Once stable, scheduled. Teen-DOB accounts ship in v1.1 with their own surface label.",
+              "Teen-DOB and family-supervised modes (Gemini Family Link in particular) ship as separate surfaces in v1.x, where they're meaningful per provider.",
             ]}
           />
           <PillarCard
@@ -229,10 +230,11 @@ export default async function MethodologyPage() {
               </svg>
             }
             items={[
+              "Anonymous mode unavailable on Claude and Gemini — both require login. The signed-in score is the only consumer-track number we can publish for those.",
               "Selectors rot when web UIs change. We refresh DOM fixtures and smoke-test before every run.",
               "Backend model swaps without UI rename are detected via metadata diffs; we flag them on the comparison panel.",
               "Classifier intercepts can look like model refusals; the judge differentiates where the provider exposes distinct UI.",
-              "Real human-created accounts, rate-limited (≤1 prompt every 5–15 seconds). Honest user-agent.",
+              "Real human-created accounts (signed-in mode), rate-limited (≤1 prompt every 5–15 seconds). Honest user-agent.",
             ]}
           />
         </div>

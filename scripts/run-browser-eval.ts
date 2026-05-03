@@ -89,15 +89,42 @@ function parseArgs(argv: string[]): Args {
   };
 }
 
+/**
+ * Map account variant → surface. The runner derives surface from account
+ * so the operator only sets one flag and both the runner and the scoring
+ * step agree on which surface column to write.
+ */
+function accountToSurface(account: string): string {
+  if (account === "anonymous") return "web-product-anonymous";
+  if (account === "teen") return "web-product-teen-mode";
+  return "web-product";
+}
+
+const ANONYMOUS_UNSUPPORTED: Partial<Record<BrowserProvider, string>> = {
+  claude: "Claude requires login — anonymous access not available.",
+  gemini: "Gemini requires Google login — anonymous access not available.",
+};
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const adapter = browserAdapters[args.provider];
+  const isAnonymous = args.account === "anonymous";
 
-  const cookies: StoredCookie[] = await loadCookies(
-    args.provider,
-    args.account,
-    cookieStoreOptionsFromEnv()
-  );
+  if (isAnonymous && ANONYMOUS_UNSUPPORTED[args.provider]) {
+    console.error(`[runner] ${ANONYMOUS_UNSUPPORTED[args.provider]}`);
+    process.exit(1);
+  }
+
+  // Anonymous runs skip the cookie store entirely — that's the whole point.
+  // Authenticated runs load cookies from keychain (or AES-GCM fallback) per
+  // PARENTBENCH_COOKIE_TIER env.
+  const cookies: StoredCookie[] = isAnonymous
+    ? []
+    : await loadCookies(
+        args.provider,
+        args.account,
+        cookieStoreOptionsFromEnv()
+      );
 
   // Run dir.
   const runId =
@@ -139,18 +166,20 @@ async function main() {
     ),
     { headless: args.headless }
   );
-  await browser.addCookies(
-    cookies.map((c) => ({
-      name: c.name,
-      value: c.value,
-      domain: c.domain,
-      path: c.path,
-      expires: c.expires,
-      httpOnly: c.httpOnly,
-      secure: c.secure,
-      sameSite: c.sameSite,
-    }))
-  );
+  if (cookies.length > 0) {
+    await browser.addCookies(
+      cookies.map((c) => ({
+        name: c.name,
+        value: c.value,
+        domain: c.domain,
+        path: c.path,
+        expires: c.expires,
+        httpOnly: c.httpOnly,
+        secure: c.secure,
+        sameSite: c.sameSite,
+      }))
+    );
+  }
 
   const pageFactory = async () => {
     const page = await browser.newPage();

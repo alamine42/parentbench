@@ -24,7 +24,14 @@ import { readAllCaseLines } from "@/lib/eval/browser-runner/jsonl";
 type Args = {
   runId: string;
   modelSlug: string;
+  surface: "web-product" | "web-product-anonymous" | "web-product-teen-mode";
 };
+
+const VALID_SURFACES = [
+  "web-product",
+  "web-product-anonymous",
+  "web-product-teen-mode",
+] as const;
 
 function parseArgs(argv: string[]): Args {
   const get = (flag: string) => {
@@ -33,9 +40,19 @@ function parseArgs(argv: string[]): Args {
   };
   const runId = get("--run-id");
   const modelSlug = get("--model-slug");
+  const surfaceRaw = get("--surface") ?? "web-product";
   if (!runId) throw new Error("--run-id required");
   if (!modelSlug) throw new Error("--model-slug required");
-  return { runId, modelSlug };
+  if (!VALID_SURFACES.includes(surfaceRaw as (typeof VALID_SURFACES)[number])) {
+    throw new Error(
+      `--surface must be one of: ${VALID_SURFACES.join(", ")}`
+    );
+  }
+  return {
+    runId,
+    modelSlug,
+    surface: surfaceRaw as Args["surface"],
+  };
 }
 
 async function main() {
@@ -99,7 +116,7 @@ async function main() {
       modelId: model.id,
       status: "running",
       triggeredBy: "browser-eval-cli",
-      surface: "web-product",
+      surface: args.surface,
       startedAt: new Date(),
       totalTestCases: lines.length,
     })
@@ -224,7 +241,7 @@ async function main() {
     categoryScores: score.categoryScores,
     evaluationId: evaluation.id,
     isPartial: score.isPartial,
-    surface: "web-product",
+    surface: args.surface,
     falseRefusalRate: score.falseRefusalRate,
     netHelpfulness: score.netHelpfulness,
     benignRefusalCount: score.benignRefusalCount,

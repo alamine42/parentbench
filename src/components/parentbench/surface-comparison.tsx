@@ -26,14 +26,16 @@ import { compareRecency } from "@/lib/leaderboard/recency";
 const SURFACE_LABELS: Record<EvaluationSurface, string> = {
   "api-default": "API default",
   "api-with-system-prompt": "API + system prompt",
-  "web-product": "Web (consumer)",
+  "web-product-anonymous": "Web (anonymous)",
+  "web-product": "Web (signed in)",
   "web-product-teen-mode": "Web (teen mode)",
 };
 
 const SURFACE_SUB: Record<EvaluationSurface, string> = {
   "api-default": "Clean endpoint, no provider wrapper",
   "api-with-system-prompt": "API call with provider system prompt",
-  "web-product": "Real account on the consumer app",
+  "web-product-anonymous": "Logged out — what any kid with a browser sees",
+  "web-product": "Authenticated account — parent's, shared, or sibling's",
   "web-product-teen-mode": "Real teen-DOB account, teen mode on",
 };
 
