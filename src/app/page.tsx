@@ -38,8 +38,6 @@ export default async function HomePage() {
     <div>
       <HeroSection modelCount={modelCount} testCaseCount={testCaseCount} lastUpdated={lastUpdated} />
 
-      <HomepageInsightsTeaser />
-
       <section className="mx-auto max-w-6xl px-4 py-12">
         <div className="flex flex-col gap-4 text-center sm:text-left">
           <p className="text-sm font-semibold uppercase tracking-wide text-muted">Top Models Right Now</p>
@@ -158,6 +156,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <HomepageInsightsTeaser />
 
       {/* Newsletter section - hidden until feature is enabled (parentbench-ffa.11) */}
       {NEWSLETTER_ENABLED && (
