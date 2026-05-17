@@ -3,6 +3,7 @@ import Image from "next/image";
 import { HeroSection } from "@/components/parentbench/hero-section";
 import { HomepageInsightsTeaser } from "@/components/insights/homepage-teaser";
 import { NewsletterSignup, NEWSLETTER_ENABLED } from "@/components/newsletter-signup";
+import { FROZEN } from "@/lib/freeze";
 import { LetterGradeBadge } from "@/components/ui/letter-grade";
 import { ScoreRing } from "@/components/ui/score-ring";
 import { ColorBar } from "@/components/ui/color-bar";
@@ -159,23 +160,47 @@ export default async function HomePage() {
 
       <HomepageInsightsTeaser />
 
-      {/* Newsletter section - hidden until feature is enabled (parentbench-ffa.11) */}
-      {NEWSLETTER_ENABLED && (
+      {FROZEN ? (
         <section className="mx-auto max-w-6xl px-4 py-16">
-          <div className="grid gap-8 rounded-2xl border border-card-border bg-card-bg p-8 lg:grid-cols-2">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wide text-muted">Stay in the loop</p>
-              <h2 className="mt-2 text-3xl font-bold">Get new safety grades in your inbox.</h2>
-              <p className="mt-2 text-muted">
-                We only email when we publish new model evaluations, release methodology updates, or open-source new test cases.
-              </p>
-            </div>
-            <div>
-              <NewsletterSignup variant="compact" />
-              <p className="mt-2 text-xs text-muted">Zero spam. Unsubscribe anytime.</p>
-            </div>
+          <div className="rounded-2xl border border-card-border bg-card-bg p-8">
+            <p className="text-sm font-semibold uppercase tracking-wide text-muted">Notice</p>
+            <h2 className="mt-2 text-3xl font-bold">ParentBench is paused.</h2>
+            <p className="mt-3 max-w-3xl text-muted">
+              The benchmark has been frozen as of May 17, 2026. Every score, report, and
+              page on this site reflects the state of evaluations up to that date — no new
+              models are being added and existing scores are not being refreshed.
+            </p>
+            <p className="mt-3 max-w-3xl text-muted">
+              For questions, collaboration, or to discuss what&apos;s next, email{" "}
+              <a
+                href="mailto:mehdi.alamine@gmail.com"
+                className="font-medium text-foreground underline underline-offset-4 hover:text-accent"
+              >
+                mehdi.alamine@gmail.com
+              </a>
+              .
+            </p>
           </div>
         </section>
+      ) : (
+        /* Newsletter section - hidden until feature is enabled (parentbench-ffa.11) */
+        NEWSLETTER_ENABLED && (
+          <section className="mx-auto max-w-6xl px-4 py-16">
+            <div className="grid gap-8 rounded-2xl border border-card-border bg-card-bg p-8 lg:grid-cols-2">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-wide text-muted">Stay in the loop</p>
+                <h2 className="mt-2 text-3xl font-bold">Get new safety grades in your inbox.</h2>
+                <p className="mt-2 text-muted">
+                  We only email when we publish new model evaluations, release methodology updates, or open-source new test cases.
+                </p>
+              </div>
+              <div>
+                <NewsletterSignup variant="compact" />
+                <p className="mt-2 text-xs text-muted">Zero spam. Unsubscribe anytime.</p>
+              </div>
+            </div>
+          </section>
+        )
       )}
     </div>
   );

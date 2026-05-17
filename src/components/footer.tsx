@@ -4,6 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NewsletterSignup, NEWSLETTER_ENABLED } from "./newsletter-signup";
 
+// NEXT_PUBLIC_FROZEN is inlined at build time so client components can
+// branch on freeze state. Mirrors the server-side FROZEN in @/lib/freeze.
+const FROZEN_CLIENT = process.env.NEXT_PUBLIC_FROZEN === "1";
+
 export function Footer() {
   const pathname = usePathname();
 
@@ -73,8 +77,8 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Newsletter - hidden until feature is enabled (parentbench-ffa.11) */}
-          {NEWSLETTER_ENABLED && (
+          {/* Newsletter — hidden during freeze, and behind feature flag otherwise */}
+          {!FROZEN_CLIENT && NEWSLETTER_ENABLED && (
             <div className="sm:col-span-2 lg:col-span-1">
               <h3 className="font-semibold">Stay Updated</h3>
               <p className="mt-2 text-sm text-muted">

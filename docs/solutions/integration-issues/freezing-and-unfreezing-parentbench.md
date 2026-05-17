@@ -46,8 +46,12 @@ is an env-flag operation, not a refactor. Unfreeze is the inverse.
    git push
    ```
 
-3. **Set `FROZEN=1` in Vercel.** Production env var. Trigger a redeploy
-   so the build picks it up.
+3. **Set `FROZEN=1` AND `NEXT_PUBLIC_FROZEN=1` in Vercel.** Both
+   variables are needed: `FROZEN` is read by server-side data loaders
+   and middleware; `NEXT_PUBLIC_FROZEN` is inlined into the client
+   bundle and hides write-related UI (e.g. footer newsletter signup,
+   homepage "subscribe" card flips to a frozen notice). Trigger a
+   redeploy so the build picks both up.
 
 4. **Verify on the deployed site:**
    - `curl -i https://parentbench.ai/api/admin/evaluations` → expect
@@ -74,7 +78,8 @@ is an env-flag operation, not a refactor. Unfreeze is the inverse.
 
 1. **Unpause Neon** in the dashboard. Confirm the connection string
    still matches `DATABASE_URL` in Vercel.
-2. **Set `FROZEN=0`** (or remove) in Vercel env vars. Redeploy.
+2. **Set `FROZEN=0` and `NEXT_PUBLIC_FROZEN=0`** (or remove both) in
+   Vercel env vars. Redeploy.
 3. **Re-sync Inngest** so cron functions register:
    ```bash
    curl -s -X PUT https://parentbench.ai/api/inngest
