@@ -1,0 +1,12 @@
+{
+  "snapshotAt": null,
+  "counts": {
+    "models": 0,
+    "activeModels": 0,
+    "scores": 0,
+    "categories": 0,
+    "testCases": 0,
+    "insightsReports": 0
+  },
+  "_note": "Placeholders. Run `npx tsx scripts/freeze-snapshot.ts` to populate from live DB before deploying with FROZEN=1."
+}

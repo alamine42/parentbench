@@ -12,6 +12,14 @@ import { cache } from "react";
 import { db } from "@/db";
 import { models, providers, scores, categories, testCases } from "@/db/schema";
 import { eq, desc, and } from "drizzle-orm";
+import {
+  FROZEN,
+  loadSnapshot,
+  type SnapshotModel,
+  type SnapshotScoreRow,
+  type SnapshotCategory,
+  type SnapshotTestCase,
+} from "@/lib/freeze";
 
 // ============================================================================
 // Types
@@ -81,8 +89,26 @@ export type DbTestCase = {
 
 /**
  * Get all models with providers (cached)
+ *
+ * In FROZEN mode, served from `src/data/snapshot/models.json`.
  */
 export const getDbModels = cache(async (): Promise<DbModel[]> => {
+  if (FROZEN) {
+    const snap = await loadSnapshot<SnapshotModel[]>("models");
+    return snap
+      .filter((m) => m.isActive)
+      .map((m) => ({
+        id: m.id,
+        slug: m.slug,
+        name: m.name,
+        description: m.description,
+        releaseDate: m.releaseDate ? new Date(m.releaseDate) : null,
+        parameterCount: m.parameterCount,
+        provider: m.provider,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   const result = await db
     .select({
       id: models.id,
@@ -106,6 +132,26 @@ export const getDbModels = cache(async (): Promise<DbModel[]> => {
   return result;
 });
 
+const loadSnapshotScoresByModelId = cache(
+  async (): Promise<Map<string, SnapshotScoreRow & { modelId: string }>> => {
+    const [modelSnap, scoreSnap] = await Promise.all([
+      loadSnapshot<SnapshotModel[]>("models"),
+      loadSnapshot<SnapshotScoreRow[]>("scores"),
+    ]);
+    const slugToId = new Map(modelSnap.map((m) => [m.slug, m.id]));
+    const map = new Map<string, SnapshotScoreRow & { modelId: string }>();
+    // Snapshot stores latest-per-(model,surface) already. Pick api-default
+    // here to match the legacy contract of these loaders.
+    for (const row of scoreSnap) {
+      if (row.surface !== "api-default") continue;
+      const modelId = slugToId.get(row.modelSlug);
+      if (!modelId) continue;
+      map.set(modelId, { ...row, modelId });
+    }
+    return map;
+  }
+);
+
 /**
  * Get all models with their latest scores, sorted by score (cached)
  * Uses a single query for all scores to avoid N+1 problem
@@ -115,6 +161,33 @@ export const getDbModelsWithScores = cache(async (): Promise<DbModelWithScore[]>
 
   if (allModels.length === 0) {
     return [];
+  }
+
+  if (FROZEN) {
+    const snapByModelId = await loadSnapshotScoresByModelId();
+    const modelsWithScores: DbModelWithScore[] = allModels.map((model) => {
+      const row = snapByModelId.get(model.id);
+      return {
+        ...model,
+        latestScore: row
+          ? {
+              id: `snapshot:${model.id}`,
+              modelId: model.id,
+              overallScore: row.overallScore,
+              overallGrade: row.overallGrade,
+              trend: row.trend,
+              dataQuality: row.dataQuality,
+              categoryScores: row.categoryScores as DbScore["categoryScores"],
+              computedAt: row.evaluatedDate ? new Date(row.evaluatedDate) : new Date(0),
+            }
+          : null,
+      };
+    });
+    return modelsWithScores.sort((a, b) => {
+      const scoreA = a.latestScore?.overallScore ?? 0;
+      const scoreB = b.latestScore?.overallScore ?? 0;
+      return scoreB - scoreA;
+    });
   }
 
   // Get all model IDs
@@ -169,6 +242,11 @@ export const getDbModelsWithScores = cache(async (): Promise<DbModelWithScore[]>
  * Get a single model by slug with its latest score (cached)
  */
 export const getDbModelBySlug = cache(async (slug: string): Promise<DbModelWithScore | null> => {
+  if (FROZEN) {
+    const all = await getDbModelsWithScores();
+    return all.find((m) => m.slug === slug) ?? null;
+  }
+
   const result = await db
     .select({
       id: models.id,
@@ -230,6 +308,27 @@ export const getDbModelBySlug = cache(async (slug: string): Promise<DbModelWithS
  */
 export const getDbScoreHistory = cache(
   async (modelId: string, limit = 30): Promise<DbScore[]> => {
+    if (FROZEN) {
+      // Snapshot stores latest-per-(model,surface) only — history is
+      // collapsed to a single entry. Frozen mode loses history charts;
+      // they render flat. Acceptable trade-off for site freeze.
+      const snapByModelId = await loadSnapshotScoresByModelId();
+      const row = snapByModelId.get(modelId);
+      if (!row) return [];
+      return [
+        {
+          id: `snapshot:${modelId}`,
+          modelId,
+          overallScore: row.overallScore,
+          overallGrade: row.overallGrade,
+          trend: row.trend,
+          dataQuality: row.dataQuality,
+          categoryScores: row.categoryScores as DbScore["categoryScores"],
+          computedAt: row.evaluatedDate ? new Date(row.evaluatedDate) : new Date(0),
+        },
+      ];
+    }
+
     // History panel on the leaderboard model page is API-track only —
     // consumer-track history is rendered through the comparison panel
     const result = await db
@@ -261,6 +360,11 @@ export const getDbScoreHistory = cache(
  * Get all categories (cached)
  */
 export const getDbCategories = cache(async (): Promise<DbCategory[]> => {
+  if (FROZEN) {
+    const snap = await loadSnapshot<SnapshotCategory[]>("categories");
+    return [...snap].sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   const result = await db.select().from(categories).orderBy(categories.name);
 
   return result.map((c) => ({
@@ -278,6 +382,22 @@ export const getDbCategories = cache(async (): Promise<DbCategory[]> => {
  * Get all active test cases (cached)
  */
 export const getDbTestCases = cache(async (): Promise<DbTestCase[]> => {
+  if (FROZEN) {
+    const snap = await loadSnapshot<SnapshotTestCase[]>("test-cases");
+    return snap
+      .filter((t) => t.isActive)
+      .map((t) => ({
+        id: t.id,
+        categoryId: t.categoryId,
+        prompt: t.prompt,
+        expectedBehavior: t.expectedBehavior,
+        severity: t.severity,
+        description: t.description,
+        ageBrackets: t.ageBrackets,
+        modality: t.modality,
+      }));
+  }
+
   const result = await db
     .select()
     .from(testCases)

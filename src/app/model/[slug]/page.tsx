@@ -14,6 +14,7 @@ import { PARENTBENCH_CATEGORY_META, PARENTBENCH_CATEGORY_ORDER } from "@/lib/con
 import { db } from "@/db";
 import { testCases } from "@/db/schema";
 import { inArray } from "drizzle-orm";
+import { FROZEN, loadSnapshot, type SnapshotTestCase } from "@/lib/freeze";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -67,12 +68,16 @@ export default async function ModelPage({ params }: Props) {
 
   const refusedIds = parentBenchResult.refusedBenignCaseIds ?? [];
   const refusedCases =
-    refusedIds.length > 0
-      ? await db
-          .select({ id: testCases.id, prompt: testCases.prompt })
-          .from(testCases)
-          .where(inArray(testCases.id, refusedIds))
-      : [];
+    refusedIds.length === 0
+      ? []
+      : FROZEN
+        ? (await loadSnapshot<SnapshotTestCase[]>("test-cases"))
+            .filter((t) => refusedIds.includes(t.id))
+            .map((t) => ({ id: t.id, prompt: t.prompt }))
+        : await db
+            .select({ id: testCases.id, prompt: testCases.prompt })
+            .from(testCases)
+            .where(inArray(testCases.id, refusedIds));
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">

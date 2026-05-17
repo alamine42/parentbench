@@ -8,6 +8,7 @@ import { db } from "@/db";
 import { insightsReports } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { formatDate } from "@/lib/utils";
+import { FROZEN, loadSnapshot, type SnapshotInsightsReport } from "@/lib/freeze";
 
 export const revalidate = 60;
 export const metadata = {
@@ -32,22 +33,38 @@ export default async function ArchivePage({
     narrative: unknown;
     generatorModel: string;
   }> = [];
-  try {
-    rows = await db
-      .select({
-        slug: insightsReports.slug,
-        generatedAt: insightsReports.generatedAt,
-        dataThrough: insightsReports.dataThrough,
-        narrative: insightsReports.narrative,
-        generatorModel: insightsReports.generatorModel,
-      })
-      .from(insightsReports)
-      .where(eq(insightsReports.status, "published"))
-      .orderBy(desc(insightsReports.generatedAt))
-      .limit(PAGE_SIZE + 1) // +1 to detect "has next page"
-      .offset((page - 1) * PAGE_SIZE);
-  } catch (err) {
-    console.warn("[insights] insights_reports query failed; empty archive:", err);
+  if (FROZEN) {
+    try {
+      const snap = await loadSnapshot<SnapshotInsightsReport[]>("insights-reports");
+      const start = (page - 1) * PAGE_SIZE;
+      rows = snap.slice(start, start + PAGE_SIZE + 1).map((r) => ({
+        slug: r.slug,
+        generatedAt: new Date(r.generatedAt),
+        dataThrough: new Date(r.dataThrough),
+        narrative: r.narrative,
+        generatorModel: r.generatorModel,
+      }));
+    } catch (err) {
+      console.warn("[insights] snapshot load failed; empty archive:", err);
+    }
+  } else {
+    try {
+      rows = await db
+        .select({
+          slug: insightsReports.slug,
+          generatedAt: insightsReports.generatedAt,
+          dataThrough: insightsReports.dataThrough,
+          narrative: insightsReports.narrative,
+          generatorModel: insightsReports.generatorModel,
+        })
+        .from(insightsReports)
+        .where(eq(insightsReports.status, "published"))
+        .orderBy(desc(insightsReports.generatedAt))
+        .limit(PAGE_SIZE + 1) // +1 to detect "has next page"
+        .offset((page - 1) * PAGE_SIZE);
+    } catch (err) {
+      console.warn("[insights] insights_reports query failed; empty archive:", err);
+    }
   }
 
   const hasNext = rows.length > PAGE_SIZE;

@@ -10,6 +10,7 @@ import Link from "next/link";
 import { db } from "@/db";
 import { insightsReports } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
+import { FROZEN, loadSnapshot, type SnapshotInsightsReport } from "@/lib/freeze";
 
 export async function HomepageInsightsTeaser() {
   // Defensive: tolerate missing insights_reports table (migration pending).
@@ -17,20 +18,38 @@ export async function HomepageInsightsTeaser() {
   let latest:
     | { slug: string; generatedAt: Date; narrative: unknown }
     | undefined;
-  try {
-    [latest] = await db
-      .select({
-        slug: insightsReports.slug,
-        generatedAt: insightsReports.generatedAt,
-        narrative: insightsReports.narrative,
-      })
-      .from(insightsReports)
-      .where(eq(insightsReports.status, "published"))
-      .orderBy(desc(insightsReports.generatedAt))
-      .limit(1);
-  } catch (err) {
-    console.warn("[insights] homepage teaser query failed; hiding card:", err);
-    return null;
+
+  if (FROZEN) {
+    try {
+      const snap = await loadSnapshot<SnapshotInsightsReport[]>("insights-reports");
+      const first = snap[0];
+      if (first) {
+        latest = {
+          slug: first.slug,
+          generatedAt: new Date(first.generatedAt),
+          narrative: first.narrative,
+        };
+      }
+    } catch (err) {
+      console.warn("[insights] snapshot load failed; hiding card:", err);
+      return null;
+    }
+  } else {
+    try {
+      [latest] = await db
+        .select({
+          slug: insightsReports.slug,
+          generatedAt: insightsReports.generatedAt,
+          narrative: insightsReports.narrative,
+        })
+        .from(insightsReports)
+        .where(eq(insightsReports.status, "published"))
+        .orderBy(desc(insightsReports.generatedAt))
+        .limit(1);
+    } catch (err) {
+      console.warn("[insights] homepage teaser query failed; hiding card:", err);
+      return null;
+    }
   }
 
   if (!latest || !latest.narrative) return null;

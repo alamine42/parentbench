@@ -1,6 +1,12 @@
 import { db } from "@/db";
 import { models, providers, scores } from "@/db/schema";
 import { eq, desc, gte, and } from "drizzle-orm";
+import {
+  FROZEN,
+  loadSnapshot,
+  type SnapshotModel,
+  type SnapshotScoreRow,
+} from "@/lib/freeze";
 
 export type ModelWithProvider = {
   id: string;
@@ -39,6 +45,23 @@ export type ModelWithScore = ModelWithProvider & {
  * Get all active models with their providers
  */
 export async function getAllModels(): Promise<ModelWithProvider[]> {
+  if (FROZEN) {
+    const snap = await loadSnapshot<SnapshotModel[]>("models");
+    return snap
+      .filter((m) => m.isActive)
+      .map((m) => ({
+        id: m.id,
+        slug: m.slug,
+        name: m.name,
+        description: m.description,
+        releaseDate: m.releaseDate ? new Date(m.releaseDate) : null,
+        parameterCount: m.parameterCount,
+        isActive: m.isActive,
+        provider: m.provider,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   const result = await db
     .select({
       id: models.id,
@@ -67,6 +90,11 @@ export async function getAllModels(): Promise<ModelWithProvider[]> {
  * Get a single model by slug with provider
  */
 export async function getModelBySlug(slug: string): Promise<ModelWithProvider | null> {
+  if (FROZEN) {
+    const all = await getAllModels();
+    return all.find((m) => m.slug === slug) ?? null;
+  }
+
   const result = await db
     .select({
       id: models.id,
@@ -97,6 +125,26 @@ export async function getModelBySlug(slug: string): Promise<ModelWithProvider | 
 export async function getModelWithScore(slug: string): Promise<ModelWithScore | null> {
   const model = await getModelBySlug(slug);
   if (!model) return null;
+
+  if (FROZEN) {
+    const snap = await loadSnapshot<SnapshotScoreRow[]>("scores");
+    const row = snap.find(
+      (r) => r.modelSlug === slug && r.surface === "api-default"
+    );
+    return {
+      ...model,
+      latestScore: row
+        ? {
+            overallScore: row.overallScore,
+            overallGrade: row.overallGrade,
+            trend: row.trend,
+            dataQuality: row.dataQuality,
+            categoryScores: row.categoryScores as CategoryScore[],
+            computedAt: row.evaluatedDate ? new Date(row.evaluatedDate) : new Date(0),
+          }
+        : null,
+    };
+  }
 
   // API track only — consumer-track scores (surface='web-product') surface
   // through dedicated readers in src/lib/parentbench.ts so this generic
@@ -136,6 +184,37 @@ export async function getAllModelsWithScores(): Promise<ModelWithScore[]> {
 
   if (allModels.length === 0) {
     return [];
+  }
+
+  if (FROZEN) {
+    const snap = await loadSnapshot<SnapshotScoreRow[]>("scores");
+    const apiScoresBySlug = new Map<string, SnapshotScoreRow>();
+    for (const row of snap) {
+      if (row.surface === "api-default" && !apiScoresBySlug.has(row.modelSlug)) {
+        apiScoresBySlug.set(row.modelSlug, row);
+      }
+    }
+    const withScores: ModelWithScore[] = allModels.map((model) => {
+      const row = apiScoresBySlug.get(model.slug);
+      return {
+        ...model,
+        latestScore: row
+          ? {
+              overallScore: row.overallScore,
+              overallGrade: row.overallGrade,
+              trend: row.trend,
+              dataQuality: row.dataQuality,
+              categoryScores: row.categoryScores as CategoryScore[],
+              computedAt: row.evaluatedDate ? new Date(row.evaluatedDate) : new Date(0),
+            }
+          : null,
+      };
+    });
+    return withScores.sort((a, b) => {
+      const scoreA = a.latestScore?.overallScore ?? 0;
+      const scoreB = b.latestScore?.overallScore ?? 0;
+      return scoreB - scoreA;
+    });
   }
 
   // Get all model IDs
@@ -194,6 +273,9 @@ export async function getModelScoreHistory(
   trend: string;
   computedAt: Date;
 }>> {
+  if (FROZEN) {
+    return frozenSingleEntryHistory(modelId);
+  }
   // API track only — see note in getModelWithScore.
   const result = await db
     .select({
@@ -242,6 +324,10 @@ export async function getModelScoreHistoryWithCategories(
   } = {}
 ): Promise<ScoreHistoryEntry[]> {
   const { timeRange = "ALL", limit = 100 } = options;
+
+  if (FROZEN) {
+    return frozenSingleEntryHistoryWithCategories(modelId);
+  }
 
   // Calculate date range
   let fromDate: Date | null = null;
@@ -352,6 +438,67 @@ export async function calculateScoreTrend(
     periodStart: oldest.computedAt,
     periodEnd: latest.computedAt,
   };
+}
+
+/**
+ * In FROZEN mode, score history is collapsed to a single entry per
+ * model (snapshot keeps latest-per-surface only). The history chart
+ * renders flat — acceptable trade-off for the site freeze. The
+ * `limit` and `timeRange` arguments are ignored.
+ */
+async function frozenSingleEntryHistory(
+  modelId: string
+): Promise<Array<{
+  overallScore: number;
+  overallGrade: string;
+  trend: string;
+  computedAt: Date;
+}>> {
+  const [modelSnap, scoreSnap] = await Promise.all([
+    loadSnapshot<SnapshotModel[]>("models"),
+    loadSnapshot<SnapshotScoreRow[]>("scores"),
+  ]);
+  const idToSlug = new Map(modelSnap.map((m) => [m.id, m.slug]));
+  const slug = idToSlug.get(modelId);
+  if (!slug) return [];
+  const row = scoreSnap.find(
+    (r) => r.modelSlug === slug && r.surface === "api-default"
+  );
+  if (!row) return [];
+  return [
+    {
+      overallScore: row.overallScore,
+      overallGrade: row.overallGrade,
+      trend: row.trend,
+      computedAt: row.evaluatedDate ? new Date(row.evaluatedDate) : new Date(0),
+    },
+  ];
+}
+
+async function frozenSingleEntryHistoryWithCategories(
+  modelId: string
+): Promise<ScoreHistoryEntry[]> {
+  const [modelSnap, scoreSnap] = await Promise.all([
+    loadSnapshot<SnapshotModel[]>("models"),
+    loadSnapshot<SnapshotScoreRow[]>("scores"),
+  ]);
+  const idToSlug = new Map(modelSnap.map((m) => [m.id, m.slug]));
+  const slug = idToSlug.get(modelId);
+  if (!slug) return [];
+  const row = scoreSnap.find(
+    (r) => r.modelSlug === slug && r.surface === "api-default"
+  );
+  if (!row) return [];
+  return [
+    {
+      overallScore: row.overallScore,
+      overallGrade: row.overallGrade,
+      trend: row.trend,
+      dataQuality: row.dataQuality,
+      categoryScores: (row.categoryScores || []) as CategoryScore[],
+      computedAt: row.evaluatedDate ? new Date(row.evaluatedDate) : new Date(0),
+    },
+  ];
 }
 
 /**

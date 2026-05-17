@@ -4,6 +4,12 @@ import { cache } from "react";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { models, scores, testCases, categories } from "@/db/schema";
+import {
+  FROZEN,
+  loadSnapshot,
+  type SnapshotScoreRow,
+  type SnapshotTestCase,
+} from "@/lib/freeze";
 import type {
   ParentBenchScoresData,
   ParentBenchResult,
@@ -134,11 +140,22 @@ function dedupLatest<K>(rows: ScoreRow[], keyOf: (r: ScoreRow) => K): ScoreRow[]
  * One row per model within the requested surface (most-recent wins).
  * Default surface is `api-default` for back-compat. Wrapped in
  * `react.cache` so a single render only hits the DB once per surface.
+ *
+ * In `FROZEN=1` mode the DB call is bypassed entirely and rows are
+ * served from `src/data/snapshot/scores.json`.
  */
 const loadScoresFromDB = cache(
   async (
     surface: EvaluationSurface = DEFAULT_SURFACE
   ): Promise<ParentBenchResult[]> => {
+    if (FROZEN) {
+      const snap = await loadSnapshot<SnapshotScoreRow[]>("scores");
+      const activeSlugs = await loadActiveSlugsFromSnapshot();
+      const surfaceRows = snap.filter(
+        (r) => r.surface === surface && activeSlugs.has(r.modelSlug)
+      );
+      return surfaceRows.map(snapshotRowToResult);
+    }
     try {
       const rows = await db
         .select(SCORE_PROJECTION)
@@ -154,12 +171,49 @@ const loadScoresFromDB = cache(
   }
 );
 
+const loadActiveSlugsFromSnapshot = cache(async (): Promise<Set<string>> => {
+  const models = await loadSnapshot<Array<{ slug: string; isActive: boolean }>>(
+    "models"
+  );
+  return new Set(models.filter((m) => m.isActive).map((m) => m.slug));
+});
+
+function snapshotRowToResult(row: SnapshotScoreRow): ParentBenchResult {
+  return {
+    modelSlug: row.modelSlug,
+    overallScore: row.overallScore,
+    overallGrade: row.overallGrade as LetterGrade,
+    trend: row.trend as TrendDirection,
+    categoryScores: (row.categoryScores as ParentBenchCategoryScore[]) ?? [],
+    evaluatedDate: row.evaluatedDate
+      ? row.evaluatedDate.split("T")[0]
+      : new Date().toISOString().split("T")[0],
+    dataQuality: row.dataQuality as DataQuality,
+    methodologyVersion: "1.0.0",
+    surface: row.surface as EvaluationSurface,
+    confidence: row.confidence,
+    variance: row.variance,
+    isPartial: row.isPartial,
+    falseRefusalRate: row.falseRefusalRate,
+    netHelpfulness: row.netHelpfulness,
+    benignRefusalCount: row.benignRefusalCount,
+    benignTotalCount: row.benignTotalCount,
+    refusedBenignCaseIds: row.refusedBenignCaseIds,
+  };
+}
+
 /**
  * One row per surface for a single model — drives the per-model
  * comparison panel.
  */
 const loadScoresByModelFromDB = cache(
   async (modelSlug: string): Promise<ParentBenchResult[]> => {
+    if (FROZEN) {
+      const snap = await loadSnapshot<SnapshotScoreRow[]>("scores");
+      return snap
+        .filter((r) => r.modelSlug === modelSlug)
+        .map(snapshotRowToResult);
+    }
     try {
       const rows = await db
         .select(SCORE_PROJECTION)
@@ -179,6 +233,22 @@ const loadScoresByModelFromDB = cache(
  * Load test cases from database with category joins.
  */
 const loadTestCasesFromDB = cache(async (): Promise<ParentBenchTestCase[]> => {
+  if (FROZEN) {
+    const snap = await loadSnapshot<SnapshotTestCase[]>("test-cases");
+    return snap
+      .filter((t) => t.isActive && t.categoryName)
+      .map((row) => ({
+        id: row.id,
+        category: row.categoryName as ParentBenchCategory,
+        prompt: row.prompt,
+        expectedBehavior: row.expectedBehavior as
+          | "refuse"
+          | "safe_response"
+          | "redirect",
+        severity: row.severity as "critical" | "high" | "medium",
+        description: row.description,
+      }));
+  }
   try {
     const dbTestCases = await db
       .select({

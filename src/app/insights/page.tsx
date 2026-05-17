@@ -13,6 +13,12 @@ import { insightsReports, models } from "@/db/schema";
 import type { InsightsAggregate } from "@/lib/insights/build-aggregate";
 import type { InsightsNarrative } from "@/lib/insights/writer-model";
 import { pickPublishedForInsightsRoute } from "@/lib/insights/pick-report";
+import {
+  FROZEN,
+  loadSnapshot,
+  type SnapshotInsightsReport,
+  type SnapshotModel,
+} from "@/lib/freeze";
 import { ProviderRollupChart } from "@/components/insights/provider-rollup-chart";
 import { CategoryLeadersChart } from "@/components/insights/category-leaders-chart";
 import { BiggestMoversChart } from "@/components/insights/biggest-movers-chart";
@@ -44,21 +50,40 @@ export default async function InsightsPage() {
     narrative: unknown;
     generatorModel: string;
   }> = [];
-  try {
-    rows = await db
-      .select({
-        id: insightsReports.id,
-        slug: insightsReports.slug,
-        status: insightsReports.status,
-        generatedAt: insightsReports.generatedAt,
-        dataThrough: insightsReports.dataThrough,
-        aggregates: insightsReports.aggregates,
-        narrative: insightsReports.narrative,
-        generatorModel: insightsReports.generatorModel,
-      })
-      .from(insightsReports);
-  } catch (err) {
-    console.warn("[insights] insights_reports query failed; treating as no data:", err);
+
+  if (FROZEN) {
+    try {
+      const snap = await loadSnapshot<SnapshotInsightsReport[]>("insights-reports");
+      rows = snap.map((r) => ({
+        id: r.id,
+        slug: r.slug,
+        status: r.status as typeof rows[number]["status"],
+        generatedAt: new Date(r.generatedAt),
+        dataThrough: new Date(r.dataThrough),
+        aggregates: r.aggregates,
+        narrative: r.narrative,
+        generatorModel: r.generatorModel,
+      }));
+    } catch (err) {
+      console.warn("[insights] snapshot load failed; treating as no data:", err);
+    }
+  } else {
+    try {
+      rows = await db
+        .select({
+          id: insightsReports.id,
+          slug: insightsReports.slug,
+          status: insightsReports.status,
+          generatedAt: insightsReports.generatedAt,
+          dataThrough: insightsReports.dataThrough,
+          aggregates: insightsReports.aggregates,
+          narrative: insightsReports.narrative,
+          generatorModel: insightsReports.generatorModel,
+        })
+        .from(insightsReports);
+    } catch (err) {
+      console.warn("[insights] insights_reports query failed; treating as no data:", err);
+    }
   }
 
   const picked = pickPublishedForInsightsRoute(rows);
@@ -71,7 +96,9 @@ export default async function InsightsPage() {
   const methodology = await getParentBenchMethodology();
 
   // Resolve model names for chart labels
-  const modelRows = await db.select({ slug: models.slug, name: models.name }).from(models);
+  const modelRows: Array<{ slug: string; name: string }> = FROZEN
+    ? (await loadSnapshot<SnapshotModel[]>("models")).map((m) => ({ slug: m.slug, name: m.name }))
+    : await db.select({ slug: models.slug, name: models.name }).from(models);
   const modelNames: Record<string, string> = Object.fromEntries(modelRows.map((m) => [m.slug, m.name]));
 
   const charts = {

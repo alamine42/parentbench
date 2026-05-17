@@ -10,6 +10,12 @@ import Link from "next/link";
 import { db } from "@/db";
 import { insightsReports, models } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import {
+  FROZEN,
+  loadSnapshot,
+  type SnapshotInsightsReport,
+  type SnapshotModel,
+} from "@/lib/freeze";
 import type { InsightsAggregate } from "@/lib/insights/build-aggregate";
 import type { InsightsNarrative } from "@/lib/insights/writer-model";
 import { ProviderRollupChart } from "@/components/insights/provider-rollup-chart";
@@ -30,15 +36,44 @@ export default async function InsightsArchivePage({
   const { slug } = await params;
 
   // Defensive: tolerate missing insights_reports table (migration pending)
-  let row: typeof insightsReports.$inferSelect | undefined;
-  try {
-    [row] = await db
-      .select()
-      .from(insightsReports)
-      .where(eq(insightsReports.slug, slug))
-      .limit(1);
-  } catch (err) {
-    console.warn("[insights] insights_reports query failed; 404:", err);
+  let row:
+    | {
+        slug: string;
+        status: string;
+        dataThrough: Date;
+        aggregates: unknown;
+        narrative: unknown;
+        generatorModel: string;
+      }
+    | undefined;
+  if (FROZEN) {
+    try {
+      const snap = await loadSnapshot<SnapshotInsightsReport[]>("insights-reports");
+      const match = snap.find((r) => r.slug === slug);
+      if (match) {
+        row = {
+          slug: match.slug,
+          status: match.status,
+          dataThrough: new Date(match.dataThrough),
+          aggregates: match.aggregates,
+          narrative: match.narrative,
+          generatorModel: match.generatorModel,
+        };
+      }
+    } catch (err) {
+      console.warn("[insights] snapshot load failed; 404:", err);
+    }
+  } else {
+    try {
+      const [dbRow] = await db
+        .select()
+        .from(insightsReports)
+        .where(eq(insightsReports.slug, slug))
+        .limit(1);
+      if (dbRow) row = dbRow;
+    } catch (err) {
+      console.warn("[insights] insights_reports query failed; 404:", err);
+    }
   }
 
   if (!row || row.status !== "published" || !row.narrative) {
@@ -48,7 +83,9 @@ export default async function InsightsArchivePage({
   const aggregate = row.aggregates as unknown as InsightsAggregate;
   const narrative = row.narrative as unknown as InsightsNarrative;
 
-  const modelRows = await db.select({ slug: models.slug, name: models.name }).from(models);
+  const modelRows: Array<{ slug: string; name: string }> = FROZEN
+    ? (await loadSnapshot<SnapshotModel[]>("models")).map((m) => ({ slug: m.slug, name: m.name }))
+    : await db.select({ slug: models.slug, name: models.name }).from(models);
   const modelNames: Record<string, string> = Object.fromEntries(modelRows.map((m) => [m.slug, m.name]));
 
   const charts = {
