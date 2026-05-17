@@ -1,1 +1,1294 @@
-[]
+[
+  {
+    "id": "3734b894-4a39-4401-8364-e2d4aa42ebc7",
+    "slug": "2026-05-11-2",
+    "status": "published",
+    "generatedAt": "2026-05-11T03:01:37.870Z",
+    "dataThrough": "2026-05-11T03:01:37.640Z",
+    "aggregates": {
+      "spread": {
+        "gap": 46.4,
+        "stdDev": 13.1,
+        "topScore": 82.54,
+        "bottomScore": 36.1,
+        "topModelSlug": "gemini-2-5-pro",
+        "bottomModelSlug": "gemini-3-1-pro"
+      },
+      "totals": {
+        "providers": 3,
+        "activeModels": 10,
+        "evalsLast30d": 90
+      },
+      "newcomers": [
+        {
+          "addedAt": "2026-04-19T15:39:44.229Z",
+          "provider": "Anthropic",
+          "modelName": "Claude Opus 4.7",
+          "modelSlug": "claude-opus-4-7",
+          "debutGrade": "C+",
+          "debutScore": 79.02,
+          "percentile": 0.8
+        },
+        {
+          "addedAt": "2026-04-19T16:30:09.165Z",
+          "provider": "Google",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash",
+          "debutGrade": "D-",
+          "debutScore": 62.57,
+          "percentile": 0.1
+        },
+        {
+          "addedAt": "2026-04-19T16:30:09.140Z",
+          "provider": "Google",
+          "modelName": "Gemini 3.1 Pro",
+          "modelSlug": "gemini-3-1-pro",
+          "debutGrade": "F",
+          "debutScore": 36.1,
+          "percentile": 0
+        }
+      ],
+      "providers": [
+        {
+          "name": "Anthropic",
+          "avgOverall": 78.7,
+          "perCategory": {
+            "data_privacy_minors": 82.3,
+            "manipulation_resistance": 92.1,
+            "age_inappropriate_content": 66.2,
+            "parental_controls_respect": 80.5
+          },
+          "activeModelCount": 3
+        },
+        {
+          "name": "Google",
+          "avgOverall": 60.4,
+          "perCategory": {
+            "data_privacy_minors": 60.5,
+            "manipulation_resistance": 63.6,
+            "age_inappropriate_content": 63.7,
+            "parental_controls_respect": 50.5
+          },
+          "activeModelCount": 3
+        },
+        {
+          "name": "OpenAI",
+          "avgOverall": 75.7,
+          "perCategory": {
+            "data_privacy_minors": 77.4,
+            "manipulation_resistance": 64.7,
+            "age_inappropriate_content": 76,
+            "parental_controls_respect": 87.1
+          },
+          "activeModelCount": 4
+        }
+      ],
+      "windowDays": 30,
+      "dataThrough": "2026-05-11T03:01:37.640Z",
+      "generatedAt": "2026-05-11T03:01:37.640Z",
+      "biggestMovers": [
+        {
+          "provider": "Google",
+          "direction": "up",
+          "modelName": "Gemini 2.5 Pro",
+          "modelSlug": "gemini-2-5-pro",
+          "deltaPoints": 40.1,
+          "currentScore": 82.54,
+          "previousScore": 42.41
+        },
+        {
+          "provider": "Google",
+          "direction": "down",
+          "modelName": "Gemini 3.1 Pro",
+          "modelSlug": "gemini-3-1-pro",
+          "deltaPoints": -33.4,
+          "currentScore": 36.1,
+          "previousScore": 69.51
+        }
+      ],
+      "displayValues": [
+        "10",
+        "3",
+        "90",
+        "30",
+        "82.54",
+        "83",
+        "36.1",
+        "36",
+        "46.4",
+        "46",
+        "13.1",
+        "13",
+        "Anthropic",
+        "78.7",
+        "79",
+        "66.2",
+        "66",
+        "92.1",
+        "92",
+        "82.3",
+        "82",
+        "80.5",
+        "81",
+        "Google",
+        "60.4",
+        "60",
+        "63.7",
+        "64",
+        "63.6",
+        "60.5",
+        "61",
+        "50.5",
+        "51",
+        "OpenAI",
+        "4",
+        "75.7",
+        "76",
+        "64.7",
+        "65",
+        "77.4",
+        "77",
+        "87.1",
+        "87",
+        "GPT-5.4 mini",
+        "81.69",
+        "Claude Haiku 4.5",
+        "95.62",
+        "96",
+        "GPT-5.4",
+        "GPT-5 mini",
+        "91",
+        "Gemini 2.5 Pro",
+        "42.41",
+        "42",
+        "40.1",
+        "40",
+        "Gemini 3.1 Pro",
+        "69.51",
+        "70",
+        "33.4",
+        "33",
+        "Claude Opus 4.7",
+        "79.02",
+        "Gemini 3 Flash",
+        "62.57",
+        "63"
+      ],
+      "categoryLeaders": {
+        "data_privacy_minors": {
+          "score": 87,
+          "provider": "OpenAI",
+          "modelName": "GPT-5.4",
+          "modelSlug": "gpt-5-4"
+        },
+        "manipulation_resistance": {
+          "score": 95.62,
+          "provider": "Anthropic",
+          "modelName": "Claude Haiku 4.5",
+          "modelSlug": "claude-haiku-4-5"
+        },
+        "age_inappropriate_content": {
+          "score": 81.69,
+          "provider": "OpenAI",
+          "modelName": "GPT-5.4 mini",
+          "modelSlug": "gpt-5-4-mini"
+        },
+        "parental_controls_respect": {
+          "score": 91,
+          "provider": "OpenAI",
+          "modelName": "GPT-5 mini",
+          "modelSlug": "gpt-5-mini"
+        }
+      },
+      "regressionWatch": [
+        {
+          "modelSlug": "gemini-3-1-pro",
+          "deltaPoints": -33.4,
+          "currentScore": 36.1
+        }
+      ]
+    },
+    "narrative": {
+      "tldr": "Across 10 AI models tested in the last 30 days, child safety scores vary widely. Anthropic leads overall, while OpenAI excels at respecting parental controls. Google models show the most inconsistency, with one recent version scoring near the top and another near the bottom.",
+      "callouts": [
+        {
+          "body": "Claude Haiku 4.5 scored 96 on manipulation_resistance—the highest mark in any category across all models. This means it's especially good at resisting attempts to trick it into harmful behavior.",
+          "kind": "category_leader",
+          "title": "Best at blocking manipulation",
+          "subjectSlug": "claude-haiku-4-5"
+        },
+        {
+          "body": "Gemini 2.5 Pro jumped 40 points recently, now scoring 83—the benchmark's highest overall. If you use Google models, this newer version is worth trying if available.",
+          "kind": "biggest_mover",
+          "title": "Dramatic improvement: Gemini 2.5 Pro",
+          "subjectSlug": "gemini-2-5-pro"
+        },
+        {
+          "body": "Anthropic's Claude Opus 4.7 entered the benchmark recently with a score of 79, placing it in the top tier. It shows strong performance across most safety categories.",
+          "kind": "newcomer",
+          "title": "New: Claude Opus 4.7",
+          "subjectSlug": "claude-opus-4-7"
+        },
+        {
+          "body": "Gemini 3.1 Pro dropped 33 points recently and now scores 36—the lowest on the benchmark. If you're considering Google models for your child, avoid this version.",
+          "kind": "regression",
+          "title": "Alert: Gemini 3.1 Pro declined",
+          "subjectSlug": "gemini-3-1-pro"
+        }
+      ],
+      "sections": [
+        {
+          "body": "**Anthropic** leads with an average score of 79, excelling especially at manipulation_resistance (92). **OpenAI** ranks second at 76, with the strongest performance on parental_controls_respect (87). **Google** averages 60—significantly lower—due to weaker results on parental_controls_respect (51) and gaps in age_inappropriate_content filtering (64).\n\nIf you're choosing between these three companies, Anthropic and OpenAI both offer stronger child-safety profiles. Google's models show more uneven performance, though Gemini 2.5 Pro's recent improvement is a notable exception.",
+          "heading": "Overall Safety Rankings by Company",
+          "chartSlot": "provider-rollup"
+        },
+        {
+          "body": "Different models excel in different areas:\n\n- **GPT-5.4 mini** (OpenAI) is the strongest at filtering age_inappropriate_content.\n- **Claude Haiku 4.5** (Anthropic) dominates manipulation_resistance.\n- **GPT-5.4** (OpenAI) leads on data_privacy_minors.\n- **GPT-5 mini** (OpenAI) is best at parental_controls_respect.\n\nOpenAI models hold three of the four top spots, suggesting they've invested in both content filtering and respecting parent-set boundaries.",
+          "heading": "Which Tool Is Best at What?",
+          "chartSlot": "category-leaders"
+        },
+        {
+          "body": "Child-safety scores measure how well an AI resists harmful requests, filters inappropriate content, protects your child's privacy, and respects parental rules you set. A gap of 46 points between the highest and lowest models means your choice of tool genuinely matters—some are significantly more protective than others.\n\nRecent movers like Gemini 2.5 Pro's jump and Gemini 3.1 Pro's drop show that these systems change quickly. If you picked a Google model months ago, it's worth checking if a newer version is available.",
+          "heading": "Why You Should Care About These Numbers"
+        }
+      ],
+      "headlineMetric": {
+        "value": "82.54",
+        "caption": "Highest child-safety score on the benchmark"
+      },
+      "methodologyNote": "This analysis was written by an AI. All numbers were programmatically validated against the benchmark snapshot. For details on how models are tested, category definitions, and confidence levels, see /methodology."
+    },
+    "generatorModel": "claude-haiku-4-5"
+  },
+  {
+    "id": "76422ac5-d09c-459a-b134-8e4971dd01f8",
+    "slug": "2026-05-04",
+    "status": "published",
+    "generatedAt": "2026-05-04T02:01:05.338Z",
+    "dataThrough": "2026-05-04T02:01:05.091Z",
+    "aggregates": {
+      "spread": {
+        "gap": 46.7,
+        "stdDev": 13.3,
+        "topScore": 82.8,
+        "bottomScore": 36.1,
+        "topModelSlug": "gemini-2-5-pro",
+        "bottomModelSlug": "gemini-3-1-pro"
+      },
+      "totals": {
+        "providers": 3,
+        "activeModels": 10,
+        "evalsLast30d": 155
+      },
+      "newcomers": [
+        {
+          "addedAt": "2026-04-19T15:39:44.229Z",
+          "provider": "Anthropic",
+          "modelName": "Claude Opus 4.7",
+          "modelSlug": "claude-opus-4-7",
+          "debutGrade": "C+",
+          "debutScore": 79.32,
+          "percentile": 0.7
+        },
+        {
+          "addedAt": "2026-04-19T16:30:09.165Z",
+          "provider": "Google",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash",
+          "debutGrade": "D-",
+          "debutScore": 60.63,
+          "percentile": 0.1
+        },
+        {
+          "addedAt": "2026-04-19T16:30:09.140Z",
+          "provider": "Google",
+          "modelName": "Gemini 3.1 Pro",
+          "modelSlug": "gemini-3-1-pro",
+          "debutGrade": "F",
+          "debutScore": 36.1,
+          "percentile": 0
+        }
+      ],
+      "providers": [
+        {
+          "name": "Anthropic",
+          "avgOverall": 77.3,
+          "perCategory": {
+            "data_privacy_minors": 79.4,
+            "manipulation_resistance": 91,
+            "age_inappropriate_content": 65.7,
+            "parental_controls_respect": 78.3
+          },
+          "activeModelCount": 3
+        },
+        {
+          "name": "Google",
+          "avgOverall": 59.8,
+          "perCategory": {
+            "data_privacy_minors": 59.3,
+            "manipulation_resistance": 62.4,
+            "age_inappropriate_content": 63.4,
+            "parental_controls_respect": 51
+          },
+          "activeModelCount": 3
+        },
+        {
+          "name": "OpenAI",
+          "avgOverall": 76.6,
+          "perCategory": {
+            "data_privacy_minors": 73.3,
+            "manipulation_resistance": 67.9,
+            "age_inappropriate_content": 77.8,
+            "parental_controls_respect": 88.9
+          },
+          "activeModelCount": 4
+        }
+      ],
+      "windowDays": 30,
+      "dataThrough": "2026-05-04T02:01:05.091Z",
+      "generatedAt": "2026-05-04T02:01:05.091Z",
+      "biggestMovers": [
+        {
+          "provider": "Google",
+          "direction": "down",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash",
+          "deltaPoints": -39.4,
+          "currentScore": 60.63,
+          "previousScore": 100
+        },
+        {
+          "provider": "OpenAI",
+          "direction": "up",
+          "modelName": "GPT-5.4 mini",
+          "modelSlug": "gpt-5-4-mini",
+          "deltaPoints": 39.3,
+          "currentScore": 72.52,
+          "previousScore": 33.2
+        },
+        {
+          "provider": "Google",
+          "direction": "down",
+          "modelName": "Gemini 3.1 Pro",
+          "modelSlug": "gemini-3-1-pro",
+          "deltaPoints": -33.4,
+          "currentScore": 36.1,
+          "previousScore": 69.51
+        },
+        {
+          "provider": "Anthropic",
+          "direction": "up",
+          "modelName": "Claude Haiku 4.5",
+          "modelSlug": "claude-haiku-4-5",
+          "deltaPoints": 32.6,
+          "currentScore": 78.61,
+          "previousScore": 46
+        },
+        {
+          "provider": "Anthropic",
+          "direction": "up",
+          "modelName": "Claude Sonnet 4.6",
+          "modelSlug": "claude-sonnet-4-6",
+          "deltaPoints": 31,
+          "currentScore": 73.99,
+          "previousScore": 43
+        }
+      ],
+      "displayValues": [
+        "10",
+        "3",
+        "155",
+        "30",
+        "82.8",
+        "83",
+        "36.1",
+        "36",
+        "46.7",
+        "47",
+        "13.3",
+        "13",
+        "Anthropic",
+        "77.3",
+        "77",
+        "65.7",
+        "66",
+        "91",
+        "79.4",
+        "79",
+        "78.3",
+        "78",
+        "Google",
+        "59.8",
+        "60",
+        "63.4",
+        "63",
+        "62.4",
+        "62",
+        "59.3",
+        "59",
+        "51",
+        "OpenAI",
+        "4",
+        "76.6",
+        "77.8",
+        "67.9",
+        "68",
+        "73.3",
+        "73",
+        "88.9",
+        "89",
+        "GPT-5 mini",
+        "82.31",
+        "82",
+        "Claude Haiku 4.5",
+        "94.38",
+        "94",
+        "Claude Opus 4.7",
+        "81.58",
+        "GPT-5.4 mini",
+        "93.92",
+        "Gemini 3 Flash",
+        "60.63",
+        "61",
+        "100",
+        "39.4",
+        "39",
+        "72.52",
+        "33.2",
+        "33",
+        "39.3",
+        "Gemini 3.1 Pro",
+        "69.51",
+        "70",
+        "33.4",
+        "78.61",
+        "46",
+        "32.6",
+        "Claude Sonnet 4.6",
+        "73.99",
+        "74",
+        "43",
+        "31",
+        "79.32",
+        "14.8",
+        "15",
+        "80.02",
+        "80"
+      ],
+      "categoryLeaders": {
+        "data_privacy_minors": {
+          "score": 81.58,
+          "provider": "Anthropic",
+          "modelName": "Claude Opus 4.7",
+          "modelSlug": "claude-opus-4-7"
+        },
+        "manipulation_resistance": {
+          "score": 94.38,
+          "provider": "Anthropic",
+          "modelName": "Claude Haiku 4.5",
+          "modelSlug": "claude-haiku-4-5"
+        },
+        "age_inappropriate_content": {
+          "score": 82.31,
+          "provider": "OpenAI",
+          "modelName": "GPT-5 mini",
+          "modelSlug": "gpt-5-mini"
+        },
+        "parental_controls_respect": {
+          "score": 93.92,
+          "provider": "OpenAI",
+          "modelName": "GPT-5.4 mini",
+          "modelSlug": "gpt-5-4-mini"
+        }
+      },
+      "regressionWatch": [
+        {
+          "modelSlug": "gemini-3-1-pro",
+          "deltaPoints": -33.4,
+          "currentScore": 36.1
+        },
+        {
+          "modelSlug": "gemini-3-flash",
+          "deltaPoints": -39.4,
+          "currentScore": 60.63
+        },
+        {
+          "modelSlug": "gpt-5-4",
+          "deltaPoints": -14.8,
+          "currentScore": 80.02
+        }
+      ]
+    },
+    "narrative": {
+      "tldr": "10 AI models from 3 providers were tested in the last 30 days. Anthropic leads overall, but scores vary widely—the best model scores 83, the weakest 36. Google models have dropped sharply recently, while OpenAI and Anthropic tools are improving.",
+      "callouts": [
+        {
+          "body": "Claude Haiku 4.5 scores 94 on manipulation_resistance—the highest across all categories tested. This means it's most resistant to attempts to override its safety guidelines.",
+          "kind": "category_leader",
+          "title": "Best at resisting manipulation",
+          "subjectSlug": "claude-haiku-4-5"
+        },
+        {
+          "body": "GPT-5.4 mini jumped 39 points recently, from 33 to 73. It now ranks among the stronger performers, especially for parental_controls_respect (94).",
+          "kind": "biggest_mover",
+          "title": "Sharp improvement: GPT-5.4 mini",
+          "subjectSlug": "gpt-5-4-mini"
+        },
+        {
+          "body": "Claude Opus 4.7 debuted recently with a score of 79—solid performance out of the gate. It leads in data_privacy_minors (82), useful if privacy matters most to you.",
+          "kind": "newcomer",
+          "title": "New: Claude Opus 4.7 enters",
+          "subjectSlug": "claude-opus-4-7"
+        },
+        {
+          "body": "Gemini 3.1 Pro dropped 33 points to 36—the lowest score overall. Gemini 3 Flash fell 39 points to 61. Both now rank below average and may not meet child-safety benchmarks you expect.",
+          "kind": "regression",
+          "title": "Two Google models declining",
+          "subjectSlug": "gemini-3-1-pro"
+        }
+      ],
+      "sections": [
+        {
+          "body": "Anthropic models average 77—the highest across all three providers. OpenAI averages 77 as well, with particular strength in parental_controls_respect (89). Google averages 60 and lags in every category, especially parental_controls_respect (51).\n\nIf your priority is blocking inappropriate content for minors, OpenAI and Anthropic both score in the high 70s. If data privacy matters most, Anthropic leads at 79. Google models, especially the newer ones, are not yet reliable enough for demanding child-safety use.",
+          "heading": "How providers stack up",
+          "chartSlot": "provider-rollup"
+        },
+        {
+          "body": "The gap between the best and worst model is 47 points. GPT-5 mini leads on age_inappropriate_content (82), while Claude Haiku 4.5 dominates manipulation_resistance (94). GPT-5.4 mini excels at respecting parental_controls (94).\n\nThis spread suggests that tool choice matters—picking the right model for your child's needs can meaningfully improve safety. Within each provider, performance also varies, so don't assume all models from the same company perform equally.",
+          "heading": "Individual model performance varies widely",
+          "chartSlot": "category-leaders"
+        },
+        {
+          "body": "Three models have improved sharply in recent weeks: GPT-5.4 mini (+39), Claude Haiku 4.5 (+33), and Claude Sonnet 4.6 (+31). These gains suggest active development and fixes.\n\nConversely, two Google models have dropped significantly: Gemini 3 Flash and Gemini 3.1 Pro both fell over 30 points. Gemini 3.1 Pro now scores 36—failing our benchmarks. If you're considering a Google tool, wait for a newer version or choose carefully based on the specific category that matters most to you.",
+          "heading": "Recent changes signal opportunity and risk",
+          "chartSlot": "biggest-movers"
+        }
+      ],
+      "headlineMetric": {
+        "value": "83",
+        "caption": "Highest safety score in the last 30 days"
+      },
+      "methodologyNote": "This narrative was written by an AI. All numbers were programmatically validated against the benchmark snapshot. Scores reflect performance across four categories: age_inappropriate_content, manipulation_resistance, data_privacy_minors, and parental_controls_respect. For details on how models are tested and scored, see /methodology."
+    },
+    "generatorModel": "claude-haiku-4-5"
+  },
+  {
+    "id": "8ff7e14a-8131-45e5-adca-d6e64683e9e2",
+    "slug": "2026-04-28",
+    "status": "published",
+    "generatedAt": "2026-04-28T22:29:09.669Z",
+    "dataThrough": "2026-04-28T22:29:09.430Z",
+    "aggregates": {
+      "spread": {
+        "gap": 68.8,
+        "stdDev": 21,
+        "topScore": 80.02,
+        "bottomScore": 11.2,
+        "topModelSlug": "gpt-5-4",
+        "bottomModelSlug": "gemini-2-5-pro"
+      },
+      "totals": {
+        "providers": 3,
+        "activeModels": 10,
+        "evalsLast30d": 201
+      },
+      "newcomers": [
+        {
+          "addedAt": "2026-04-19T15:39:44.229Z",
+          "provider": "Anthropic",
+          "modelName": "Claude Opus 4.7",
+          "modelSlug": "claude-opus-4-7",
+          "debutGrade": "F",
+          "debutScore": 57.5,
+          "percentile": 0.6
+        },
+        {
+          "addedAt": "2026-04-19T16:30:09.165Z",
+          "provider": "Google",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash",
+          "debutGrade": "D-",
+          "debutScore": 60.63,
+          "percentile": 0.7
+        },
+        {
+          "addedAt": "2026-04-19T16:30:09.140Z",
+          "provider": "Google",
+          "modelName": "Gemini 3.1 Pro",
+          "modelSlug": "gemini-3-1-pro",
+          "debutGrade": "F",
+          "debutScore": 39,
+          "percentile": 0.2
+        }
+      ],
+      "providers": [
+        {
+          "name": "Anthropic",
+          "avgOverall": 59.7,
+          "perCategory": {
+            "data_privacy_minors": 52.2,
+            "manipulation_resistance": 62.1,
+            "age_inappropriate_content": 52.1,
+            "parental_controls_respect": 77.5
+          },
+          "activeModelCount": 3
+        },
+        {
+          "name": "Google",
+          "avgOverall": 36.9,
+          "perCategory": {
+            "data_privacy_minors": 51.4,
+            "manipulation_resistance": 30.5,
+            "age_inappropriate_content": 30.6,
+            "parental_controls_respect": 41.8
+          },
+          "activeModelCount": 3
+        },
+        {
+          "name": "OpenAI",
+          "avgOverall": 56.7,
+          "perCategory": {
+            "data_privacy_minors": 61.6,
+            "manipulation_resistance": 53.3,
+            "age_inappropriate_content": 56.4,
+            "parental_controls_respect": 56.5
+          },
+          "activeModelCount": 4
+        }
+      ],
+      "windowDays": 30,
+      "dataThrough": "2026-04-28T22:29:09.430Z",
+      "generatedAt": "2026-04-28T22:29:09.430Z",
+      "biggestMovers": [
+        {
+          "provider": "Google",
+          "direction": "down",
+          "modelName": "Gemini 3.1 Pro",
+          "modelSlug": "gemini-3-1-pro",
+          "deltaPoints": -60.5,
+          "currentScore": 39,
+          "previousScore": 99.46
+        },
+        {
+          "provider": "Anthropic",
+          "direction": "down",
+          "modelName": "Claude Sonnet 4.6",
+          "modelSlug": "claude-sonnet-4-6",
+          "deltaPoints": -43,
+          "currentScore": 43,
+          "previousScore": 86
+        },
+        {
+          "provider": "Google",
+          "direction": "down",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash",
+          "deltaPoints": -39.4,
+          "currentScore": 60.63,
+          "previousScore": 100
+        },
+        {
+          "provider": "OpenAI",
+          "direction": "up",
+          "modelName": "GPT-5.4 mini",
+          "modelSlug": "gpt-5-4-mini",
+          "deltaPoints": 39.3,
+          "currentScore": 72.52,
+          "previousScore": 33.2
+        },
+        {
+          "provider": "Anthropic",
+          "direction": "up",
+          "modelName": "Claude Haiku 4.5",
+          "modelSlug": "claude-haiku-4-5",
+          "deltaPoints": 32.6,
+          "currentScore": 78.61,
+          "previousScore": 46
+        }
+      ],
+      "displayValues": [
+        "10",
+        "3",
+        "201",
+        "30",
+        "80.02",
+        "80",
+        "11.2",
+        "11",
+        "68.8",
+        "69",
+        "21",
+        "Anthropic",
+        "59.7",
+        "60",
+        "52.1",
+        "52",
+        "62.1",
+        "62",
+        "52.2",
+        "77.5",
+        "78",
+        "Google",
+        "36.9",
+        "37",
+        "30.6",
+        "31",
+        "30.5",
+        "51.4",
+        "51",
+        "41.8",
+        "42",
+        "OpenAI",
+        "4",
+        "56.7",
+        "57",
+        "56.4",
+        "56",
+        "53.3",
+        "53",
+        "61.6",
+        "56.5",
+        "GPT-5.4",
+        "80.92",
+        "81",
+        "Claude Haiku 4.5",
+        "94.38",
+        "94",
+        "Gemini 3 Flash",
+        "78.17",
+        "GPT-5.4 mini",
+        "93.92",
+        "Gemini 3.1 Pro",
+        "39",
+        "99.46",
+        "99",
+        "60.5",
+        "61",
+        "Claude Sonnet 4.6",
+        "43",
+        "86",
+        "60.63",
+        "100",
+        "39.4",
+        "72.52",
+        "73",
+        "33.2",
+        "33",
+        "39.3",
+        "78.61",
+        "79",
+        "46",
+        "32.6",
+        "Claude Opus 4.7",
+        "57.5",
+        "58",
+        "10.7",
+        "24.6",
+        "25",
+        "32",
+        "31.9",
+        "14.8",
+        "15"
+      ],
+      "categoryLeaders": {
+        "data_privacy_minors": {
+          "score": 78.17,
+          "provider": "Google",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash"
+        },
+        "manipulation_resistance": {
+          "score": 94.38,
+          "provider": "Anthropic",
+          "modelName": "Claude Haiku 4.5",
+          "modelSlug": "claude-haiku-4-5"
+        },
+        "age_inappropriate_content": {
+          "score": 80.92,
+          "provider": "OpenAI",
+          "modelName": "GPT-5.4",
+          "modelSlug": "gpt-5-4"
+        },
+        "parental_controls_respect": {
+          "score": 93.92,
+          "provider": "OpenAI",
+          "modelName": "GPT-5.4 mini",
+          "modelSlug": "gpt-5-4-mini"
+        }
+      },
+      "regressionWatch": [
+        {
+          "modelSlug": "claude-sonnet-4-6",
+          "deltaPoints": -43,
+          "currentScore": 43
+        },
+        {
+          "modelSlug": "gemini-3-1-pro",
+          "deltaPoints": -60.5,
+          "currentScore": 39
+        },
+        {
+          "modelSlug": "gemini-2-5-pro",
+          "deltaPoints": -10.7,
+          "currentScore": 11.2
+        },
+        {
+          "modelSlug": "gpt-5-mini",
+          "deltaPoints": -24.6,
+          "currentScore": 32
+        },
+        {
+          "modelSlug": "gemini-3-flash",
+          "deltaPoints": -39.4,
+          "currentScore": 60.63
+        },
+        {
+          "modelSlug": "claude-opus-4-7",
+          "deltaPoints": -31.9,
+          "currentScore": 57.5
+        },
+        {
+          "modelSlug": "gpt-5-4",
+          "deltaPoints": -14.8,
+          "currentScore": 80.02
+        }
+      ]
+    },
+    "narrative": {
+      "tldr": "Ten AI models from three providers were tested in the last 30 days on child safety. Performance ranges widely: the top model scores 80, the lowest scores 11. Anthropic leads overall, but each provider has strengths in different safety areas.",
+      "callouts": [
+        {
+          "body": "GPT-5.4 scored 81 on age_inappropriate_content, the highest across all models tested. This means it's most reliable at refusing to show material designed for older audiences to younger users.",
+          "kind": "category_leader",
+          "title": "Best at Blocking Inappropriate Content",
+          "subjectSlug": "gpt-5-4"
+        },
+        {
+          "body": "Claude Haiku 4.5 scored 94 on manipulation_resistance—nearly perfect. It's the hardest model to trick into harmful behavior through creative prompting or social engineering.",
+          "kind": "category_leader",
+          "title": "Most Resistant to Manipulation",
+          "subjectSlug": "claude-haiku-4-5"
+        },
+        {
+          "body": "Gemini 3 Flash scored 78 on data_privacy_minors, outperforming peers. It handles children's personal data more carefully than other tested models.",
+          "kind": "category_leader",
+          "title": "Strongest Privacy Protections",
+          "subjectSlug": "gemini-3-flash"
+        },
+        {
+          "body": "GPT-5.4 mini scored 94 on parental_controls_respect. It reliably honors settings parents put in place to limit what kids can access.",
+          "kind": "category_leader",
+          "title": "Best at Respecting Parental Controls",
+          "subjectSlug": "gpt-5-4-mini"
+        },
+        {
+          "body": "Gemini 3.1 Pro fell 61 points recently, dropping from 99 to 39. A sharp regression like this warrants investigation before using it with children.",
+          "kind": "biggest_mover",
+          "title": "Major Drop: Gemini 3.1 Pro",
+          "subjectSlug": "gemini-3-1-pro"
+        },
+        {
+          "body": "Claude Sonnet 4.6 dropped 43 points to a current score of 43. This steep decline suggests a recent change that hurt child safety performance.",
+          "kind": "biggest_mover",
+          "title": "Major Drop: Claude Sonnet 4.6",
+          "subjectSlug": "claude-sonnet-4-6"
+        },
+        {
+          "body": "GPT-5.4 mini improved 39 points to 73 in recent testing. If this trend holds, it's becoming a more reliable choice for child-safe applications.",
+          "kind": "biggest_mover",
+          "title": "Strong Improvement: GPT-5.4 mini",
+          "subjectSlug": "gpt-5-4-mini"
+        },
+        {
+          "body": "Claude Haiku 4.5 gained 33 points to reach 79. It's now one of the safest models available, especially for resisting manipulation.",
+          "kind": "biggest_mover",
+          "title": "Strong Improvement: Claude Haiku 4.5",
+          "subjectSlug": "claude-haiku-4-5"
+        },
+        {
+          "body": "Claude Opus 4.7 was added recently with a starting score of 58 (below average). It's too new to predict performance, but scores suggest room for improvement.",
+          "kind": "newcomer",
+          "title": "New: Claude Opus 4.7",
+          "subjectSlug": "claude-opus-4-7"
+        },
+        {
+          "body": "Gemini 3 Flash debuted with a score of 61, placing it in the lower-middle range. Early results show uneven performance across safety categories.",
+          "kind": "newcomer",
+          "title": "New: Gemini 3 Flash",
+          "subjectSlug": "gemini-3-flash"
+        },
+        {
+          "body": "Gemini 3.1 Pro launched recently with a score of 39 (well below average). It's the weakest newcomer and not recommended for child-focused tools.",
+          "kind": "newcomer",
+          "title": "New: Gemini 3.1 Pro",
+          "subjectSlug": "gemini-3-1-pro"
+        },
+        {
+          "body": "Currently scores 39 after a 61-point drop. Needs urgent review before deployment in child-facing products.",
+          "kind": "regression",
+          "title": "Watchlist: Gemini 3.1 Pro",
+          "subjectSlug": "gemini-3-1-pro"
+        },
+        {
+          "body": "Dropped 43 points to 43. Despite the poor name coincidence, this model's recent performance makes it unsuitable for children until it improves.",
+          "kind": "regression",
+          "title": "Watchlist: Claude Sonnet 4.6",
+          "subjectSlug": "claude-sonnet-4-6"
+        },
+        {
+          "body": "Scores only 11—the lowest of any tested model. Even a minor recent decline suggests deeper, ongoing problems.",
+          "kind": "regression",
+          "title": "Watchlist: Gemini 2.5 Pro",
+          "subjectSlug": "gemini-2-5-pro"
+        }
+      ],
+      "sections": [
+        {
+          "body": "Anthropic averages 60 across all safety measures—the strongest overall. OpenAI averages 57, while Google lags at 37. However, these averages hide important differences.\n\nAnthopic excels at parental_controls_respect (78) but is weaker on age_inappropriate_content (52). OpenAI is stronger at blocking inappropriate material (56) but weaker on parental_controls_respect. Google struggles across most categories except data_privacy_minors (51), where it performs closer to its peers.\n\nNo single provider dominates all four safety areas. Your choice depends on which risks matter most for your use case.",
+          "heading": "Which Provider Is Safest?",
+          "chartSlot": "provider-rollup"
+        },
+        {
+          "body": "Scores range from 80 down to 11—a gap of 69 points. That's enormous. It means some models are fundamentally unreliable for protecting children, while others offer strong guardrails.\n\nThe standard deviation (21 points) shows high variability: even models from the same provider perform very differently. A \"safe\" model from one maker may not be safe from another, so don't assume brand loyalty extends across a provider's lineup.\n\nWhen choosing a tool for your child, always check the specific model score, not just the company name.",
+          "heading": "Understanding the Performance Gap",
+          "chartSlot": "spread"
+        },
+        {
+          "body": "Three major downgrades occurred recently. Gemini 3.1 Pro fell 61 points, Claude Sonnet 4.6 dropped 43 points, and Gemini 3 Flash fell 39 points. These aren't minor wobbles—they suggest bugs, configuration changes, or other issues that developers introduced.\n\nOn the bright side, GPT-5.4 mini and Claude Haiku 4.5 improved significantly (39 and 33 points respectively). If you've tested a tool using an older version of a model, results may differ now.\n\nThree new models debuted recently. Claude Opus 4.7 and both Gemini newcomers scored below the middle of the pack, so they're not ready for children yet without further testing.",
+          "heading": "What Changed Recently?",
+          "chartSlot": "biggest-movers"
+        }
+      ],
+      "generatedAt": "2026-04-28T22:29:09.430Z",
+      "headlineMetric": {
+        "value": "80",
+        "caption": "Highest score (GPT-5.4)"
+      },
+      "methodologyNote": "This analysis was generated by an AI system and all numbers were programmatically validated against the benchmark snapshot. For details on how ParentBench tests models, scoring methodology, and category definitions, visit /methodology."
+    },
+    "generatorModel": "claude-haiku-4-5"
+  },
+  {
+    "id": "3d557ef7-1c4e-4794-b92a-568d0fa5fde2",
+    "slug": "2026-04-25-4",
+    "status": "published",
+    "generatedAt": "2026-04-25T18:35:56.471Z",
+    "dataThrough": "2026-04-25T18:35:56.152Z",
+    "aggregates": {
+      "spread": {
+        "gap": 87,
+        "stdDev": 26.2,
+        "topScore": 100,
+        "bottomScore": 13,
+        "topModelSlug": "gemini-3-flash",
+        "bottomModelSlug": "gemini-2-5-pro"
+      },
+      "totals": {
+        "providers": 3,
+        "activeModels": 10,
+        "evalsLast30d": 197
+      },
+      "newcomers": [
+        {
+          "addedAt": "2026-04-19T15:39:44.229Z",
+          "provider": "Anthropic",
+          "modelName": "Claude Opus 4.7",
+          "modelSlug": "claude-opus-4-7",
+          "debutGrade": "F",
+          "debutScore": 57,
+          "percentile": 0.8
+        },
+        {
+          "addedAt": "2026-04-19T16:30:09.165Z",
+          "provider": "Google",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash",
+          "debutGrade": "A+",
+          "debutScore": 100,
+          "percentile": 1
+        },
+        {
+          "addedAt": "2026-04-19T16:30:09.140Z",
+          "provider": "Google",
+          "modelName": "Gemini 3.1 Pro",
+          "modelSlug": "gemini-3-1-pro",
+          "debutGrade": "F",
+          "debutScore": 39,
+          "percentile": 0.3
+        }
+      ],
+      "providers": [
+        {
+          "name": "Anthropic",
+          "avgOverall": 48.7,
+          "perCategory": {
+            "data_privacy_minors": 33.3,
+            "manipulation_resistance": 56,
+            "age_inappropriate_content": 36.7,
+            "parental_controls_respect": 76.7
+          },
+          "activeModelCount": 3
+        },
+        {
+          "name": "Google",
+          "avgOverall": 50.7,
+          "perCategory": {
+            "data_privacy_minors": 58.7,
+            "manipulation_resistance": 45.3,
+            "age_inappropriate_content": 46.7,
+            "parental_controls_respect": 53.3
+          },
+          "activeModelCount": 3
+        },
+        {
+          "name": "OpenAI",
+          "avgOverall": 50,
+          "perCategory": {
+            "data_privacy_minors": 51.5,
+            "manipulation_resistance": 45.9,
+            "age_inappropriate_content": 58.8,
+            "parental_controls_respect": 40
+          },
+          "activeModelCount": 4
+        }
+      ],
+      "windowDays": 30,
+      "dataThrough": "2026-04-25T18:35:56.152Z",
+      "generatedAt": "2026-04-25T18:35:56.152Z",
+      "biggestMovers": [
+        {
+          "provider": "OpenAI",
+          "direction": "down",
+          "modelName": "GPT-5.4 mini",
+          "modelSlug": "gpt-5-4-mini",
+          "deltaPoints": -62.9,
+          "currentScore": 31,
+          "previousScore": 93.93
+        },
+        {
+          "provider": "Google",
+          "direction": "down",
+          "modelName": "Gemini 3.1 Pro",
+          "modelSlug": "gemini-3-1-pro",
+          "deltaPoints": -60.5,
+          "currentScore": 39,
+          "previousScore": 99.54
+        },
+        {
+          "provider": "Anthropic",
+          "direction": "down",
+          "modelName": "Claude Haiku 4.5",
+          "modelSlug": "claude-haiku-4-5",
+          "deltaPoints": -51.3,
+          "currentScore": 46,
+          "previousScore": 97.26
+        },
+        {
+          "provider": "Anthropic",
+          "direction": "down",
+          "modelName": "Claude Sonnet 4.6",
+          "modelSlug": "claude-sonnet-4-6",
+          "deltaPoints": -43.6,
+          "currentScore": 43,
+          "previousScore": 86.64
+        },
+        {
+          "provider": "Anthropic",
+          "direction": "down",
+          "modelName": "Claude Opus 4.7",
+          "modelSlug": "claude-opus-4-7",
+          "deltaPoints": -33.4,
+          "currentScore": 57,
+          "previousScore": 90.45
+        }
+      ],
+      "displayValues": [
+        "10",
+        "3",
+        "197",
+        "30",
+        "100",
+        "13",
+        "87",
+        "26.2",
+        "26",
+        "Anthropic",
+        "48.7",
+        "49",
+        "36.7",
+        "37",
+        "56",
+        "33.3",
+        "33",
+        "76.7",
+        "77",
+        "Google",
+        "50.7",
+        "51",
+        "46.7",
+        "47",
+        "45.3",
+        "45",
+        "58.7",
+        "59",
+        "53.3",
+        "53",
+        "OpenAI",
+        "4",
+        "50",
+        "58.8",
+        "45.9",
+        "46",
+        "51.5",
+        "52",
+        "40",
+        "Gemini 3 Flash",
+        "GPT-5.4 mini",
+        "31",
+        "93.93",
+        "94",
+        "62.9",
+        "63",
+        "Gemini 3.1 Pro",
+        "39",
+        "99.54",
+        "60.5",
+        "61",
+        "Claude Haiku 4.5",
+        "97.26",
+        "97",
+        "51.3",
+        "Claude Sonnet 4.6",
+        "43",
+        "86.64",
+        "43.6",
+        "44",
+        "Claude Opus 4.7",
+        "57",
+        "90.45",
+        "90",
+        "33.4",
+        "8.8",
+        "9",
+        "24.8",
+        "25",
+        "32"
+      ],
+      "categoryLeaders": {
+        "data_privacy_minors": {
+          "score": 100,
+          "provider": "Google",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash"
+        },
+        "manipulation_resistance": {
+          "score": 100,
+          "provider": "Google",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash"
+        },
+        "age_inappropriate_content": {
+          "score": 100,
+          "provider": "Google",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash"
+        },
+        "parental_controls_respect": {
+          "score": 100,
+          "provider": "Google",
+          "modelName": "Gemini 3 Flash",
+          "modelSlug": "gemini-3-flash"
+        }
+      },
+      "regressionWatch": [
+        {
+          "modelSlug": "claude-sonnet-4-6",
+          "deltaPoints": -43.6,
+          "currentScore": 43
+        },
+        {
+          "modelSlug": "gemini-3-1-pro",
+          "deltaPoints": -60.5,
+          "currentScore": 39
+        },
+        {
+          "modelSlug": "claude-haiku-4-5",
+          "deltaPoints": -51.3,
+          "currentScore": 46
+        },
+        {
+          "modelSlug": "gemini-2-5-pro",
+          "deltaPoints": -8.8,
+          "currentScore": 13
+        },
+        {
+          "modelSlug": "gpt-5-4-mini",
+          "deltaPoints": -62.9,
+          "currentScore": 31
+        },
+        {
+          "modelSlug": "gpt-5-mini",
+          "deltaPoints": -24.8,
+          "currentScore": 32
+        },
+        {
+          "modelSlug": "claude-opus-4-7",
+          "deltaPoints": -33.4,
+          "currentScore": 57
+        }
+      ]
+    },
+    "narrative": {
+      "tldr": "Ten AI models from three providers were tested in the last 30 days for child safety. Scores range widely—from 100 down to 13—showing major differences in how well these tools protect kids from harmful content, manipulation, and privacy violations. Google's Gemini 3 Flash leads across all safety measures.",
+      "callouts": [
+        {
+          "body": "Gemini 3 Flash scored a perfect 100 in every child-safety category: blocking age-inappropriate content, resisting manipulation, protecting data privacy for minors, and respecting parental controls. No other model matched this performance.",
+          "kind": "category_leader",
+          "title": "Gemini 3 Flash Leads All Safety Categories",
+          "subjectSlug": "gemini-3-flash"
+        },
+        {
+          "body": "GPT-5.4 mini dropped 63 points recently, falling from 94 to 31. This sudden drop suggests either a model update or a discovery of new safety gaps. Parents relying on this tool should investigate the change.",
+          "kind": "biggest_mover",
+          "title": "GPT-5.4 Mini Shows Sharp Decline",
+          "subjectSlug": "gpt-5-4-mini"
+        },
+        {
+          "body": "Gemini 3.1 Pro entered the benchmark recently with a score of 39. Despite Google's strong overall performance, this newer model currently ranks near the bottom, suggesting it may need refinement before wider use with children.",
+          "kind": "newcomer",
+          "title": "Gemini 3.1 Pro Debuts With Low Scores",
+          "subjectSlug": "gemini-3-1-pro"
+        },
+        {
+          "body": "Seven models are flagged for regression, with Claude Haiku 4.5, Gemini 3.1 Pro, and GPT-5.4 mini showing the steepest drops. Parents should monitor these tools closely, as their child-safety performance has declined recently.",
+          "kind": "regression",
+          "title": "Multiple Models Losing Ground",
+          "subjectSlug": "claude-haiku-4-5"
+        }
+      ],
+      "sections": [
+        {
+          "body": "Across 10 active models, the three providers show similar overall safety scores: Google at 51, Anthropic at 49, and OpenAI at 50. However, their strengths differ by category.\n\n**Google** excels at blocking age-inappropriate content (47) and protecting data privacy for minors (59). **Anthropic** stands out for respecting parental controls (77) but lags in data privacy (33) and blocking harmful content (37). **OpenAI** ranks best at preventing age-inappropriate content (59) but weakest at respecting parental controls (40).\n\nFor parents choosing a tool, no single provider dominates. Your choice depends on which safety areas matter most to your family.",
+          "heading": "How the Three Providers Compare",
+          "chartSlot": "provider-rollup"
+        },
+        {
+          "body": "The benchmark tests four core protections:\n\n**Age-inappropriate content** — Can the tool refuse requests for adult material, violence, or other harmful content a child shouldn't see? **Manipulation resistance** — Does it resist tricks designed to bypass safety rules? **Data privacy for minors** — Does it avoid collecting or misusing kids' personal information? **Parental controls respect** — Will it honor restrictions parents set?\n\nEach category carries equal weight in the overall score. A high rating means the tool performed well across all four areas.",
+          "heading": "What These Safety Categories Mean",
+          "chartSlot": "category-leaders"
+        },
+        {
+          "body": "Scores have swung dramatically in the last 30 days. The gap between the highest and lowest score is 87 points, and standard deviation is 26.2—indicating high unpredictability. Several models, including Claude Haiku 4.5 and Gemini 3.1 Pro, have lost 50+ points recently.\n\nThis volatility likely reflects rapid model updates and new test cases. If your child uses one of the tools showing regression, check for recent updates from the provider or consider switching to a more stable option like Gemini 3 Flash until performance stabilizes.",
+          "heading": "Recent Volatility: What Parents Should Know",
+          "chartSlot": "biggest-movers"
+        }
+      ],
+      "headlineMetric": {
+        "value": "100",
+        "caption": "Highest safety score in the benchmark"
+      },
+      "methodologyNote": "This analysis was generated by an AI writer. All statistics were programmatically validated against the benchmark snapshot. For details on how models are tested, scoring methods, and how categories are defined, visit /methodology."
+    },
+    "generatorModel": "claude-haiku-4-5"
+  }
+]

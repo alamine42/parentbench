@@ -1,1 +1,631 @@
-[]
+[
+  {
+    "id": "0fef4b57-3c89-4e00-9d7a-fab7fb4a128c",
+    "slug": "claude-haiku-4-5",
+    "name": "Claude Haiku 4.5",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "active",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:12:00.850Z",
+    "provider": {
+      "id": "c69e805f-25e3-4160-bca5-8b4c311c9242",
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "logoUrl": "/logos/anthropic.svg"
+    }
+  },
+  {
+    "id": "804dffe1-0ed1-413b-b5c0-72fe2a9352e0",
+    "slug": "claude-opus-4",
+    "name": "Claude Opus 4",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "maintenance",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:12:00.991Z",
+    "provider": {
+      "id": "c69e805f-25e3-4160-bca5-8b4c311c9242",
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "logoUrl": "/logos/anthropic.svg"
+    }
+  },
+  {
+    "id": "9f16c96f-f016-4baf-8e82-6a5f3125d5db",
+    "slug": "claude-opus-4-1",
+    "name": "Claude Opus 4.1",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "maintenance",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:12:00.929Z",
+    "provider": {
+      "id": "c69e805f-25e3-4160-bca5-8b4c311c9242",
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "logoUrl": "/logos/anthropic.svg"
+    }
+  },
+  {
+    "id": "8805e3a1-8d3e-4f2e-963a-666dbe60a213",
+    "slug": "claude-opus-4-5",
+    "name": "Claude Opus 4.5",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "maintenance",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:12:00.903Z",
+    "provider": {
+      "id": "c69e805f-25e3-4160-bca5-8b4c311c9242",
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "logoUrl": "/logos/anthropic.svg"
+    }
+  },
+  {
+    "id": "95afb3e2-31f7-40c4-84d9-bdebcd8c7923",
+    "slug": "claude-opus-4-6",
+    "name": "Claude Opus 4.6",
+    "description": null,
+    "releaseDate": "2025-02-10T00:00:00.000Z",
+    "parameterCount": null,
+    "evalTier": "maintenance",
+    "isActive": true,
+    "createdAt": "2026-03-22T16:58:23.850Z",
+    "provider": {
+      "id": "c69e805f-25e3-4160-bca5-8b4c311c9242",
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "logoUrl": "/logos/anthropic.svg"
+    }
+  },
+  {
+    "id": "c9990758-9dfe-45a2-8ad2-6a30920844f5",
+    "slug": "claude-opus-4-7",
+    "name": "Claude Opus 4.7",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "active",
+    "isActive": true,
+    "createdAt": "2026-04-19T15:39:44.229Z",
+    "provider": {
+      "id": "c69e805f-25e3-4160-bca5-8b4c311c9242",
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "logoUrl": "/logos/anthropic.svg"
+    }
+  },
+  {
+    "id": "c318da9f-1c2c-4bca-be6d-552194d23545",
+    "slug": "claude-sonnet-4",
+    "name": "Claude Sonnet 4",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "standard",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:12:00.963Z",
+    "provider": {
+      "id": "c69e805f-25e3-4160-bca5-8b4c311c9242",
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "logoUrl": "/logos/anthropic.svg"
+    }
+  },
+  {
+    "id": "92b6d743-640f-4684-94d4-44849b45db81",
+    "slug": "claude-sonnet-4-5",
+    "name": "Claude Sonnet 4.5",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "standard",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:12:00.876Z",
+    "provider": {
+      "id": "c69e805f-25e3-4160-bca5-8b4c311c9242",
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "logoUrl": "/logos/anthropic.svg"
+    }
+  },
+  {
+    "id": "023c5f83-035e-4b63-b7e9-84b3997ab586",
+    "slug": "claude-sonnet-4-6",
+    "name": "Claude Sonnet 4.6",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "active",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:12:00.814Z",
+    "provider": {
+      "id": "c69e805f-25e3-4160-bca5-8b4c311c9242",
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "logoUrl": "/logos/anthropic.svg"
+    }
+  },
+  {
+    "id": "eb25f55d-80ce-4259-946c-ead007604189",
+    "slug": "command-r-plus",
+    "name": "Command R+",
+    "description": null,
+    "releaseDate": "2024-04-04T00:00:00.000Z",
+    "parameterCount": "104B",
+    "evalTier": "paused",
+    "isActive": false,
+    "createdAt": "2026-03-22T16:58:23.660Z",
+    "provider": {
+      "id": "2a6b7b3a-31a8-4e54-8576-0cc32d1c43d9",
+      "name": "Cohere",
+      "slug": "cohere",
+      "logoUrl": "/logos/cohere.svg"
+    }
+  },
+  {
+    "id": "b3014729-f99f-491f-a13f-1796a53676f5",
+    "slug": "deepseek-v3",
+    "name": "DeepSeek V3",
+    "description": null,
+    "releaseDate": "2024-12-26T00:00:00.000Z",
+    "parameterCount": "671B",
+    "evalTier": "paused",
+    "isActive": false,
+    "createdAt": "2026-03-22T16:58:23.709Z",
+    "provider": {
+      "id": "07b84a6c-dbc3-4a3b-bd10-a17b7226c472",
+      "name": "DeepSeek",
+      "slug": "deepseek",
+      "logoUrl": "/logos/deepseek.svg"
+    }
+  },
+  {
+    "id": "7d8106e2-80ce-41d4-a47e-25849a1d4a88",
+    "slug": "gpt-4-1",
+    "name": "GPT-4.1",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "standard",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:06:20.685Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "fcc8431a-0c14-4370-bbfa-58279bb791fd",
+    "slug": "gpt-4-1-mini",
+    "name": "GPT-4.1 mini",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "standard",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:06:20.713Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "726c0321-3769-4ee1-bfbb-f2b551fe76f8",
+    "slug": "gpt-4o",
+    "name": "GPT-4o",
+    "description": null,
+    "releaseDate": "2024-05-13T00:00:00.000Z",
+    "parameterCount": null,
+    "evalTier": "maintenance",
+    "isActive": true,
+    "createdAt": "2026-03-22T16:58:23.607Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "5bfecd86-a144-46b1-97aa-cf597dbecb83",
+    "slug": "gpt-4o-mini",
+    "name": "GPT-4o mini",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "maintenance",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:06:20.651Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "36094b80-a14e-4b70-b814-81095d4a570c",
+    "slug": "gpt-5",
+    "name": "GPT-5",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "active",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:06:20.743Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "3fb4b245-6758-457d-b62b-e8b2a5f12f13",
+    "slug": "gpt-5-mini",
+    "name": "GPT-5 mini",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "active",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:06:20.774Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "9942d597-bff5-470f-a4f8-397ac7d6f0e3",
+    "slug": "gpt-5-nano",
+    "name": "GPT-5 nano",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "maintenance",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:06:20.802Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "dd185d9a-c636-4a7b-af35-916f40169cd0",
+    "slug": "gpt-5-4",
+    "name": "GPT-5.4",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "active",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:06:20.829Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "86a2b9b6-5191-4ab9-b315-4ab8767d6f7a",
+    "slug": "gpt-5-4-pro",
+    "name": "GPT-5.4 Pro",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "paused",
+    "isActive": false,
+    "createdAt": "2026-03-22T19:06:20.856Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "21f0512e-7872-4c2a-b398-e9c9191d58c8",
+    "slug": "gpt-5-4-mini",
+    "name": "GPT-5.4 mini",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "active",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:06:20.883Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "7d4afbe2-58d8-4bc6-b451-88b1d2ad7163",
+    "slug": "gpt-5-4-nano",
+    "name": "GPT-5.4 nano",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "maintenance",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:06:20.911Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "f0fd720b-2aec-4c12-8591-b34f226bf2a8",
+    "slug": "gemini-1-5-flash",
+    "name": "Gemini 1.5 Flash",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "paused",
+    "isActive": false,
+    "createdAt": "2026-03-25T21:04:02.347Z",
+    "provider": {
+      "id": "022c7e43-95c1-41aa-8edb-0a70b0db0c1f",
+      "name": "Google",
+      "slug": "google",
+      "logoUrl": "/logos/google.svg"
+    }
+  },
+  {
+    "id": "06d21df0-088c-4119-9cb8-f928b25bc26a",
+    "slug": "gemini-1-5-pro",
+    "name": "Gemini 1.5 Pro",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "paused",
+    "isActive": false,
+    "createdAt": "2026-03-25T21:04:02.320Z",
+    "provider": {
+      "id": "022c7e43-95c1-41aa-8edb-0a70b0db0c1f",
+      "name": "Google",
+      "slug": "google",
+      "logoUrl": "/logos/google.svg"
+    }
+  },
+  {
+    "id": "61756f51-a7fa-4400-a027-019414146ebd",
+    "slug": "gemini-2-0-flash",
+    "name": "Gemini 2.0 Flash",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "paused",
+    "isActive": false,
+    "createdAt": "2026-03-25T21:04:02.262Z",
+    "provider": {
+      "id": "022c7e43-95c1-41aa-8edb-0a70b0db0c1f",
+      "name": "Google",
+      "slug": "google",
+      "logoUrl": "/logos/google.svg"
+    }
+  },
+  {
+    "id": "6afb637d-4baf-4562-a69b-0318c859b73c",
+    "slug": "gemini-2-0-flash-lite",
+    "name": "Gemini 2.0 Flash-Lite",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "paused",
+    "isActive": false,
+    "createdAt": "2026-03-25T21:04:02.293Z",
+    "provider": {
+      "id": "022c7e43-95c1-41aa-8edb-0a70b0db0c1f",
+      "name": "Google",
+      "slug": "google",
+      "logoUrl": "/logos/google.svg"
+    }
+  },
+  {
+    "id": "808f11b6-fa0f-41b3-a835-0c4e181830c0",
+    "slug": "gemini-2-5-flash",
+    "name": "Gemini 2.5 Flash",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "standard",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:12:01.163Z",
+    "provider": {
+      "id": "022c7e43-95c1-41aa-8edb-0a70b0db0c1f",
+      "name": "Google",
+      "slug": "google",
+      "logoUrl": "/logos/google.svg"
+    }
+  },
+  {
+    "id": "df25d3f9-01ce-4903-92e2-0375529962fd",
+    "slug": "gemini-2-5-flash-lite",
+    "name": "Gemini 2.5 Flash-Lite",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "standard",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:12:01.191Z",
+    "provider": {
+      "id": "022c7e43-95c1-41aa-8edb-0a70b0db0c1f",
+      "name": "Google",
+      "slug": "google",
+      "logoUrl": "/logos/google.svg"
+    }
+  },
+  {
+    "id": "113a7f15-1014-40ff-8393-ffe4789d9813",
+    "slug": "gemini-2-5-pro",
+    "name": "Gemini 2.5 Pro",
+    "description": null,
+    "releaseDate": "2025-02-01T00:00:00.000Z",
+    "parameterCount": null,
+    "evalTier": "active",
+    "isActive": true,
+    "createdAt": "2026-03-22T16:58:23.838Z",
+    "provider": {
+      "id": "022c7e43-95c1-41aa-8edb-0a70b0db0c1f",
+      "name": "Google",
+      "slug": "google",
+      "logoUrl": "/logos/google.svg"
+    }
+  },
+  {
+    "id": "5da5a57c-46b8-4fa5-a09a-fcf2b6755291",
+    "slug": "gemini-3-flash",
+    "name": "Gemini 3 Flash",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "active",
+    "isActive": true,
+    "createdAt": "2026-04-19T16:30:09.165Z",
+    "provider": {
+      "id": "022c7e43-95c1-41aa-8edb-0a70b0db0c1f",
+      "name": "Google",
+      "slug": "google",
+      "logoUrl": "/logos/google.svg"
+    }
+  },
+  {
+    "id": "0dd7697f-aa9e-4d5a-ab37-4ecd2730e49b",
+    "slug": "gemini-3-1-pro",
+    "name": "Gemini 3.1 Pro",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "active",
+    "isActive": true,
+    "createdAt": "2026-04-19T16:30:09.140Z",
+    "provider": {
+      "id": "022c7e43-95c1-41aa-8edb-0a70b0db0c1f",
+      "name": "Google",
+      "slug": "google",
+      "logoUrl": "/logos/google.svg"
+    }
+  },
+  {
+    "id": "37543571-2f6c-488b-a095-9f412b066880",
+    "slug": "grok-2",
+    "name": "Grok 2",
+    "description": null,
+    "releaseDate": "2024-08-13T00:00:00.000Z",
+    "parameterCount": null,
+    "evalTier": "standard",
+    "isActive": true,
+    "createdAt": "2026-03-22T16:58:23.722Z",
+    "provider": {
+      "id": "212c198f-ab60-493a-aba8-e2aabac0605b",
+      "name": "xAI",
+      "slug": "xai",
+      "logoUrl": "/logos/xai.svg"
+    }
+  },
+  {
+    "id": "60046ff6-f7c3-4321-a8e4-2a35b7787c8a",
+    "slug": "llama-3-1-405b",
+    "name": "Llama 3.1 405B",
+    "description": null,
+    "releaseDate": "2024-07-23T00:00:00.000Z",
+    "parameterCount": "405B",
+    "evalTier": "paused",
+    "isActive": false,
+    "createdAt": "2026-03-22T16:58:23.633Z",
+    "provider": {
+      "id": "27820c81-5925-463f-8460-3338ae7cc224",
+      "name": "Meta",
+      "slug": "meta",
+      "logoUrl": "/logos/meta.svg"
+    }
+  },
+  {
+    "id": "8e4504d2-16da-4933-9979-f4f7629510f5",
+    "slug": "mistral-large-2",
+    "name": "Mistral Large 2",
+    "description": null,
+    "releaseDate": "2024-07-24T00:00:00.000Z",
+    "parameterCount": "123B",
+    "evalTier": "paused",
+    "isActive": false,
+    "createdAt": "2026-03-22T16:58:23.647Z",
+    "provider": {
+      "id": "092b5fb0-feeb-45dd-8d0a-2cb6f71420d4",
+      "name": "Mistral AI",
+      "slug": "mistral",
+      "logoUrl": "/logos/mistral.svg"
+    }
+  },
+  {
+    "id": "7e61e37b-0ca0-49b6-83f5-5c9083745e2d",
+    "slug": "o3",
+    "name": "o3",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "maintenance",
+    "isActive": true,
+    "createdAt": "2026-03-22T19:06:20.935Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "cd33d791-b2e5-4e5a-a79a-90d72c4728a4",
+    "slug": "o3-pro",
+    "name": "o3 Pro",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "paused",
+    "isActive": false,
+    "createdAt": "2026-03-22T19:06:20.963Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  },
+  {
+    "id": "3513eeef-399f-4abf-b847-c40f047631b2",
+    "slug": "o4-mini",
+    "name": "o4-mini",
+    "description": null,
+    "releaseDate": null,
+    "parameterCount": null,
+    "evalTier": "standard",
+    "isActive": false,
+    "createdAt": "2026-03-22T19:06:20.996Z",
+    "provider": {
+      "id": "9007b59d-f859-4512-8195-712567e4406c",
+      "name": "OpenAI",
+      "slug": "openai",
+      "logoUrl": "/assets/openai_logo.png"
+    }
+  }
+]
