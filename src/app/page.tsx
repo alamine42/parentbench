@@ -37,6 +37,29 @@ export default async function HomePage() {
 
   return (
     <div>
+      {FROZEN && (
+        <section className="border-b-2 border-amber-600 bg-amber-500 text-amber-950">
+          <div className="mx-auto max-w-6xl px-4 py-5">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+              <span className="inline-flex w-fit items-center rounded-full bg-amber-950 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-50">
+                Paused
+              </span>
+              <p className="text-sm font-semibold sm:text-base">
+                ParentBench is paused — the benchmark has been frozen as of May 17, 2026. Every score,
+                report, and page reflects evaluations up to that date.{" "}
+                <a
+                  href="mailto:mehdi.alamine@gmail.com"
+                  className="font-bold underline underline-offset-4 hover:text-amber-900"
+                >
+                  Get in touch
+                </a>
+                .
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
       <HeroSection modelCount={modelCount} testCaseCount={testCaseCount} lastUpdated={lastUpdated} />
 
       <section className="mx-auto max-w-6xl px-4 py-12">
@@ -160,47 +183,23 @@ export default async function HomePage() {
 
       <HomepageInsightsTeaser />
 
-      {FROZEN ? (
+      {/* Newsletter section - hidden until feature is enabled (parentbench-ffa.11) */}
+      {!FROZEN && NEWSLETTER_ENABLED && (
         <section className="mx-auto max-w-6xl px-4 py-16">
-          <div className="rounded-2xl border border-card-border bg-card-bg p-8">
-            <p className="text-sm font-semibold uppercase tracking-wide text-muted">Notice</p>
-            <h2 className="mt-2 text-3xl font-bold">ParentBench is paused.</h2>
-            <p className="mt-3 max-w-3xl text-muted">
-              The benchmark has been frozen as of May 17, 2026. Every score, report, and
-              page on this site reflects the state of evaluations up to that date — no new
-              models are being added and existing scores are not being refreshed.
-            </p>
-            <p className="mt-3 max-w-3xl text-muted">
-              For questions, collaboration, or to discuss what&apos;s next, email{" "}
-              <a
-                href="mailto:mehdi.alamine@gmail.com"
-                className="font-medium text-foreground underline underline-offset-4 hover:text-accent"
-              >
-                mehdi.alamine@gmail.com
-              </a>
-              .
-            </p>
+          <div className="grid gap-8 rounded-2xl border border-card-border bg-card-bg p-8 lg:grid-cols-2">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wide text-muted">Stay in the loop</p>
+              <h2 className="mt-2 text-3xl font-bold">Get new safety grades in your inbox.</h2>
+              <p className="mt-2 text-muted">
+                We only email when we publish new model evaluations, release methodology updates, or open-source new test cases.
+              </p>
+            </div>
+            <div>
+              <NewsletterSignup variant="compact" />
+              <p className="mt-2 text-xs text-muted">Zero spam. Unsubscribe anytime.</p>
+            </div>
           </div>
         </section>
-      ) : (
-        /* Newsletter section - hidden until feature is enabled (parentbench-ffa.11) */
-        NEWSLETTER_ENABLED && (
-          <section className="mx-auto max-w-6xl px-4 py-16">
-            <div className="grid gap-8 rounded-2xl border border-card-border bg-card-bg p-8 lg:grid-cols-2">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-wide text-muted">Stay in the loop</p>
-                <h2 className="mt-2 text-3xl font-bold">Get new safety grades in your inbox.</h2>
-                <p className="mt-2 text-muted">
-                  We only email when we publish new model evaluations, release methodology updates, or open-source new test cases.
-                </p>
-              </div>
-              <div>
-                <NewsletterSignup variant="compact" />
-                <p className="mt-2 text-xs text-muted">Zero spam. Unsubscribe anytime.</p>
-              </div>
-            </div>
-          </section>
-        )
       )}
     </div>
   );
